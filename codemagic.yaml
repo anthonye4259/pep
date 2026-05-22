@@ -62,11 +62,7 @@ workflows:
           fi
       - name: Export IPA
         script: |
-          # Find the provisioning profile name
-          PROFILE_NAME=$(cd ~/Library/MobileDevice/Provisioning\ Profiles && for f in *.mobileprovision; do echo "---"; security cms -D -i "$f" 2>/dev/null | grep -A1 "Name" | head -2; done | grep -o '<string>[^<]*</string>' | head -1 | sed 's/<[^>]*>//g')
-          echo "Using profile: $PROFILE_NAME"
-          
-          cat > /tmp/ExportOptions.plist <<EOF
+          cat > /tmp/ExportOptions.plist << 'PLISTEOF'
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
@@ -78,15 +74,18 @@ workflows:
               <key>provisioningProfiles</key>
               <dict>
                   <key>com.peptidai.app</key>
-                  <string>${PROFILE_NAME}</string>
+                  <string>PeptidAI App Store</string>
               </dict>
               <key>uploadSymbols</key>
               <true/>
           </dict>
           </plist>
-          EOF
+          PLISTEOF
           
+          echo "=== ExportOptions.plist ==="
           cat /tmp/ExportOptions.plist
+          echo "=== Installed profiles ==="
+          ls ~/Library/MobileDevice/Provisioning\ Profiles/ 2>/dev/null
           
           xcodebuild -exportArchive \
             -archivePath ios/App/build/App.xcarchive \
