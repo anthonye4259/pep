@@ -25,6 +25,10 @@ workflows:
       - name: Sync Capacitor
         script: |
           npx cap sync ios
+      - name: Install CocoaPods
+        script: |
+          cd ios/App
+          pod install
       - name: Set bundle ID
         script: |
           cd ios/App
@@ -40,16 +44,19 @@ workflows:
             -configuration Release \
             -sdk iphoneos \
             -archivePath build/App.xcarchive \
-            archive
+            archive \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            DEVELOPMENT_TEAM="$(xcode-project detect-signing --team-id)"
       - name: Export IPA
         script: |
-          cd ios/App
-          xcodebuild -exportArchive \
-            -archivePath build/App.xcarchive \
-            -exportOptionsPlist /Users/builder/export_options.plist \
-            -exportPath build/ipa
+          xcode-project build-ipa \
+            --workspace ios/App/App.xcworkspace \
+            --scheme App \
+            --archive-path ios/App/build/App.xcarchive
     artifacts:
-      - ios/App/build/ipa/*.ipa
+      - build/ios/ipa/*.ipa
+      - ios/App/build/*.ipa
+      - /tmp/xcodebuild_logs/*.log
     publishing:
       app_store_connect:
         api_key: $APP_STORE_CONNECT_PRIVATE_KEY
