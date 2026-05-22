@@ -65,14 +65,9 @@ workflows:
           xcode-project build-ipa \
             --workspace ios/App/App.xcworkspace \
             --scheme App \
-            --archive-path ios/App/build/App.xcarchive \
-            || xcode-project build-ipa \
-              --project ios/App/App.xcodeproj \
-              --scheme App \
-              --archive-path ios/App/build/App.xcarchive
+            --archive-directory ios/App/build
     artifacts:
-      - build/ios/ipa/*.ipa
-      - ios/App/build/*.ipa
+      - ./**/*.ipa
       - /tmp/xcodebuild_logs/*.log
     publishing:
       app_store_connect:
