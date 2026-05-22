@@ -25,10 +25,14 @@ workflows:
       - name: Sync Capacitor
         script: |
           npx cap sync ios
-      - name: Install CocoaPods
+      - name: Check iOS structure
         script: |
-          cd ios/App
-          pod install
+          echo "=== iOS directory ==="
+          ls -la ios/App/
+          echo "=== Looking for workspace ==="
+          find ios -name "*.xcworkspace" -o -name "*.xcodeproj" | head -10
+          echo "=== Podfile check ==="
+          cat ios/App/Podfile 2>/dev/null || echo "No Podfile"
       - name: Set bundle ID
         script: |
           cd ios/App
@@ -39,20 +43,33 @@ workflows:
       - name: Build iOS app
         script: |
           cd ios/App
-          xcodebuild -workspace App.xcworkspace \
-            -scheme App \
-            -configuration Release \
-            -sdk iphoneos \
-            -archivePath build/App.xcarchive \
-            archive \
-            CODE_SIGN_IDENTITY="Apple Distribution" \
-            DEVELOPMENT_TEAM="$(xcode-project detect-signing --team-id)"
+          if [ -d "App.xcworkspace" ]; then
+            echo "Using xcworkspace"
+            xcodebuild -workspace App.xcworkspace \
+              -scheme App \
+              -configuration Release \
+              -sdk iphoneos \
+              -archivePath build/App.xcarchive \
+              archive
+          else
+            echo "Using xcodeproj"
+            xcodebuild -project App.xcodeproj \
+              -scheme App \
+              -configuration Release \
+              -sdk iphoneos \
+              -archivePath build/App.xcarchive \
+              archive
+          fi
       - name: Export IPA
         script: |
           xcode-project build-ipa \
             --workspace ios/App/App.xcworkspace \
             --scheme App \
-            --archive-path ios/App/build/App.xcarchive
+            --archive-path ios/App/build/App.xcarchive \
+            || xcode-project build-ipa \
+              --project ios/App/App.xcodeproj \
+              --scheme App \
+              --archive-path ios/App/build/App.xcarchive
     artifacts:
       - build/ios/ipa/*.ipa
       - ios/App/build/*.ipa
