@@ -9,7 +9,7 @@ workflows:
         bundle_identifier: com.peptidai.app
       vars:
         BUNDLE_ID: "com.peptidai.app"
-      node: 18
+      node: 22
       xcode: latest
       cocoapods: default
     scripts:
