@@ -26,5 +26,4 @@ dist-ssr
 # Capacitor
 ios/
 android/
-*.png
 paywall_screenshot.png
