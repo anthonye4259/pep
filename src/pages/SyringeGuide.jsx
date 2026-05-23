@@ -4,7 +4,7 @@ import { IoArrowBack, IoSave, IoCheckmarkCircle, IoInformationCircleOutline, IoS
 import NeonSyringe from '../components/NeonSyringe';
 import { useApp } from '../context/AppContext';
 
-const DISCLAIMER = 'This is a mathematical visualization tool, not medical advice. Verify all calculations with your healthcare provider before use. You are solely responsible for your dosage decisions.';
+const DISCLAIMER = 'FOR LABORATORY RESEARCH PURPOSES ONLY. NOT FOR HUMAN CONSUMPTION OR MEDICAL USE. This is an informational mathematical visualization tool, not medical advice. Verify all calculations independently. You are solely responsible for your use of this information.';
 
 export default function SyringeGuide() {
   const navigate = useNavigate();
@@ -40,8 +40,8 @@ export default function SyringeGuide() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
         <button className="btn btn-icon btn-secondary" onClick={() => navigate(-1)}><IoArrowBack size={20} /></button>
         <div>
-          <h1 style={{ fontSize: '1.3rem' }}>Dose Calculator</h1>
-          <p className="text-muted text-sm">Reconstitution math visualizer</p>
+          <h1 style={{ fontSize: '1.3rem' }}>Volume Calculator</h1>
+          <p className="text-muted text-sm">Research math visualizer</p>
         </div>
       </div>
 
@@ -61,7 +61,7 @@ export default function SyringeGuide() {
             <input type="number" className="input" placeholder="2" value={waterMl} onChange={e => setWaterMl(e.target.value)} />
           </div>
           <div className="input-group" style={{ marginBottom: 0 }}>
-            <label>Your dose (mcg)</label>
+            <label>Target Amount (mcg)</label>
             <input type="number" className="input" placeholder="250" value={targetMcg} onChange={e => setTargetMcg(e.target.value)} />
           </div>
         </div>
@@ -71,9 +71,9 @@ export default function SyringeGuide() {
       {hasValues && (
         <div className="animate-in">
           {/* Persistent disclaimer above syringe */}
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: '10px 14px', background: '#f8f8f8', borderRadius: 10, marginBottom: 16, border: '1px solid #e5e5e5' }}>
-            <IoInformationCircleOutline size={18} color="#999" style={{ flexShrink: 0, marginTop: 1 }} />
-            <p style={{ fontSize: '0.7rem', color: '#888', lineHeight: 1.5, margin: 0 }}>{DISCLAIMER}</p>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: '10px 14px', background: 'var(--bg-card)', borderRadius: 10, marginBottom: 16, border: '1px solid var(--border)' }}>
+            <IoInformationCircleOutline size={18} color="var(--danger)" style={{ flexShrink: 0, marginTop: 1 }} />
+            <p style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}><strong>{DISCLAIMER}</strong></p>
           </div>
 
           <NeonSyringe peptideMg={Number(peptideMg)} waterMl={Number(waterMl)} targetMcg={Number(targetMcg)} syringeSize={syringeSize} onSyringeChange={setSyringeSize} height={340} />
@@ -83,7 +83,7 @@ export default function SyringeGuide() {
               {saved ? <><IoCheckmarkCircle size={18} /> Saved</> : <><IoSave size={18} /> Save Config</>}
             </button>
             <button className="btn btn-primary" style={{ flex: 1, opacity: logged ? 0.6 : 1 }} onClick={handleLog}>
-              {logged ? <><IoCheckmarkCircle size={18} /> Logged</> : 'Log Entry'}
+              {logged ? <><IoCheckmarkCircle size={18} /> Logged</> : 'Log Record'}
             </button>
           </div>
           <button className="btn btn-secondary btn-full" style={{ marginTop: 10 }} onClick={() => {

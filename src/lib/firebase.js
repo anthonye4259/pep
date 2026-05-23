@@ -18,16 +18,7 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
-// Enable offline persistence — Firestore caches data locally
-// so the app works offline and syncs when reconnected
-enableIndexedDbPersistence(db).catch((err) => {
-  if (err.code === 'failed-precondition') {
-    // Multiple tabs open — persistence can only be enabled in one tab
-    console.warn('Firestore persistence failed: multiple tabs open');
-  } else if (err.code === 'unimplemented') {
-    // Browser doesn't support IndexedDB
-    console.warn('Firestore persistence not available in this browser');
-  }
-});
+// Offline persistence disabled to prevent WKWebView IndexedDB locking issues
+// which causes the login process to hang indefinitely.
 
 export default app;

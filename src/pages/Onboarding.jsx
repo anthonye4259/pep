@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { IoArrowForward, IoShieldCheckmark } from 'react-icons/io5';
 
-const DISCLAIMER = `This app is a mathematical calculation tool for educational visualization purposes only. It does not provide medical advice, diagnosis, or treatment recommendations. All calculations are based entirely on values you manually input. Always consult your healthcare professional or the explicit instructions on your prescription before administering any medication. You assume full responsibility for verifying your dosage accuracy.`;
+const DISCLAIMER = `FOR LABORATORY RESEARCH PURPOSES ONLY. NOT FOR HUMAN CONSUMPTION OR MEDICAL USE. This app is an informational record-keeping and mathematical visualization tool. It does not provide medical advice, diagnosis, or recommendations. You assume full responsibility for verifying all calculations independently.`;
 
 const QUESTIONS = [
   {
@@ -19,7 +19,7 @@ const QUESTIONS = [
   {
     id: 'struggle',
     title: 'What\'s your biggest challenge?',
-    options: ['Calculating the right dose', 'Knowing how much water to add', 'Reading the syringe markings', 'Keeping track of my schedule'],
+    options: ['Calculating the right volume', 'Knowing how much water to add', 'Reading the syringe markings', 'Keeping track of my schedule'],
   },
 ];
 
@@ -114,7 +114,7 @@ export default function Onboarding({ onComplete }) {
         {/* Welcome */}
         {phase === 'welcome' && (
           <>
-            <h1 className="ob-title">Never guess<br />your dose <span className="accent">again.</span></h1>
+            <h1 className="ob-title">Never guess<br />your volume <span className="accent">again.</span></h1>
             <p className="ob-desc">Enter your vial info. We visualize the math on a syringe graphic. You verify and decide.</p>
           </>
         )}
@@ -128,9 +128,9 @@ export default function Onboarding({ onComplete }) {
               <div className="ob-step-item"><div className="ob-step-num">3</div><div className="ob-step-label">Visualize</div></div>
             </div>
             <h1 className="ob-title" style={{ fontSize: '1.5rem' }}>
-              You enter the values.<br />We do the <span style={{ color: '#39ff14' }}>math</span>.
+              You enter the values.<br />We do the <span style={{ color: 'var(--accent)' }}>math</span>.
             </h1>
-            <p className="ob-desc">Enter your vial concentration, water volume, and target dose. The app calculates and shows the result on a syringe graphic.</p>
+            <p className="ob-desc">Enter your container concentration, water volume, and target amount. The app calculates and shows the result on a visual graphic.</p>
           </>
         )}
 
