@@ -25,6 +25,9 @@ workflows:
       - name: Sync Capacitor
         script: |
           npx cap sync ios
+      - name: Generate App Icons
+        script: |
+          npx @capacitor/assets generate --iconBackgroundColor '#FDF1F4' --iconBackgroundColorDark '#FDF1F4' --splashBackgroundColor '#FDF1F4' --splashBackgroundColorDark '#FDF1F4'
       - name: Check iOS structure
         script: |
           echo "=== iOS directory ==="
@@ -33,10 +36,11 @@ workflows:
           find ios -name "*.xcworkspace" -o -name "*.xcodeproj" | head -10
           echo "=== Podfile check ==="
           cat ios/App/Podfile 2>/dev/null || echo "No Podfile"
-      - name: Set bundle ID
+      - name: Configure Xcode Project
         script: |
           cd ios/App
           sed -i '' "s/PRODUCT_BUNDLE_IDENTIFIER = .*;/PRODUCT_BUNDLE_IDENTIFIER = com.peptidai.app;/g" App.xcodeproj/project.pbxproj
+          sed -i '' "s/CURRENT_PROJECT_VERSION = 1;/CURRENT_PROJECT_VERSION = $BUILD_NUMBER;/g" App.xcodeproj/project.pbxproj
       - name: Set up code signing
         script: |
           xcode-project use-profiles
