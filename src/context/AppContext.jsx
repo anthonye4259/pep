@@ -3,6 +3,7 @@ import { auth, db } from '../lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { collection, doc, setDoc, deleteDoc, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { App as CapApp } from '@capacitor/app';
+import { Purchases } from '@revenuecat/purchases-capacitor';
 
 const AppContext = createContext();
 
@@ -19,6 +20,13 @@ export function AppProvider({ children }) {
   });
   const [journal, setJournal] = useState([]);
   const [userProfile, setUserProfile] = useState(null);
+
+  // Initialize RevenueCat
+  useEffect(() => {
+    const rcKey = import.meta.env.VITE_REVENUECAT_APPLE_KEY || "appl_REPLACE_ME_WHEN_READY";
+    try { Purchases.configure({ apiKey: rcKey }); } 
+    catch (e) { console.warn('RevenueCat config warning', e); }
+  }, []);
 
   // Listen for Deep Links (Referrals and Templates)
   useEffect(() => {
@@ -138,7 +146,21 @@ export function AppProvider({ children }) {
   }
 
   function completeOnboarding(answers) { setAppState(prev => ({ ...prev, step: 'auth', onboardingAnswers: answers })); }
-  function completeAuth(user) { setAppState(prev => ({ ...prev, step: 'paywall', user: { uid: user.uid, email: user.email, displayName: user.displayName } })); }
+  
+  async function completeAuth(user) { 
+    try {
+      await Purchases.logIn({ appUserID: user.uid });
+      const info = await Purchases.getCustomerInfo();
+      if (info.customerInfo.entitlements.active['premium']) {
+        // Bypass paywall if active subscription exists
+        setAppState(prev => ({ ...prev, step: 'app', user: { uid: user.uid, email: user.email, displayName: user.displayName } }));
+        return;
+      }
+    } catch (e) { console.error('RevenueCat Login Error:', e); }
+    
+    setAppState(prev => ({ ...prev, step: 'paywall', user: { uid: user.uid, email: user.email, displayName: user.displayName } })); 
+  }
+  
   function completePaywall() { setAppState(prev => ({ ...prev, step: 'app' })); }
   function resetApp() {
     localStorage.removeItem('peptidai_app_state');

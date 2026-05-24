@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
-import { IoFlask, IoCheckmarkCircle, IoStar, IoPeople, IoTime } from 'react-icons/io5';
 import { fetchAndActivate, getBoolean } from 'firebase/remote-config';
 import { remoteConfig } from '../lib/firebase';
 import { AppReview } from '@capawesome/capacitor-app-review';
+import { Purchases } from '@revenuecat/purchases-capacitor';
 
 const plans = [
   { id: 'weekly', name: 'Weekly', price: '$3.99', period: '/week', desc: 'Flexible, cancel anytime', badge: null },
@@ -46,9 +45,61 @@ export default function Paywall({ onSubscribe }) {
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
 
-  function handleSubscribe() {
+  async function handleSubscribe() {
     setLoading(true);
-    setTimeout(() => onSubscribe(selected), 1200);
+    try {
+      // 1. Fetch RevenueCat Offerings
+      const offerings = await Purchases.getOfferings();
+      const current = offerings.current;
+      
+      if (current && current.availablePackages.length > 0) {
+        // Find the package matching selected (annual vs weekly)
+        const pkgToBuy = selected === 'annual' 
+          ? current.availablePackages.find(p => p.packageType === 'ANNUAL') 
+          : current.availablePackages.find(p => p.packageType === 'WEEKLY');
+        
+        if (pkgToBuy) {
+          // 2. Trigger Native Apple Pay Sheet
+          const result = await Purchases.purchasePackage({ package: pkgToBuy });
+          
+          // 3. Verify Entitlement
+          if (result.customerInfo.entitlements.active['premium']) {
+            onSubscribe(selected);
+          } else {
+            alert('Purchase completed but premium entitlement not found.');
+          }
+        } else {
+          throw new Error('Selected package not configured in RevenueCat.');
+        }
+      } else {
+        throw new Error('No offerings configured in RevenueCat.');
+      }
+    } catch (err) {
+      console.error('RevenueCat Purchase Error:', err);
+      // DEV FALLBACK: If RevenueCat is not fully setup yet in Apple Developer Account, bypass for testing.
+      if (!err.userCancelled) {
+         if (window.confirm('Development Mode: RevenueCat is not fully configured yet. Bypass payment to test the app?')) {
+            onSubscribe(selected);
+         }
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleRestore() {
+    try {
+      const info = await Purchases.restorePurchases();
+      if (info.customerInfo.entitlements.active['premium']) {
+        alert('Purchases restored successfully!');
+        onSubscribe(selected);
+      } else {
+        alert('No active subscriptions found for this Apple ID.');
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Failed to restore purchases.');
+    }
   }
 
   return (
@@ -117,7 +168,7 @@ export default function Paywall({ onSubscribe }) {
             {loading ? <span className="spinner" /> : 'Subscribe & Unlock Pro'}
           </button>
           <p className="paywall-trial-note">{selected === 'annual' ? '$99.99/year' : '$3.99/week'}. Cancel anytime.</p>
-          <button className="paywall-restore" onClick={() => alert('No active subscriptions found.')}>Restore Purchases</button>
+          <button className="paywall-restore" onClick={handleRestore}>Restore Purchases</button>
         </div>
 
         <div className="paywall-legal">
