@@ -13,8 +13,10 @@ import Settings from './pages/Settings';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import ReconstitutionGuide from './pages/ReconstitutionGuide';
+import Journal from './pages/Journal';
+import Referrals from './pages/Referrals';
 
-const HIDE_NAV = ['/guide', '/privacy', '/terms', '/settings', '/reconstitution-guide'];
+const HIDE_NAV = ['/guide', '/privacy', '/terms', '/settings', '/reconstitution-guide', '/referrals'];
 
 function AppShell() {
   const { appState, completeOnboarding, completeAuth, completePaywall } = useApp();
@@ -38,6 +40,8 @@ function AppShell() {
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/reconstitution-guide" element={<ReconstitutionGuide />} />
+        <Route path="/journal" element={<Journal />} />
+        <Route path="/referrals" element={<Referrals />} />
       </Routes>
 
       {!hideNav && (
@@ -53,6 +57,9 @@ function AppShell() {
           </NavLink>
           <NavLink to="/vials" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
             {({ isActive }) => (<><span className="nav-icon">{isActive ? <IoFlask size={24} /> : <IoFlaskOutline size={24} />}</span><span>My Vials</span></>)}
+          </NavLink>
+          <NavLink to="/journal" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+            {({ isActive }) => (<><span className="nav-icon">{isActive ? <div style={{fontWeight: 'bold', fontSize: 24}}>J</div> : <div style={{fontSize: 24}}>J</div>}</span><span>Journal</span></>)}
           </NavLink>
         </nav>
       )}

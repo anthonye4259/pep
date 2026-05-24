@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { IoChevronBack, IoChevronForward, IoFlaskOutline, IoAdd, IoClose, IoNotifications } from 'react-icons/io5';
+import { IoChevronBack, IoChevronForward, IoFlaskOutline, IoAdd, IoClose, IoNotifications, IoShareSocialOutline, IoCameraOutline } from 'react-icons/io5';
 import { useApp } from '../context/AppContext';
+import ShareGraphic from '../components/ShareGraphic';
+import { Share } from '@capacitor/share';
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const SCHEDULE_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -10,6 +12,7 @@ export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showAddSchedule, setShowAddSchedule] = useState(false);
   const [scheduleForm, setScheduleForm] = useState({ peptideName: '', days: [], time: '08:00' });
+  const [showGraphic, setShowGraphic] = useState(false);
   const today = new Date();
 
   const year = currentDate.getFullYear();
@@ -57,11 +60,26 @@ export default function Calendar() {
     setShowAddSchedule(false);
   }
 
+  async function shareProtocol(s) {
+    const data = btoa(JSON.stringify({ peptideName: s.peptideName, days: s.days, time: s.time }));
+    const url = `peptidai://template?data=${data}`;
+    try {
+      await Share.share({ title: 'Protocol Template', text: `Try my ${s.peptideName} protocol on PeptidAI!`, url });
+    } catch (e) {
+      console.error('Share error', e);
+    }
+  }
+
   return (
     <div className="page">
-      <div className="page-header">
-        <h1>Calendar</h1>
-        <p>Schedule & history</p>
+      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <h1>Calendar</h1>
+          <p>Schedule & history</p>
+        </div>
+        <button className="btn btn-secondary btn-sm" onClick={() => setShowGraphic(true)} style={{ padding: '6px 12px' }}>
+          <IoCameraOutline size={18} style={{ marginRight: 6 }} /> Export to Story
+        </button>
       </div>
 
       <div className="card" style={{ marginBottom: 20 }}>
@@ -110,7 +128,10 @@ export default function Calendar() {
                 <div className="vial-name">{s.peptideName}</div>
                 <div className="vial-detail">{s.days.join(', ')} at {s.time}</div>
               </div>
-              <button className="btn btn-icon btn-sm" style={{ background: 'none', border: 'none', color: '#999' }} onClick={() => deleteSchedule(s.id)}><IoClose size={18} /></button>
+              <div style={{ display: 'flex', gap: 4 }}>
+                <button className="btn btn-icon btn-sm" style={{ background: 'none', border: 'none', color: '#ec4899' }} onClick={() => shareProtocol(s)}><IoShareSocialOutline size={18} /></button>
+                <button className="btn btn-icon btn-sm" style={{ background: 'none', border: 'none', color: '#999' }} onClick={() => deleteSchedule(s.id)}><IoClose size={18} /></button>
+              </div>
             </div>
           ))
         )}
@@ -163,6 +184,15 @@ export default function Calendar() {
             <button className="btn btn-primary btn-full" onClick={handleAddSchedule} style={{ marginTop: 8 }}>Save Schedule</button>
           </div>
         </div>
+      )}
+
+      {showGraphic && (
+        <ShareGraphic 
+          title="My Protocol Stack" 
+          subtitle="Weekly Routine" 
+          items={schedules.map(s => ({ title: s.peptideName, value: s.days.join(', ') }))} 
+          onClose={() => setShowGraphic(false)} 
+        />
       )}
     </div>
   );

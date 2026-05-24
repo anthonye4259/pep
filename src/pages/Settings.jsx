@@ -89,6 +89,15 @@ export default function Settings() {
 
       <p style={{ textAlign: 'center', fontSize: '0.7rem', color: '#ccc', marginTop: 20 }}>PeptidAI v1.0.0</p>
 
+      <div className="settings-group">
+        <Link to="/referrals" className="settings-item">
+          <div>
+            <span style={{ fontWeight: 600, color: '#ec4899' }}>Refer a Friend (Get 1 Month Free)</span>
+          </div>
+          <IoChevronForward color="#999" />
+        </Link>
+      </div>
+
       {/* Delete confirmation */}
       {showDelete && (
         <div className="modal-overlay" onClick={() => setShowDelete(false)}>

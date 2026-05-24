@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { IoFlask } from 'react-icons/io5';
-import { auth } from '../lib/firebase';
+import { auth, db } from '../lib/firebase';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 
 export default function Auth({ onAuth }) {
   const [mode, setMode] = useState('signup');
@@ -20,6 +21,19 @@ export default function Auth({ onAuth }) {
       if (mode === 'signup') {
         userCred = await createUserWithEmailAndPassword(auth, email, password);
         if (name) await updateProfile(userCred.user, { displayName: name });
+        
+        // Track Referral
+        const inviteCode = localStorage.getItem('peptidai_invite_code');
+        if (inviteCode) {
+          try {
+            await setDoc(doc(db, 'users', userCred.user.uid), {
+              referredBy: inviteCode,
+              createdAt: new Date().toISOString()
+            }, { merge: true });
+          } catch (e) {
+            console.error('Failed to log referral', e);
+          }
+        }
       } else {
         userCred = await signInWithEmailAndPassword(auth, email, password);
       }

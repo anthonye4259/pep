@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import { auth, db } from '../lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { collection, doc, setDoc, deleteDoc, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { App as CapApp } from '@capacitor/app';
 
 const AppContext = createContext();
 
@@ -16,6 +17,39 @@ export function AppProvider({ children }) {
   const [schedules, setSchedules] = useState(() => {
     try { return JSON.parse(localStorage.getItem('peptidai_schedules') || '[]'); } catch { return []; }
   });
+  const [journal, setJournal] = useState([]);
+
+  // Listen for Deep Links (Referrals and Templates)
+  useEffect(() => {
+    const listener = CapApp.addListener('appUrlOpen', (event) => {
+      try {
+        const url = new URL(event.url);
+        if (url.protocol === 'peptidai:') {
+          if (url.host === 'invite') {
+            const code = url.searchParams.get('code');
+            if (code) {
+              localStorage.setItem('peptidai_invite_code', code);
+              alert('Invite code applied!');
+            }
+          } else if (url.host === 'template') {
+            const data = url.searchParams.get('data');
+            if (data) {
+              const decoded = JSON.parse(atob(data));
+              if (window.confirm(`Import Protocol Template: ${decoded.name || 'Custom Protocol'}?`)) {
+                saveSchedule({ ...decoded, id: Date.now().toString() });
+                alert('Protocol imported successfully!');
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.error('Deep link error', e);
+      }
+    });
+    return () => {
+      listener.then(l => l.remove());
+    };
+  }, []);
 
   // Persist app state
   useEffect(() => {
@@ -32,17 +66,25 @@ export function AppProvider({ children }) {
     return unsub;
   }, [appState.step]);
 
-  // Listen to vials from Firestore
+  // Listen to vials and journal from Firestore
   useEffect(() => {
     if (!appState.user?.uid) return;
+    
+    // Vials
     const vialsRef = collection(db, 'users', appState.user.uid, 'vials');
-    const q = query(vialsRef, orderBy('updatedAt', 'desc'));
-    const unsub = onSnapshot(q, (snap) => {
+    const qVials = query(vialsRef, orderBy('updatedAt', 'desc'));
+    const unsubVials = onSnapshot(qVials, (snap) => {
       setVials(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-    }, (err) => {
-      console.error('Firestore vials error:', err);
-    });
-    return unsub;
+    }, (err) => console.error('Firestore vials error:', err));
+    
+    // Journal
+    const journalRef = collection(db, 'users', appState.user.uid, 'journal');
+    const qJournal = query(journalRef, orderBy('date', 'desc'));
+    const unsubJournal = onSnapshot(qJournal, (snap) => {
+      setJournal(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    }, (err) => console.error('Firestore journal error:', err));
+
+    return () => { unsubVials(); unsubJournal(); };
   }, [appState.user?.uid]);
 
   async function saveVial(vialData) {
@@ -75,6 +117,12 @@ export function AppProvider({ children }) {
     });
   }
 
+  async function saveJournalEntry(entry) {
+    if (!appState.user?.uid) return;
+    const docRef = doc(db, 'users', appState.user.uid, 'journal', entry.date);
+    await setDoc(docRef, { ...entry, updatedAt: new Date().toISOString() }, { merge: true });
+  }
+
   function completeOnboarding() { setAppState(prev => ({ ...prev, step: 'auth' })); }
   function completeAuth(user) { setAppState(prev => ({ ...prev, step: 'paywall', user: { uid: user.uid, email: user.email, displayName: user.displayName } })); }
   function completePaywall() { setAppState(prev => ({ ...prev, step: 'app' })); }
@@ -88,8 +136,8 @@ export function AppProvider({ children }) {
 
   return (
     <AppContext.Provider value={{
-      appState, vials, schedules,
-      saveVial, deleteVial, saveSchedule, deleteSchedule,
+      appState, vials, schedules, journal,
+      saveVial, deleteVial, saveSchedule, deleteSchedule, saveJournalEntry,
       completeOnboarding, completeAuth, completePaywall, resetApp,
     }}>
       {children}
