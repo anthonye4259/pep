@@ -4,12 +4,23 @@ import { IoPersonCircleOutline, IoChevronForward, IoLogOutOutline, IoTrashOutlin
 import { auth } from '../lib/firebase';
 import { signOut, deleteUser } from 'firebase/auth';
 import { useApp } from '../context/AppContext';
+import { Purchases } from '@revenuecat/purchases-capacitor';
+import { useEffect } from 'react';
 
 export default function Settings() {
   const navigate = useNavigate();
   const { appState, resetApp } = useApp();
   const [showDelete, setShowDelete] = useState(false);
+  const [manageUrl, setManageUrl] = useState('https://apps.apple.com/account/subscriptions');
   const user = appState.user;
+
+  useEffect(() => {
+    Purchases.getCustomerInfo().then(info => {
+      if (info.customerInfo.managementURL) {
+        setManageUrl(info.customerInfo.managementURL);
+      }
+    }).catch(e => console.error(e));
+  }, []);
 
   async function handleSignOut() {
     await signOut(auth);
@@ -30,7 +41,7 @@ export default function Settings() {
   }
 
   const menuItems = [
-    { label: 'Manage Subscription', icon: IoCardOutline, action: () => window.open('https://apps.apple.com/account/subscriptions', '_blank') },
+    { label: 'Manage Subscription', icon: IoCardOutline, action: () => window.open(manageUrl, '_blank') },
     { label: 'Reconstitution Guide', icon: IoHelpCircleOutline, action: () => navigate('/reconstitution-guide') },
     { label: 'Privacy Policy', icon: IoShieldCheckmarkOutline, action: () => navigate('/privacy') },
     { label: 'Terms of Service', icon: IoDocumentTextOutline, action: () => navigate('/terms') },
