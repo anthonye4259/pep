@@ -3,8 +3,11 @@ import { IoCheckmarkCircle, IoSparkles, IoLockClosed } from 'react-icons/io5';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';
+import Onboarding from './Onboarding';
 
 export default function WebFunnel() {
+  const [funnelStep, setFunnelStep] = useState('quiz');
+  const [quizAnswers, setQuizAnswers] = useState(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -12,6 +15,11 @@ export default function WebFunnel() {
 
   // REPLACE THIS WITH YOUR REAL STRIPE PAYMENT LINK
   const STRIPE_LINK = 'https://buy.stripe.com/test_YOUR_LINK_HERE';
+
+  function handleQuizComplete(answers) {
+    setQuizAnswers(answers);
+    setFunnelStep('checkout');
+  }
 
   async function handleCheckout(e) {
     e.preventDefault();
@@ -23,9 +31,10 @@ export default function WebFunnel() {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       const uid = cred.user.uid;
 
-      // 2. Save basic profile data
+      // 2. Save basic profile data and quiz answers
       await setDoc(doc(db, 'users', uid), {
         email,
+        onboardingAnswers: quizAnswers,
         source: 'web_stripe_funnel',
         createdAt: new Date().toISOString()
       }, { merge: true });
@@ -37,6 +46,10 @@ export default function WebFunnel() {
       setError(err.message);
       setLoading(false);
     }
+  }
+
+  if (funnelStep === 'quiz') {
+    return <Onboarding onComplete={handleQuizComplete} />;
   }
 
   return (
