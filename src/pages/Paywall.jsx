@@ -5,7 +5,7 @@ import { Purchases } from '@revenuecat/purchases-capacitor';
 
 const plans = [
   { id: 'weekly', name: 'Weekly', price: '$3.99', period: '/week', desc: 'Flexible, cancel anytime', badge: null },
-  { id: 'monthly', name: 'Monthly', price: '$12.99', period: '/mo', desc: 'Standard subscription', badge: null },
+  { id: 'monthly', name: 'Monthly', price: '$9.99', period: '/mo', desc: 'Standard subscription', badge: null },
   { id: 'annual', name: 'Annual', price: '$99.99', period: '/year', desc: 'Save 52% vs weekly', badge: 'BEST VALUE' },
   { id: 'lifetime', name: 'Lifetime', price: '$249.99', period: ' once', desc: 'Pay once, own forever', badge: 'ULTIMATE' },
 ];
@@ -177,7 +177,7 @@ export default function Paywall({ onSubscribe }) {
             {loading ? <span className="spinner" /> : 'Subscribe & Unlock Pro'}
           </button>
           <p className="paywall-trial-note">
-            {selected === 'annual' ? '$99.99/year' : selected === 'monthly' ? '$12.99/month' : selected === 'lifetime' ? '$249.99 once' : '$3.99/week'}. {selected !== 'lifetime' && 'Cancel anytime.'}
+            {selected === 'annual' ? '$99.99/year' : selected === 'monthly' ? '$9.99/month' : selected === 'lifetime' ? '$249.99 once' : '$3.99/week'}. {selected !== 'lifetime' && 'Cancel anytime.'}
           </p>
           <button className="paywall-restore" onClick={handleRestore}>Restore Purchases</button>
         </div>
