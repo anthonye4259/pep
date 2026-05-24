@@ -64,25 +64,35 @@ export default function Home() {
       <div
         className={`scan-hero ${scanning ? 'camera-active' : ''}`}
         onClick={() => !scanning && fileInputRef.current?.click()}
+        style={{ 
+          background: 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)', 
+          border: 'none',
+          boxShadow: '0 20px 40px rgba(236,72,153,0.3)',
+          color: 'white',
+          position: 'relative',
+          overflow: 'hidden'
+        }}
       >
+        {/* Subtle shimmer effect */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)', transform: 'skewX(-20deg) translateX(-150%)', animation: 'shimmer 3s infinite' }} />
+
         {scanning ? (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
-            <div className="spinner" style={{ width: 32, height: 32, borderColor: '#e5e5e5', borderTopColor: '#1a1a1a' }} />
-            <span style={{ fontWeight: 600, color: '#1a1a1a' }}>Analyzing vial label...</span>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, position: 'relative', zIndex: 2 }}>
+            <div className="spinner" style={{ width: 36, height: 36, borderColor: 'rgba(255,255,255,0.3)', borderTopColor: '#ffffff' }} />
+            <span style={{ fontWeight: 700, color: '#ffffff', fontSize: '1.1rem', letterSpacing: 0.5 }}>AI Analyzing Label...</span>
           </div>
         ) : (
-          <>
-            <div className="scan-corners">
-              <div className="scan-corner tl" /><div className="scan-corner tr" />
-              <div className="scan-corner bl" /><div className="scan-corner br" />
+          <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.2)', width: 80, height: 80, borderRadius: 40, marginBottom: 16 }}>
+               <IoCameraOutline size={48} color="white" />
             </div>
-            <IoCameraOutline className="scan-hero-icon" size={48} />
-            <div className="scan-hero-text">Snap Your Vial Label</div>
-            <div className="scan-hero-sub">AI extracts the peptide name & concentration</div>
-          </>
+            <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'white', marginBottom: 6 }}>Tap to Auto-Scan</div>
+            <div style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.9)', fontWeight: 500 }}>Our AI extracts the math instantly</div>
+          </div>
         )}
         <input ref={fileInputRef} type="file" accept="image/*" capture="environment" style={{ display: 'none' }} onChange={handleCapture} />
       </div>
+      <style>{`@keyframes shimmer { 100% { transform: skewX(-20deg) translateX(150%); } }`}</style>
 
       <button className="btn btn-secondary btn-full mt-12" onClick={() => navigate('/guide')} style={{ gap: 8 }}>
         <IoCreateOutline size={18} /> Enter manually
