@@ -6,6 +6,7 @@ import { Purchases } from '@revenuecat/purchases-capacitor';
 const plans = [
   { id: 'weekly', name: 'Weekly', price: '$3.99', period: '/week', desc: 'Flexible, cancel anytime', badge: null },
   { id: 'annual', name: 'Annual', price: '$99.99', period: '/year', desc: 'Save 52% vs weekly', badge: 'BEST VALUE' },
+  { id: 'lifetime', name: 'Lifetime', price: '$249.99', period: ' once', desc: 'Pay once, own forever', badge: 'ULTIMATE' },
 ];
 
 const features = [
@@ -53,10 +54,15 @@ export default function Paywall({ onSubscribe }) {
       const current = offerings.current;
       
       if (current && current.availablePackages.length > 0) {
-        // Find the package matching selected (annual vs weekly)
-        const pkgToBuy = selected === 'annual' 
-          ? current.availablePackages.find(p => p.packageType === 'ANNUAL') 
-          : current.availablePackages.find(p => p.packageType === 'WEEKLY');
+        // Find the package matching selected (annual vs weekly vs lifetime)
+        let pkgToBuy;
+        if (selected === 'annual') {
+          pkgToBuy = current.availablePackages.find(p => p.packageType === 'ANNUAL');
+        } else if (selected === 'lifetime') {
+          pkgToBuy = current.availablePackages.find(p => p.packageType === 'LIFETIME');
+        } else {
+          pkgToBuy = current.availablePackages.find(p => p.packageType === 'WEEKLY');
+        }
         
         if (pkgToBuy) {
           // 2. Trigger Native Apple Pay Sheet
@@ -167,7 +173,9 @@ export default function Paywall({ onSubscribe }) {
           <button className={`btn btn-full paywall-cta ${loading ? 'loading' : ''}`} onClick={handleSubscribe} disabled={loading}>
             {loading ? <span className="spinner" /> : 'Subscribe & Unlock Pro'}
           </button>
-          <p className="paywall-trial-note">{selected === 'annual' ? '$99.99/year' : '$3.99/week'}. Cancel anytime.</p>
+          <p className="paywall-trial-note">
+            {selected === 'annual' ? '$99.99/year' : selected === 'lifetime' ? '$249.99 once' : '$3.99/week'}. {selected !== 'lifetime' && 'Cancel anytime.'}
+          </p>
           <button className="paywall-restore" onClick={handleRestore}>Restore Purchases</button>
         </div>
 
