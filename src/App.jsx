@@ -16,8 +16,9 @@ import ReconstitutionGuide from './pages/ReconstitutionGuide';
 import Journal from './pages/Journal';
 import Referrals from './pages/Referrals';
 import MyPlan from './pages/MyPlan';
+import WebFunnel from './pages/WebFunnel';
 
-const HIDE_NAV = ['/guide', '/privacy', '/terms', '/settings', '/reconstitution-guide', '/referrals'];
+const HIDE_NAV = ['/guide', '/privacy', '/terms', '/settings', '/reconstitution-guide', '/referrals', '/web-funnel'];
 
 function AppShell() {
   const { appState, completeOnboarding, completeAuth, completePaywall } = useApp();
@@ -33,6 +34,7 @@ function AppShell() {
     <div className="app-layout">
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/web-funnel" element={<WebFunnel />} />
         <Route path="/plan" element={<MyPlan />} />
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/library" element={<Library />} />
