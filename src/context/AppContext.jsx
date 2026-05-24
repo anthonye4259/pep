@@ -18,6 +18,7 @@ export function AppProvider({ children }) {
     try { return JSON.parse(localStorage.getItem('peptidai_schedules') || '[]'); } catch { return []; }
   });
   const [journal, setJournal] = useState([]);
+  const [userProfile, setUserProfile] = useState(null);
 
   // Listen for Deep Links (Referrals and Templates)
   useEffect(() => {
@@ -84,7 +85,14 @@ export function AppProvider({ children }) {
       setJournal(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     }, (err) => console.error('Firestore journal error:', err));
 
-    return () => { unsubVials(); unsubJournal(); };
+    // User Profile (for usage limits and protocol)
+    const profileRef = doc(db, 'users', appState.user.uid);
+    const unsubProfile = onSnapshot(profileRef, (docSnap) => {
+      if (docSnap.exists()) setUserProfile(docSnap.data());
+      else setUserProfile({});
+    }, (err) => console.error('Firestore profile error:', err));
+
+    return () => { unsubVials(); unsubJournal(); unsubProfile(); };
   }, [appState.user?.uid]);
 
   async function saveVial(vialData) {
@@ -123,7 +131,13 @@ export function AppProvider({ children }) {
     await setDoc(docRef, { ...entry, updatedAt: new Date().toISOString() }, { merge: true });
   }
 
-  function completeOnboarding() { setAppState(prev => ({ ...prev, step: 'auth' })); }
+  async function updateProfileData(data) {
+    if (!appState.user?.uid) return;
+    const profileRef = doc(db, 'users', appState.user.uid);
+    await setDoc(profileRef, data, { merge: true });
+  }
+
+  function completeOnboarding(answers) { setAppState(prev => ({ ...prev, step: 'auth', onboardingAnswers: answers })); }
   function completeAuth(user) { setAppState(prev => ({ ...prev, step: 'paywall', user: { uid: user.uid, email: user.email, displayName: user.displayName } })); }
   function completePaywall() { setAppState(prev => ({ ...prev, step: 'app' })); }
   function resetApp() {
@@ -136,8 +150,8 @@ export function AppProvider({ children }) {
 
   return (
     <AppContext.Provider value={{
-      appState, vials, schedules, journal,
-      saveVial, deleteVial, saveSchedule, deleteSchedule, saveJournalEntry,
+      appState, vials, schedules, journal, userProfile,
+      saveVial, deleteVial, saveSchedule, deleteSchedule, saveJournalEntry, updateProfileData,
       completeOnboarding, completeAuth, completePaywall, resetApp,
     }}>
       {children}

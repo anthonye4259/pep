@@ -50,3 +50,38 @@ Example response: {"peptideName": "Tirzepatide", "peptideMg": 10}`
     targetMcg: '',
   };
 }
+
+export async function generateProtocol(answers) {
+  const prompt = `You are a world-class longevity and wellness AI coach. Generate a highly personalized 30-day health protocol based on the following user data:
+Goals: ${answers.goal || 'General wellness'}
+Sleep: ${answers.sleep || 'Average'}
+Energy: ${answers.energy || 'Average'}
+Interested Peptides: ${(answers.peptides || []).join(', ') || 'None specified'}
+
+Return a strict JSON object with this exact structure:
+{
+  "summary": "A 2-sentence encouraging summary of their path forward.",
+  "focusAreas": ["area 1", "area 2", "area 3"],
+  "dailyRoutine": [
+    { "time": "Morning", "action": "Take..." },
+    { "time": "Evening", "action": "Do..." }
+  ],
+  "safetyNote": "A brief reminder that this is for research and they should consult a doctor."
+}`;
+
+  const response = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.3, maxOutputTokens: 600 }
+    })
+  });
+  
+  if (!response.ok) throw new Error('Gemini API error');
+  const data = await response.json();
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) throw new Error('Could not parse protocol data');
+  return JSON.parse(jsonMatch[0]);
+}

@@ -76,7 +76,7 @@ export default function Onboarding({ onComplete }) {
       setBuildProgress(prev => {
         if (prev >= 100) {
           clearInterval(progressInterval);
-          setTimeout(() => onComplete(), 800);
+          setTimeout(() => onComplete(answers), 800);
           return 100;
         }
         return prev + 1;
