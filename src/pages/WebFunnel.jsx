@@ -4,17 +4,27 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import Onboarding from './Onboarding';
+import { useEffect } from 'react';
 
 export default function WebFunnel() {
-  const [funnelStep, setFunnelStep] = useState('quiz');
+  const [funnelStep, setFunnelStep] = useState('quiz'); // quiz, checkout, pricing
   const [quizAnswers, setQuizAnswers] = useState(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [uid, setUid] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // REPLACE THIS WITH YOUR REAL STRIPE PAYMENT LINK
-  const STRIPE_LINK = 'https://buy.stripe.com/7sYcMXcqPcId6Kg27w73G0a';
+  useEffect(() => {
+    // Inject Stripe Pricing Table script
+    const script = document.createElement('script');
+    script.src = 'https://js.stripe.com/v3/pricing-table.js';
+    script.async = true;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   function handleQuizComplete(answers) {
     setQuizAnswers(answers);
@@ -39,8 +49,8 @@ export default function WebFunnel() {
         createdAt: new Date().toISOString()
       }, { merge: true });
 
-      // 3. Redirect to Stripe, passing the UID so RevenueCat can unlock the app later
-      window.location.href = `${STRIPE_LINK}?client_reference_id=${uid}`;
+      setUid(uid);
+      setFunnelStep('pricing');
     } catch (err) {
       console.error(err);
       setError(err.message);
@@ -50,6 +60,22 @@ export default function WebFunnel() {
 
   if (funnelStep === 'quiz') {
     return <Onboarding onComplete={handleQuizComplete} />;
+  }
+
+  if (funnelStep === 'pricing') {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#fff', padding: '40px 20px' }}>
+        <h2 style={{ textAlign: 'center', marginBottom: 20, color: '#1a1a1a', fontWeight: 800 }}>Choose Your Plan</h2>
+        <p style={{ textAlign: 'center', marginBottom: 40, color: '#666' }}>Your custom protocol is securely saved to your account.</p>
+        <stripe-pricing-table 
+          pricing-table-id="prctbl_1Tagch06I3eFkRUmLUHyPyhs"
+          publishable-key="pk_live_51Rfsym06I3eFkRUmipmmgFo6bqX8Al08OhJZm1N6b6UvO6ZnLUDuhOQpNNaSeJlbFAmETOt64P6oRMboXLsnm3tJ00ClGq74Lv"
+          client-reference-id={uid}
+          customer-email={email}
+        >
+        </stripe-pricing-table>
+      </div>
+    );
   }
 
   return (
