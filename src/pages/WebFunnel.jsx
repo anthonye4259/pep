@@ -14,7 +14,7 @@ export default function WebFunnel() {
   const [error, setError] = useState('');
 
   // REPLACE THIS WITH YOUR REAL STRIPE PAYMENT LINK
-  const STRIPE_LINK = 'https://buy.stripe.com/test_YOUR_LINK_HERE';
+  const STRIPE_LINK = 'https://buy.stripe.com/7sYcMXcqPcId6Kg27w73G0a';
 
   function handleQuizComplete(answers) {
     setQuizAnswers(answers);
