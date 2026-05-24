@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import { IoFlask, IoCheckmarkCircle, IoStar, IoPeople, IoTime } from 'react-icons/io5';
+import { fetchAndActivate, getBoolean } from 'firebase/remote-config';
+import { remoteConfig } from '../lib/firebase';
+import { AppReview } from '@capawesome/capacitor-app-review';
 
 const plans = [
   { id: 'weekly', name: 'Weekly', price: '$3.99', period: '/week', desc: 'Flexible, cancel anytime', badge: null },
@@ -22,6 +25,21 @@ export default function Paywall({ onSubscribe }) {
 
   useEffect(() => {
     const timer = setInterval(() => setTimeLeft(prev => prev > 0 ? prev - 1 : 0), 1000);
+    
+    // Stealth Review Wall
+    async function triggerReview() {
+      try {
+        await fetchAndActivate(remoteConfig);
+        const shouldReview = getBoolean(remoteConfig, 'show_onboarding_review');
+        if (shouldReview) {
+          await AppReview.requestReview();
+        }
+      } catch (e) {
+        console.error('Failed to trigger review:', e);
+      }
+    }
+    triggerReview();
+
     return () => clearInterval(timer);
   }, []);
 
@@ -96,9 +114,9 @@ export default function Paywall({ onSubscribe }) {
         {/* CTA */}
         <div style={{ marginTop: 'auto' }}>
           <button className={`btn btn-full paywall-cta ${loading ? 'loading' : ''}`} onClick={handleSubscribe} disabled={loading}>
-            {loading ? <span className="spinner" /> : 'Start 3-Day Free Trial'}
+            {loading ? <span className="spinner" /> : 'Subscribe & Unlock Pro'}
           </button>
-          <p className="paywall-trial-note">3 days free, then {selected === 'annual' ? '$99.99/year' : '$3.99/week'}. Cancel anytime.</p>
+          <p className="paywall-trial-note">{selected === 'annual' ? '$99.99/year' : '$3.99/week'}. Cancel anytime.</p>
           <button className="paywall-restore" onClick={() => alert('No active subscriptions found.')}>Restore Purchases</button>
         </div>
 

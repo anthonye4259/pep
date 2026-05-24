@@ -13,7 +13,7 @@ export default function Referrals() {
     try {
       await Share.share({
         title: 'Join PeptidAI',
-        text: 'I use PeptidAI to track my wellness protocols. Use my code to get 1 month of Premium free!',
+        text: 'I use PeptidAI to track my wellness protocols. Use my code to join the community!',
         url: url,
         dialogTitle: 'Share Invite Link'
       });
@@ -50,8 +50,7 @@ export default function Referrals() {
         <h3 style={{ fontSize: '1rem', marginBottom: 12 }}>How it works</h3>
         <ul style={{ paddingLeft: 20, color: '#666', lineHeight: 1.6, margin: 0 }}>
           <li>Share your unique code or link with a friend.</li>
-          <li>When they sign up and start a trial, they get 1 month of Premium for free.</li>
-          <li>We'll automatically add 1 month of Premium to your account!</li>
+          <li>When they sign up and pay for their first month, you both get 1 month of Premium!</li>
         </ul>
       </div>
     </div>

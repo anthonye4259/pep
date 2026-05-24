@@ -3,6 +3,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore';
+import { getRemoteConfig } from 'firebase/remote-config';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyCyNKg9JF4GQ-PPLJ0M4o3iUB4n9w_q_CQ",
@@ -17,6 +18,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+export const remoteConfig = getRemoteConfig(app);
+// Set fetch interval to 1 hour (default is 12)
+remoteConfig.settings.minimumFetchIntervalMillis = 3600000;
 
 // Offline persistence disabled to prevent WKWebView IndexedDB locking issues
 // which causes the login process to hang indefinitely.
