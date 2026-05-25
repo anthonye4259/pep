@@ -148,17 +148,25 @@ export function AppProvider({ children }) {
   function completeOnboarding(answers) { setAppState(prev => ({ ...prev, step: 'auth', onboardingAnswers: answers })); }
   
   async function completeAuth(user) { 
+    const userData = { uid: user.uid, email: user.email, displayName: user.displayName };
     try {
-      await Purchases.logIn({ appUserID: user.uid });
-      const info = await Purchases.getCustomerInfo();
-      if (info.customerInfo.entitlements.active['premium']) {
+      // Race RevenueCat against a 5-second timeout so the app never hangs
+      const rcResult = await Promise.race([
+        (async () => {
+          await Purchases.logIn({ appUserID: user.uid });
+          return await Purchases.getCustomerInfo();
+        })(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('RC timeout')), 5000))
+      ]);
+      const active = rcResult.customerInfo.entitlements.active;
+      if (active['premium'] || active['peptid ai Premium']) {
         // Bypass paywall if active subscription exists
-        setAppState(prev => ({ ...prev, step: 'app', user: { uid: user.uid, email: user.email, displayName: user.displayName } }));
+        setAppState(prev => ({ ...prev, step: 'app', user: userData }));
         return;
       }
-    } catch (e) { console.error('RevenueCat Login Error:', e); }
+    } catch (e) { console.warn('RevenueCat check skipped:', e.message); }
     
-    setAppState(prev => ({ ...prev, step: 'paywall', user: { uid: user.uid, email: user.email, displayName: user.displayName } })); 
+    setAppState(prev => ({ ...prev, step: 'paywall', user: userData })); 
   }
   
   function completePaywall() { setAppState(prev => ({ ...prev, step: 'app' })); }
