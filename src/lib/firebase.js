@@ -1,8 +1,8 @@
 // Firebase configuration — REPLACE with your real config from Firebase Console
 // Go to: console.firebase.google.com → Project Settings → General → Your apps → Web app
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore';
+import { initializeAuth, browserLocalPersistence } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 import { getRemoteConfig } from 'firebase/remote-config';
 
 const firebaseConfig = {
@@ -16,13 +16,17 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+
+// CRITICAL: Use browserLocalPersistence (localStorage) instead of the default
+// indexedDBLocalPersistence. IndexedDB deadlocks in WKWebView on iOS/iPadOS,
+// causing signIn and createUser to hang indefinitely.
+export const auth = initializeAuth(app, {
+  persistence: browserLocalPersistence,
+});
+
 export const db = getFirestore(app);
 export const remoteConfig = getRemoteConfig(app);
 // Set fetch interval to 1 hour (default is 12)
 remoteConfig.settings.minimumFetchIntervalMillis = 3600000;
-
-// Offline persistence disabled to prevent WKWebView IndexedDB locking issues
-// which causes the login process to hang indefinitely.
 
 export default app;

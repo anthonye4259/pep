@@ -17,26 +17,36 @@ export default function Auth({ onAuth }) {
     setError('');
     setLoading(true);
     try {
-      let userCred;
-      if (mode === 'signup') {
-        userCred = await createUserWithEmailAndPassword(auth, email, password);
-        if (name) await updateProfile(userCred.user, { displayName: name });
-        
-        // Track Referral
-        const inviteCode = localStorage.getItem('peptidai_invite_code');
-        if (inviteCode) {
-          try {
-            await setDoc(doc(db, 'users', userCred.user.uid), {
-              referredBy: inviteCode,
-              createdAt: new Date().toISOString()
-            }, { merge: true });
-          } catch (e) {
-            console.error('Failed to log referral', e);
+      // Race auth against a 10-second timeout so the app NEVER hangs
+      const authPromise = (async () => {
+        let userCred;
+        if (mode === 'signup') {
+          userCred = await createUserWithEmailAndPassword(auth, email, password);
+          if (name) await updateProfile(userCred.user, { displayName: name });
+          
+          // Track Referral
+          const inviteCode = localStorage.getItem('peptidai_invite_code');
+          if (inviteCode) {
+            try {
+              await setDoc(doc(db, 'users', userCred.user.uid), {
+                referredBy: inviteCode,
+                createdAt: new Date().toISOString()
+              }, { merge: true });
+            } catch (e) {
+              console.error('Failed to log referral', e);
+            }
           }
+        } else {
+          userCred = await signInWithEmailAndPassword(auth, email, password);
         }
-      } else {
-        userCred = await signInWithEmailAndPassword(auth, email, password);
-      }
+        return userCred;
+      })();
+      
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Connection timed out. Please check your internet connection and try again.')), 10000)
+      );
+      
+      const userCred = await Promise.race([authPromise, timeoutPromise]);
       onAuth(userCred.user);
     } catch (err) {
       setError(err.message.replace('Firebase: ', '').replace(/\(auth\/.*\)/, '').trim());
