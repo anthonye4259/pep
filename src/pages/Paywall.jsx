@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+import { IoFlask, IoPeople, IoStar, IoTime, IoCheckmarkCircle } from 'react-icons/io5';
 import { fetchAndActivate, getBoolean } from 'firebase/remote-config';
 import { remoteConfig } from '../lib/firebase';
 import { AppReview } from '@capawesome/capacitor-app-review';
