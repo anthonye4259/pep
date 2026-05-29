@@ -87,11 +87,8 @@ export default function Paywall({ onSubscribe }) {
       }
     } catch (err) {
       console.error('RevenueCat Purchase Error:', err);
-      // DEV FALLBACK: If RevenueCat is not fully setup yet in Apple Developer Account, bypass for testing.
       if (!err.userCancelled) {
-         if (window.confirm('Development Mode: RevenueCat is not fully configured yet. Bypass payment to test the app?')) {
-            onSubscribe(selected);
-         }
+         alert(`Purchase failed: ${err.message}. Please ensure In-App Purchases are configured in App Store Connect.`);
       }
     } finally {
       setLoading(false);
@@ -187,7 +184,9 @@ export default function Paywall({ onSubscribe }) {
         <div className="paywall-legal">
           <p>Payment will be charged at confirmation. Subscription auto-renews unless canceled 24h before period end.</p>
           <p style={{ marginTop: 8 }}>
-            <a href="/privacy" style={{ color: 'rgba(255,255,255,0.4)' }}>Privacy Policy</a> · <a href="/terms" style={{ color: 'rgba(255,255,255,0.4)' }}>Terms of Service</a>
+            <span onClick={() => window.open('https://www.apple.com/legal/internet-services/itunes/dev/stdeula/', '_blank')} style={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'underline', cursor: 'pointer' }}>Terms of Use (EULA)</span>
+            {' · '}
+            <span onClick={() => window.open('https://peptidai.com/privacy', '_blank')} style={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'underline', cursor: 'pointer' }}>Privacy Policy</span>
           </p>
         </div>
       </div>
