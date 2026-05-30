@@ -71,7 +71,7 @@ export default function Paywall({ onSubscribe }) {
         
         if (pkgToBuy) {
           // 2. Trigger Native Apple Pay Sheet
-          const result = await Purchases.purchasePackage({ package: pkgToBuy });
+          const result = await Purchases.purchasePackage({ aPackage: pkgToBuy });
           
           // 3. Verify Entitlement
           if (result.customerInfo.entitlements.active['premium']) {
