@@ -74,7 +74,8 @@ export default function Paywall({ onSubscribe }) {
           const result = await Purchases.purchasePackage({ aPackage: pkgToBuy });
           
           // 3. Verify Entitlement
-          if (result.customerInfo.entitlements.active['premium']) {
+          const activeEntitlements = result.customerInfo.entitlements.active;
+          if (activeEntitlements['premium'] || activeEntitlements['peptid ai Premium'] || Object.keys(activeEntitlements).length > 0) {
             onSubscribe(selected);
           } else {
             alert('Purchase completed but premium entitlement not found.');
@@ -98,7 +99,8 @@ export default function Paywall({ onSubscribe }) {
   async function handleRestore() {
     try {
       const info = await Purchases.restorePurchases();
-      if (info.customerInfo.entitlements.active['premium']) {
+      const activeEntitlements = info.customerInfo.entitlements.active;
+      if (activeEntitlements['premium'] || activeEntitlements['peptid ai Premium'] || Object.keys(activeEntitlements).length > 0) {
         alert('Purchases restored successfully!');
         onSubscribe(selected);
       } else {
