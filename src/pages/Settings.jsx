@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { IoPersonCircleOutline, IoChevronForward, IoLogOutOutline, IoTrashOutline, IoShieldCheckmarkOutline, IoDocumentTextOutline, IoMailOutline, IoCardOutline, IoHelpCircleOutline } from 'react-icons/io5';
 import { auth } from '../lib/firebase';
 import { signOut, deleteUser } from 'firebase/auth';
 import { useApp } from '../context/AppContext';
 import { Purchases } from '@revenuecat/purchases-capacitor';
-import { useEffect } from 'react';
+import { Capacitor } from '@capacitor/core';
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -15,11 +15,13 @@ export default function Settings() {
   const user = appState.user;
 
   useEffect(() => {
-    Purchases.getCustomerInfo().then(info => {
-      if (info.customerInfo.managementURL) {
-        setManageUrl(info.customerInfo.managementURL);
-      }
-    }).catch(e => console.error(e));
+    if (Capacitor.isNativePlatform()) {
+      Purchases.getCustomerInfo().then(info => {
+        if (info?.customerInfo?.managementURL) {
+          setManageUrl(info.customerInfo.managementURL);
+        }
+      }).catch(e => console.error('RC CustomerInfo error:', e));
+    }
   }, []);
 
   async function handleSignOut() {
