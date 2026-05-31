@@ -40,7 +40,7 @@ export default function MyPlan() {
     if (lastGen) {
       const diffDays = (now - new Date(lastGen)) / (1000 * 60 * 60 * 24);
       if (diffDays < 14) {
-        alert('Your AI Tutor is currently monitoring your progress on this protocol. Please complete 14 days of data logging before requesting a new synthesis.');
+        alert('Your AI Tutor is currently monitoring your progress on this plan. Please complete 14 days of data logging before requesting a new synthesis.');
         return;
       }
     }
@@ -52,7 +52,7 @@ export default function MyPlan() {
     return (
       <div className="page" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
         <div className="spinner" style={{ width: 40, height: 40, borderColor: '#fce7f3', borderTopColor: '#ec4899', marginBottom: 20 }} />
-        <h2 style={{ fontSize: '1.2rem', color: '#1a1a1a', fontWeight: 700 }}>Synthesizing your Protocol...</h2>
+        <h2 style={{ fontSize: '1.2rem', color: '#1a1a1a', fontWeight: 700 }}>Synthesizing your Plan...</h2>
         <p style={{ color: '#999', fontSize: '0.9rem', marginTop: 8 }}>Gemini AI is analyzing your goals.</p>
       </div>
     );
@@ -76,7 +76,7 @@ export default function MyPlan() {
           <h1 style={{ fontSize: '1.8rem', display: 'flex', alignItems: 'center', gap: 8 }}>
             AI Health Plan <IoSparkles color="#ec4899" size={24} />
           </h1>
-          <p style={{ color: '#ec4899', fontWeight: 600, fontSize: '0.9rem' }}>Hyper-Personalized 30-Day Protocol</p>
+          <p style={{ color: '#ec4899', fontWeight: 600, fontSize: '0.9rem' }}>Hyper-Personalized 30-Day Research Plan</p>
         </div>
         <button onClick={handleRegenerate} style={{ background: 'transparent', border: 'none', color: '#999', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <IoRefreshCircle size={28} />

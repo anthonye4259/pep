@@ -21,7 +21,7 @@ export default function Calendar() {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const monthName = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
 
-  // Build injection map
+  // Build log map
   const injectionDays = new Set();
   (vials || []).forEach(v => {
     if (v.lastInjected) {
@@ -64,7 +64,7 @@ export default function Calendar() {
     const data = btoa(JSON.stringify({ peptideName: s.peptideName, days: s.days, time: s.time }));
     const url = `peptidai://template?data=${data}`;
     try {
-      await Share.share({ title: 'Protocol Template', text: `Try my ${s.peptideName} protocol on PeptidAI!`, url });
+      await Share.share({ title: 'Protocol Template', text: `Try my ${s.peptideName} routine on PeptidAI!`, url });
     } catch (e) {
       console.error('Share error', e);
     }
@@ -148,7 +148,7 @@ export default function Calendar() {
               <div className="vial-icon"><IoFlaskOutline size={20} /></div>
               <div className="vial-info">
                 <div className="vial-name">{v.peptideName}</div>
-                <div className="vial-detail">{v.targetMcg}mcg — {new Date(v.lastInjected).toLocaleDateString()} {new Date(v.lastInjected).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                <div className="vial-detail">{v.targetMcg}mcg — {new Date(v.lastInjected).toLocaleDateString()} {new Date(v.lastInjected).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} — Last recorded</div>
               </div>
             </div>
           ))
@@ -162,7 +162,7 @@ export default function Calendar() {
             <h2 style={{ marginBottom: 20 }}>Add Schedule</h2>
             <div className="input-group">
               <label>Peptide Name</label>
-              <input type="text" className="input" placeholder="e.g. BPC-157" value={scheduleForm.peptideName} onChange={e => setScheduleForm({ ...scheduleForm, peptideName: e.target.value })} />
+              <input type="text" className="input" placeholder="e.g. Compound A" value={scheduleForm.peptideName} onChange={e => setScheduleForm({ ...scheduleForm, peptideName: e.target.value })} />
             </div>
             <div className="input-group">
               <label>Days</label>

@@ -40,7 +40,7 @@ export default function SyringeGuide() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
         <button className="btn btn-icon btn-secondary" onClick={() => navigate(-1)}><IoArrowBack size={20} /></button>
         <div>
-          <h1 style={{ fontSize: '1.3rem' }}>Volume Calculator</h1>
+          <h1 style={{ fontSize: '1.3rem' }}>Research Volume Calculator</h1>
           <p className="text-muted text-sm">Research math visualizer</p>
         </div>
       </div>
@@ -49,7 +49,7 @@ export default function SyringeGuide() {
       <div className="card" style={{ marginBottom: 20 }}>
         <div className="input-group">
           <label>Peptide Name (your label)</label>
-          <input type="text" className="input" placeholder="e.g. Tirzepatide" value={peptideName} onChange={e => setPeptideName(e.target.value)} />
+          <input type="text" className="input" placeholder="e.g. Compound A" value={peptideName} onChange={e => setPeptideName(e.target.value)} />
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
           <div className="input-group" style={{ marginBottom: 0 }}>
@@ -87,7 +87,7 @@ export default function SyringeGuide() {
             </button>
           </div>
           <button className="btn btn-secondary btn-full" style={{ marginTop: 10 }} onClick={() => {
-            const text = `📊 PeptidAI Calculation\n${peptideName || 'Peptide'} | ${peptideMg}mg vial + ${waterMl}mL water\nTarget: ${targetMcg}mcg → Result: ${((Number(targetMcg) / ((Number(peptideMg) * 1000) / Number(waterMl))) * (syringeSize === 'u100' ? 100 : syringeSize === 'u50' ? 50 : 30)).toFixed(1)} units\n\nCalculated with PeptidAI`;
+            const text = `📊 PeptidAI Research Calculation\n${peptideName || 'Peptide'} | ${peptideMg}mg vial + ${waterMl}mL water\nTarget: ${targetMcg}mcg → Result: ${((Number(targetMcg) / ((Number(peptideMg) * 1000) / Number(waterMl))) * (syringeSize === 'u100' ? 100 : syringeSize === 'u50' ? 50 : 30)).toFixed(1)} units\n\nCalculated with PeptidAI`;
             if (navigator.share) { navigator.share({ text }); } else { navigator.clipboard.writeText(text); alert('Copied to clipboard!'); }
           }}><IoShareOutline size={18} /> Share Calculation</button>
         </div>

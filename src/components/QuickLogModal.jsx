@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext';
 import { peptideDatabase } from '../data/peptides';
 import { IoClose, IoCheckmark } from 'react-icons/io5';
 
-const INJECTION_SITES = ['Left Abdomen', 'Right Abdomen', 'Left Thigh', 'Right Thigh', 'Left Delt', 'Right Delt', 'Left Glute', 'Right Glute'];
+const INJECTION_SITES = ['Left Abdomen', 'Right Abdomen', 'Left Thigh', 'Right Thigh', 'Left Deltoid', 'Right Deltoid', 'Left Glute', 'Right Glute'];
 
 export default function QuickLogModal({ onClose }) {
   const { state, dispatch } = useApp();
@@ -46,7 +46,7 @@ export default function QuickLogModal({ onClose }) {
     <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="modal">
         <div className="modal-header">
-          <h2>Log Dose</h2>
+          <h2>Log Entry</h2>
           <button className="modal-close" onClick={onClose}><IoClose size={20} /></button>
         </div>
 
@@ -72,7 +72,7 @@ export default function QuickLogModal({ onClose }) {
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
           <div className="input-group">
-            <label>Dose (mcg)</label>
+            <label>Amount (mcg)</label>
             <input className="input" type="number" value={doseMcg} onChange={e => setDoseMcg(e.target.value)} placeholder="250" />
           </div>
           <div className="input-group">
@@ -87,7 +87,7 @@ export default function QuickLogModal({ onClose }) {
         </div>
 
         <div className="input-group">
-          <label>Injection Site</label>
+          <label>Application Area</label>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
             {INJECTION_SITES.map(s => (
               <button key={s} className={`category-chip ${site === s ? 'active' : ''}`}
@@ -105,7 +105,7 @@ export default function QuickLogModal({ onClose }) {
         </div>
 
         <button className="btn btn-primary btn-full" onClick={handleLog} disabled={!peptideId || !doseMcg}>
-          Log Dose <IoCheckmark size={16} style={{ marginLeft: 4 }} />
+          Log Entry <IoCheckmark size={16} style={{ marginLeft: 4 }} />
         </button>
       </div>
     </div>

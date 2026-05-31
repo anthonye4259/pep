@@ -62,7 +62,7 @@ export default function Auth({ onAuth }) {
         <h1 style={{ fontSize: '1.5rem', marginTop: 12 }}>
           Peptid<span className="text-neon">AI</span>
         </h1>
-        <p className="text-muted text-sm" style={{ marginTop: 4 }}>Never guess your dose again</p>
+        <p className="text-muted text-sm" style={{ marginTop: 4 }}>Never guess your amounts again</p>
       </div>
 
       <div className="auth-card">

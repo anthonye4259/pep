@@ -5,7 +5,7 @@ const steps = [
   {
     icon: IoMedkit,
     title: '1. Gather Your Supplies',
-    items: ['Your peptide vial (freeze-dried powder)', 'Bacteriostatic water (BAC water)', 'Insulin syringe(s)', 'Alcohol swabs'],
+    items: ['Your peptide vial (freeze-dried powder)', 'Bacteriostatic water (BAC water)', 'Syringe(s) for reconstitution', 'Alcohol swabs'],
   },
   {
     icon: IoHandLeft,
@@ -18,8 +18,8 @@ const steps = [
     items: [
       'Using a fresh syringe, draw your chosen amount of BAC water',
       'Common amounts: 1mL, 2mL, or 3mL',
-      'More water = lower concentration = easier to measure small doses',
-      'Less water = higher concentration = fewer injections needed',
+      'More water = lower concentration = easier to measure small amounts',
+      'Less water = higher concentration = fewer draws needed',
     ],
   },
   {
@@ -35,9 +35,9 @@ const steps = [
 ];
 
 const waterGuide = [
-  { water: '1 mL', concentration: '5,000 mcg/mL', pros: 'Fewer injections, less volume', cons: 'Harder to measure tiny doses' },
+  { water: '1 mL', concentration: '5,000 mcg/mL', pros: 'Fewer draws, less volume', cons: 'Harder to measure small amounts' },
   { water: '2 mL', concentration: '2,500 mcg/mL', pros: 'Good balance of precision and volume', cons: 'Most popular choice' },
-  { water: '3 mL', concentration: '1,667 mcg/mL', pros: 'Easiest to measure small doses', cons: 'More liquid per injection' },
+  { water: '3 mL', concentration: '1,667 mcg/mL', pros: 'Easiest to measure small amounts', cons: 'More liquid per draw' },
 ];
 
 export default function ReconstitutionGuide() {
@@ -54,7 +54,7 @@ export default function ReconstitutionGuide() {
       </div>
 
       <div style={{ padding: '12px 16px', background: '#fff8e1', borderRadius: 12, marginBottom: 24, fontSize: '0.8rem', color: '#8d6e00', lineHeight: 1.6 }}>
-        <strong>Educational information only.</strong> Always follow the instructions from your healthcare provider or prescriber. This is not medical advice.
+        <strong>For research and educational purposes only.</strong> Always verify all calculations independently. This is not medical advice.
       </div>
 
       {steps.map((step, i) => (
@@ -105,7 +105,7 @@ export default function ReconstitutionGuide() {
           </div>
         </div>
         <div style={{ marginTop: 16, fontSize: '0.82rem', color: '#555', lineHeight: 1.6 }}>
-          <strong>Example:</strong> If your target dose is 2.5mg, that equals 2,500mcg. In the calculator, enter <strong>2500</strong> in the "Your dose (mcg)" field.
+          <strong>Example:</strong> If your target amount is 2.5mg, that equals 2,500mcg. In the calculator, enter <strong>2500</strong> in the "Target amount (mcg)" field.
         </div>
       </div>
     </div>

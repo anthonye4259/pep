@@ -19,7 +19,7 @@ export default function Terms() {
         <p><strong>PeptidAI is a mathematical calculation and visualization tool for educational purposes only.</strong> The App performs arithmetic operations based entirely on values that you, the user, manually input. The App does not:</p>
         <ul style={{ paddingLeft: 20, marginTop: 8 }}>
           <li>Provide medical advice, diagnosis, or treatment</li>
-          <li>Recommend dosages, medications, or protocols</li>
+          <li>Recommend amounts, treatments, or regimens</li>
           <li>Serve as a substitute for professional medical guidance</li>
           <li>Qualify as a medical device under FDA regulations</li>
         </ul>

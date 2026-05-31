@@ -35,7 +35,7 @@ export default function MyVials() {
                 <div className="vial-info">
                   <div className="vial-name">{vial.peptideName}</div>
                   <div className="vial-detail">
-                    {vial.peptideMg}mg / {vial.waterMl}mL BAC / {vial.targetMcg}mcg dose
+                    {vial.peptideMg}mg / {vial.waterMl}mL BAC / {vial.targetMcg}mcg target
                   </div>
                   {vial.lastInjected && (
                     <div className="vial-injected">

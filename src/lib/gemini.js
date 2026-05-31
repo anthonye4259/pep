@@ -16,11 +16,11 @@ export async function extractVialLabel(base64Image) {
           },
           {
             text: `Analyze this peptide vial label image. Extract the following information and return ONLY a JSON object with these fields:
-- peptideName: the name of the peptide (e.g. "Tirzepatide", "BPC-157", "Semaglutide")
-- peptideMg: the total milligrams of peptide in the vial as a number (e.g. 10, 5, 15)
+- peptideName: the name of the compound on the label
+- peptideMg: the total milligrams of compound in the vial as a number (e.g. 10, 5, 15)
 
 If you cannot determine a value, set it to null. Return ONLY the JSON object, no other text.
-Example response: {"peptideName": "Tirzepatide", "peptideMg": 10}`
+Example response: {"peptideName": "Compound X", "peptideMg": 10}`
           }
         ]
       }],
@@ -52,11 +52,11 @@ Example response: {"peptideName": "Tirzepatide", "peptideMg": 10}`
 }
 
 export async function generateProtocol(answers) {
-  const prompt = `You are a world-class longevity and wellness AI coach. Generate a highly personalized 30-day health protocol based on the following user data:
+  const prompt = `You are a wellness and research education AI coach. Generate a personalized 30-day research plan based on the following user data:
 Goals: ${answers.goal || 'General wellness'}
 Sleep: ${answers.sleep || 'Average'}
 Energy: ${answers.energy || 'Average'}
-Interested Peptides: ${(answers.peptides || []).join(', ') || 'None specified'}
+Interested Compounds: ${(answers.peptides || []).join(', ') || 'None specified'}
 
 Return a strict JSON object with this exact structure:
 {
@@ -66,8 +66,9 @@ Return a strict JSON object with this exact structure:
     { "time": "Morning", "action": "Take..." },
     { "time": "Evening", "action": "Do..." }
   ],
-  "safetyNote": "A brief reminder that this is for research and they should consult a doctor."
+  "safetyNote": "A brief reminder that this is for research purposes only and is not medical advice."
 }`;
+
 
   const response = await fetch(API_URL, {
     method: 'POST',

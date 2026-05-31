@@ -10,9 +10,9 @@ const TUTORIAL_STEPS = [
     desc: 'Our intelligent scanner instantly extracts the peptide name, mass, and concentration.'
   },
   {
-    title: 'Never guess your dose.\nSee the exact math.',
+    title: 'Never guess your amounts.\nSee the exact math.',
     icon: <IoColorFillOutline size={100} color="#ec4899" />,
-    desc: 'We calculate the volume and display it on an interactive, visual syringe guide.'
+    desc: 'We calculate the volume and display it on an interactive visual guide.'
   },
   {
     title: 'Track your body\'s\ntransformation day by day.',
@@ -41,15 +41,15 @@ const QUESTIONS = [
     id: 'peptides',
     title: 'Which compounds are you researching?',
     subtitle: 'Select all that apply',
-    options: ['Semaglutide / Tirzepatide', 'BPC-157 / TB-500', 'CJC-1295 / Ipamorelin', 'NAD+ / Glutathione', 'Other'],
+    options: ['Weight Management Compounds', 'Recovery & Repair Compounds', 'Growth Hormone Peptides', 'Cellular Health Compounds', 'Other'],
     multi: true,
   }
 ];
 
 const BUILD_STEPS = [
   'Analyzing your goals & sleep data...',
-  'Generating your 30-Day Protocol...',
-  'Personalizing your AI Tutor...',
+  'Building your 30-Day Plan...',
+  'Personalizing your experience...',
   'Locking in your custom dashboard...',
   'Almost ready...'
 ];
@@ -234,7 +234,7 @@ export default function Onboarding({ onComplete }) {
         {phase === 'building' && (
           <div className="animate-in" style={{ width: '100%', maxWidth: 320, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
             <div style={{ width: 120, height: 120, border: '4px solid #fff5f8', borderTopColor: '#ec4899', borderRadius: '50%', animation: 'spin 1s linear infinite', marginBottom: 40 }} />
-            <h1 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: 32, color: '#1a1a1a' }}>Generating Protocol...</h1>
+            <h1 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: 32, color: '#1a1a1a' }}>Building Your Plan...</h1>
             <div style={{ width: '100%', height: 8, background: '#f0f0f0', borderRadius: 4, overflow: 'hidden', marginBottom: 24 }}>
               <div style={{ width: `${buildProgress}%`, height: '100%', background: 'linear-gradient(90deg, #ec4899, #8b5cf6)', borderRadius: 4, transition: 'width 0.15s ease' }} />
             </div>

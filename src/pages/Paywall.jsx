@@ -121,7 +121,7 @@ export default function Paywall({ onSubscribe }) {
           <h1 style={{ fontSize: '1.8rem', marginBottom: 4, color: 'white' }}>
             Peptid<span style={{ fontWeight: 800 }}>AI</span> Pro
           </h1>
-          <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.6)' }}>Your personal dose calculator</p>
+          <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.6)' }}>Your reconstitution math tool</p>
         </div>
 
         {/* Social proof */}
