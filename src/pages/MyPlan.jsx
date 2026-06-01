@@ -99,7 +99,7 @@ export default function MyPlan() {
 
       {protocol.inventoryAdvice && (
         <div style={{ background: 'var(--bg-card)', padding: 16, borderRadius: 12, marginBottom: 32, border: '1px solid var(--border)' }}>
-          <h4 style={{ fontSize: '0.9rem', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: 8 }}>📦 Inventory Forecast</h4>
+          <h4 style={{ fontSize: '0.9rem', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: 8 }}>Inventory Forecast</h4>
           <p style={{ fontSize: '0.9rem', color: 'var(--text)', lineHeight: 1.5 }}>{protocol.inventoryAdvice}</p>
         </div>
       )}

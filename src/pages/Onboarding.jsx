@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { IoArrowForward, IoShieldCheckmark, IoScanOutline, IoColorFillOutline, IoTrendingUpOutline, IoWatchOutline } from 'react-icons/io5';
+import { IoArrowForward, IoShieldCheckmark, IoScanOutline, IoColorFillOutline, IoTrendingUpOutline, IoWatchOutline, IoCheckmark } from 'react-icons/io5';
 import { useApp } from '../context/AppContext';
 
 const DISCLAIMER = `FOR LABORATORY RESEARCH PURPOSES ONLY. NOT FOR HUMAN CONSUMPTION OR MEDICAL USE. This app is an informational record-keeping and mathematical visualization tool. It does not provide medical advice, diagnosis, or recommendations. You assume full responsibility for verifying all calculations independently.`;
@@ -198,7 +198,7 @@ export default function Onboarding({ onComplete }) {
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         color: 'white', fontSize: '0.8rem', fontWeight: 700,
                       }}>
-                        {isSelected && '✓'}
+                        {isSelected && <IoCheckmark size={16} />}
                       </div>
                     )}
                     {opt}

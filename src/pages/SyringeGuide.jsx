@@ -87,7 +87,7 @@ export default function SyringeGuide() {
             </button>
           </div>
           <button className="btn btn-secondary btn-full" style={{ marginTop: 10 }} onClick={() => {
-            const text = `📊 PeptidAI Research Calculation\n${peptideName || 'Peptide'} | ${peptideMg}mg vial + ${waterMl}mL water\nTarget: ${targetMcg}mcg → Result: ${((Number(targetMcg) / ((Number(peptideMg) * 1000) / Number(waterMl))) * (syringeSize === 'u100' ? 100 : syringeSize === 'u50' ? 50 : 30)).toFixed(1)} units\n\nCalculated with PeptidAI`;
+            const text = `PeptidAI Research Calculation\n${peptideName || 'Peptide'} | ${peptideMg}mg vial + ${waterMl}mL water\nTarget: ${targetMcg}mcg → Result: ${((Number(targetMcg) / ((Number(peptideMg) * 1000) / Number(waterMl))) * (syringeSize === 'u100' ? 100 : syringeSize === 'u50' ? 50 : 30)).toFixed(1)} units\n\nCalculated with PeptidAI`;
             if (navigator.share) { navigator.share({ text }); } else { navigator.clipboard.writeText(text); alert('Copied to clipboard!'); }
           }}><IoShareOutline size={18} /> Share Calculation</button>
         </div>
