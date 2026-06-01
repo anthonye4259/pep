@@ -1,16 +1,21 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useApp } from '../context/AppContext';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { IoAdd, IoClose, IoFlashOutline, IoFitnessOutline, IoMoonOutline, IoWatchOutline } from 'react-icons/io5';
+import { IoAdd, IoClose, IoFlashOutline, IoFitnessOutline, IoMoonOutline, IoWatchOutline, IoFlameOutline } from 'react-icons/io5';
 
 export default function Journal() {
   const { journal, saveJournalEntry, syncAppleHealth } = useApp();
   const [showLog, setShowLog] = useState(false);
-  const [form, setForm] = useState({ date: new Date().toISOString().split('T')[0], energy: 5, sleep: 5, recovery: 5, notes: '' });
+  const [form, setForm] = useState({ date: new Date().toISOString().split('T')[0], energy: 5, sleep: 5, recovery: 5, notes: '', rawSleep: null, rawEnergy: null });
   const [syncing, setSyncing] = useState(false);
 
   // Format data for chart
   const data = [...journal].sort((a, b) => new Date(a.date) - new Date(b.date));
+  
+  // Find latest biometrics
+  const latestEntry = useMemo(() => {
+    return data.slice().reverse().find(entry => entry.rawSleep !== undefined && entry.rawSleep !== null);
+  }, [data]);
 
   async function handleHealthSync() {
     setSyncing(true);
@@ -19,7 +24,9 @@ export default function Journal() {
       setForm(prev => ({ 
         ...prev, 
         sleep: result.sleepRating, 
-        notes: prev.notes + (prev.notes ? '\n' : '') + `Auto-synced: ${result.sleepHours} hrs sleep.` 
+        rawSleep: result.sleepHours,
+        rawEnergy: result.activeCalories,
+        notes: prev.notes + (prev.notes ? '\n' : '') + `Auto-synced from Apple Watch.` 
       }));
     } else {
       alert('Could not sync Apple Health data. Please check permissions.');
@@ -30,7 +37,7 @@ export default function Journal() {
   function handleSave() {
     saveJournalEntry(form);
     setShowLog(false);
-    setForm({ date: new Date().toISOString().split('T')[0], energy: 5, sleep: 5, recovery: 5, notes: '' });
+    setForm({ date: new Date().toISOString().split('T')[0], energy: 5, sleep: 5, recovery: 5, notes: '', rawSleep: null, rawEnergy: null });
   }
 
   return (
@@ -46,6 +53,37 @@ export default function Journal() {
           <IoAdd size={18} style={{ marginRight: 6 }} /> Log
         </button>
       </div>
+
+      {/* Apple Health Biometrics Dashboard */}
+      {latestEntry && (
+        <div className="card" style={{ marginBottom: 20, background: 'linear-gradient(135deg, #fffafa, #fff0f5)', border: '1px solid #ffe4e1' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+            <IoWatchOutline size={20} color="var(--accent)" />
+            <h2 style={{ fontSize: '1rem', margin: 0, color: '#1a1a1a' }}>Apple Health Insights</h2>
+          </div>
+          <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: -12, marginBottom: 16 }}>Latest Sync: {new Date(latestEntry.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</p>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div style={{ background: 'white', padding: 16, borderRadius: 16, boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--text-muted)', marginBottom: 8 }}>
+                <IoMoonOutline size={16} /> <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Sleep</span>
+              </div>
+              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#1a1a1a' }}>
+                {latestEntry.rawSleep} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 500 }}>hrs</span>
+              </div>
+            </div>
+            
+            <div style={{ background: 'white', padding: 16, borderRadius: 16, boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--success)', marginBottom: 8 }}>
+                <IoFlameOutline size={16} /> <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Activity</span>
+              </div>
+              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#1a1a1a' }}>
+                {latestEntry.rawEnergy} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 500 }}>kcal</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="card" style={{ marginBottom: 20 }}>
         <h2 style={{ fontSize: '1.1rem', marginBottom: 16 }}>30-Day Trends</h2>
@@ -80,10 +118,16 @@ export default function Journal() {
             <div style={{ fontWeight: 600, marginBottom: 8, color: 'var(--text)' }}>
                {new Date(entry.date + 'T12:00:00').toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
             </div>
-            <div style={{ display: 'flex', gap: 12, fontSize: '0.85rem', marginBottom: entry.notes ? 8 : 0 }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, fontSize: '0.85rem', marginBottom: entry.notes ? 8 : 0 }}>
               <span style={{ color: 'var(--accent)', fontWeight: 500 }}>Energy: {entry.energy}/10</span>
               <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}>Sleep: {entry.sleep}/10</span>
               <span style={{ color: 'var(--success)', fontWeight: 500 }}>Recovery: {entry.recovery}/10</span>
+              {entry.rawSleep && (
+                <span style={{ color: '#1a1a1a', fontWeight: 600, background: '#f5f5f5', padding: '2px 8px', borderRadius: 12 }}>
+                  <IoWatchOutline style={{ verticalAlign: 'middle', marginRight: 4 }}/>
+                  {entry.rawSleep}h • {entry.rawEnergy}kcal
+                </span>
+              )}
             </div>
             {entry.notes && (
               <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.4, whiteSpace: 'pre-wrap' }}>
@@ -96,7 +140,7 @@ export default function Journal() {
 
       {showLog && (
         <div className="modal-overlay" onClick={() => setShowLog(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 100, display: 'flex', alignItems: 'flex-end' }}>
-          <div className="modal" onClick={e => e.stopPropagation()} style={{ background: 'var(--bg)', width: '100%', padding: 24, paddingBottom: 'calc(24px + env(safe-area-inset-bottom))', borderRadius: '24px 24px 0 0' }}>
+          <div className="modal" onClick={e => e.stopPropagation()} style={{ background: 'var(--bg)', width: '100%', padding: 24, paddingBottom: 'calc(24px + env(safe-area-inset-bottom))', borderRadius: '24px 24px 0 0', maxHeight: '90vh', overflowY: 'auto' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
               <h2 style={{ margin: 0 }}>Daily Check-In</h2>
               <button className="btn btn-icon btn-sm" style={{ background: 'none', border: 'none', color: 'var(--text-muted)' }} onClick={() => setShowLog(false)}><IoClose size={24} /></button>
@@ -106,9 +150,9 @@ export default function Journal() {
               type="button" 
               onClick={handleHealthSync} 
               disabled={syncing}
-              style={{ width: '100%', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: 14, borderRadius: 12, background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600, cursor: 'pointer' }}>
-              <IoWatchOutline size={20} color="var(--accent)" />
-              {syncing ? 'Syncing...' : 'Sync Apple Watch Sleep'}
+              style={{ width: '100%', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: 14, borderRadius: 12, background: form.rawSleep ? 'var(--bg)' : 'var(--bg-card)', border: '1px solid var(--border)', color: form.rawSleep ? 'var(--success)' : 'var(--text)', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}>
+              <IoWatchOutline size={20} color={form.rawSleep ? 'var(--success)' : 'var(--accent)'} />
+              {syncing ? 'Syncing...' : form.rawSleep ? 'Synced!' : 'Sync Apple Watch'}
             </button>
 
             <div className="input-group">

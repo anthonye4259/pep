@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
+    "@capacitor/configure": "^2.0.10",
     "@eslint/js": "^10.0.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",

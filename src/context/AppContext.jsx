@@ -210,6 +210,21 @@ export function AppProvider({ children }) {
         });
       }
 
+      // Fetch active energy burned for the last 24 hours
+      const energyData = await Health.query({
+        sampleType: 'activeEnergyBurned',
+        startDate: yesterday.toISOString(),
+        endDate: today.toISOString(),
+      });
+
+      // Calculate total active calories
+      let totalActiveCalories = 0;
+      if (energyData && energyData.resultData) {
+        energyData.resultData.forEach(entry => {
+          totalActiveCalories += entry.value || 0;
+        });
+      }
+
       // Convert sleep hours to a 1-10 rating (assume 8 hours = 10/10)
       let sleepRating = 5;
       if (totalSleepHours > 0) {
@@ -218,6 +233,7 @@ export function AppProvider({ children }) {
 
       return {
         sleepHours: Math.round(totalSleepHours * 10) / 10,
+        activeCalories: Math.round(totalActiveCalories),
         sleepRating,
         success: true
       };
