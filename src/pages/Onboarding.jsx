@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { IoArrowForward, IoShieldCheckmark, IoScanOutline, IoColorFillOutline, IoTrendingUpOutline } from 'react-icons/io5';
+import { IoArrowForward, IoShieldCheckmark, IoScanOutline, IoColorFillOutline, IoTrendingUpOutline, IoWatchOutline } from 'react-icons/io5';
+import { useApp } from '../context/AppContext';
 
 const DISCLAIMER = `FOR LABORATORY RESEARCH PURPOSES ONLY. NOT FOR HUMAN CONSUMPTION OR MEDICAL USE. This app is an informational record-keeping and mathematical visualization tool. It does not provide medical advice, diagnosis, or recommendations. You assume full responsibility for verifying all calculations independently.`;
 
@@ -55,7 +56,8 @@ const BUILD_STEPS = [
 ];
 
 export default function Onboarding({ onComplete }) {
-  const [phase, setPhase] = useState('tutorial'); // tutorial, quiz, disclaimer, building
+  const { syncAppleHealth } = useApp();
+  const [phase, setPhase] = useState('tutorial'); // tutorial, quiz, disclaimer, healthkit, building
   const [tutStep, setTutStep] = useState(0);
   const [questionIdx, setQuestionIdx] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -224,8 +226,36 @@ export default function Onboarding({ onComplete }) {
               <p style={{ fontSize: '0.9rem', color: '#555', lineHeight: 1.7, maxWidth: 340, textAlign: 'left', margin: 0, fontWeight: 500 }}>{DISCLAIMER}</p>
             </div>
             
-            <button className="btn btn-primary btn-full" onClick={() => setPhase('building')} style={{ fontSize: '1.1rem', fontWeight: 700, padding: 18, marginTop: 40, borderRadius: 100 }}>
+            <button className="btn btn-primary btn-full" onClick={() => setPhase('healthkit')} style={{ fontSize: '1.1rem', fontWeight: 700, padding: 18, marginTop: 40, borderRadius: 100 }}>
               I Understand & Agree
+            </button>
+          </div>
+        )}
+
+        {/* HealthKit Phase */}
+        {phase === 'healthkit' && (
+          <div className="animate-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, textAlign: 'center' }}>
+            <div style={{ marginBottom: 32, background: 'var(--bg-secondary)', width: 100, height: 100, borderRadius: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+               <IoWatchOutline size={50} color="var(--accent)" />
+            </div>
+            <h1 className="ob-title" style={{ fontSize: '1.6rem', lineHeight: 1.3, marginBottom: 12 }}>Connect Apple Health</h1>
+            <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: 1.5, maxWidth: 300, marginBottom: 40 }}>
+              Allow PeptidAI to securely sync your Apple Watch sleep and energy data to build a smarter, more accurate protocol.
+            </p>
+            
+            <button 
+              className="btn btn-primary btn-full" 
+              onClick={async () => {
+                await syncAppleHealth();
+                setPhase('building');
+              }} 
+              style={{ fontSize: '1.1rem', fontWeight: 700, padding: 18, borderRadius: 100, marginBottom: 16 }}>
+              Sync Apple Watch
+            </button>
+            <button 
+              onClick={() => setPhase('building')} 
+              style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '1rem', fontWeight: 600, cursor: 'pointer' }}>
+              Skip for now
             </button>
           </div>
         )}
