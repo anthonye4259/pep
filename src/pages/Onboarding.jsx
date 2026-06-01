@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { IoArrowForward, IoShieldCheckmark, IoScanOutline, IoColorFillOutline, IoTrendingUpOutline, IoWatchOutline, IoCheckmark } from 'react-icons/io5';
 import { useApp } from '../context/AppContext';
+import RatingPhase from '../components/RatingPhase';
 
 const DISCLAIMER = `FOR LABORATORY RESEARCH PURPOSES ONLY. NOT FOR HUMAN CONSUMPTION OR MEDICAL USE. This app is an informational record-keeping and mathematical visualization tool. It does not provide medical advice, diagnosis, or recommendations. You assume full responsibility for verifying all calculations independently.`;
 
@@ -247,17 +248,22 @@ export default function Onboarding({ onComplete }) {
               className="btn btn-primary btn-full" 
               onClick={async () => {
                 await syncAppleHealth();
-                setPhase('building');
+                setPhase('rating');
               }} 
               style={{ fontSize: '1.1rem', fontWeight: 700, padding: 18, borderRadius: 100, marginBottom: 16 }}>
               Sync Apple Watch
             </button>
             <button 
-              onClick={() => setPhase('building')} 
+              onClick={() => setPhase('rating')} 
               style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '1rem', fontWeight: 600, cursor: 'pointer' }}>
               Skip for now
             </button>
           </div>
+        )}
+
+        {/* Rating Phase */}
+        {phase === 'rating' && (
+          <RatingPhase onNext={() => setPhase('building')} />
         )}
 
         {/* Building Phase */}
