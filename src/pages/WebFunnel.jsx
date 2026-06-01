@@ -83,7 +83,7 @@ export default function WebFunnel() {
       
       {/* Header */}
       <div style={{ background: 'linear-gradient(135deg, #1a1a1a 0%, #000 100%)', padding: '60px 20px 40px', textAlign: 'center', borderBottom: '1px solid #333' }}>
-        <h1 style={{ fontSize: '2.5rem', color: '#fff', marginBottom: 16 }}>Unlock Your <span style={{ color: '#ec4899' }}>AI Health Tutor</span></h1>
+        <h1 style={{ fontSize: '2.5rem', color: '#fff', marginBottom: 16 }}>Unlock Your <span style={{ color: 'var(--accent)' }}>AI Health Tutor</span></h1>
         <p style={{ color: '#aaa', fontSize: '1.1rem', maxWidth: 400, margin: '0 auto', lineHeight: 1.5 }}>
           Create your account to generate your hyper-personalized 30-day protocol and unlock the AI Vial Scanner.
         </p>
@@ -99,7 +99,7 @@ export default function WebFunnel() {
             'Daily Transformation Journal'
           ].map((benefit, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-              <IoCheckmarkCircle color="#ec4899" size={28} />
+              <IoCheckmarkCircle color="var(--accent)" size={28} />
               <span style={{ color: '#fff', fontSize: '1.1rem', fontWeight: 600 }}>{benefit}</span>
             </div>
           ))}
@@ -142,7 +142,7 @@ export default function WebFunnel() {
             disabled={loading}
             style={{ 
               width: '100%', 
-              background: 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)', 
+              background: 'linear-gradient(135deg, var(--accent) 0%, var(--text-muted) 100%)', 
               color: '#fff', 
               border: 'none', 
               padding: '20px', 

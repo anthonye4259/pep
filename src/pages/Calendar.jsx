@@ -129,7 +129,7 @@ export default function Calendar() {
                 <div className="vial-detail">{s.days.join(', ')} at {s.time}</div>
               </div>
               <div style={{ display: 'flex', gap: 4 }}>
-                <button className="btn btn-icon btn-sm" style={{ background: 'none', border: 'none', color: '#ec4899' }} onClick={() => shareProtocol(s)}><IoShareSocialOutline size={18} /></button>
+                <button className="btn btn-icon btn-sm" style={{ background: 'none', border: 'none', color: 'var(--accent)' }} onClick={() => shareProtocol(s)}><IoShareSocialOutline size={18} /></button>
                 <button className="btn btn-icon btn-sm" style={{ background: 'none', border: 'none', color: '#999' }} onClick={() => deleteSchedule(s.id)}><IoClose size={18} /></button>
               </div>
             </div>

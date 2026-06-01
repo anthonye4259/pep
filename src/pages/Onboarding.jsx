@@ -6,17 +6,17 @@ const DISCLAIMER = `FOR LABORATORY RESEARCH PURPOSES ONLY. NOT FOR HUMAN CONSUMP
 const TUTORIAL_STEPS = [
   {
     title: 'Snap a photo of your vial.\nAI does the rest.',
-    icon: <IoScanOutline size={100} color="#ec4899" />,
+    icon: <IoScanOutline size={100} color="var(--accent)" />,
     desc: 'Our intelligent scanner instantly extracts the peptide name, mass, and concentration.'
   },
   {
     title: 'Never guess your amounts.\nSee the exact math.',
-    icon: <IoColorFillOutline size={100} color="#ec4899" />,
+    icon: <IoColorFillOutline size={100} color="var(--accent)" />,
     desc: 'We calculate the volume and display it on an interactive visual guide.'
   },
   {
     title: 'Track your body\'s\ntransformation day by day.',
-    icon: <IoTrendingUpOutline size={100} color="#ec4899" />,
+    icon: <IoTrendingUpOutline size={100} color="var(--accent)" />,
     desc: 'Log your energy, sleep, and recovery. Visualize your 30-day trends instantly.'
   }
 ];
@@ -144,7 +144,7 @@ export default function Onboarding({ onComplete }) {
             {/* Story Progress Bars */}
             <div style={{ position: 'absolute', top: 60, left: 20, right: 20, display: 'flex', gap: 6 }}>
                {TUTORIAL_STEPS.map((_, i) => (
-                 <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= tutStep ? '#ec4899' : '#e0e0e0', transition: 'background 0.3s' }} />
+                 <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= tutStep ? 'var(--accent)' : '#e0e0e0', transition: 'background 0.3s' }} />
                ))}
             </div>
 
@@ -167,7 +167,7 @@ export default function Onboarding({ onComplete }) {
         {/* Questions Phase */}
         {phase === 'quiz' && currentQuestion && (
           <div className="animate-in" key={questionIdx} style={{ width: '100%', maxWidth: 380, display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1 }}>
-            <p style={{ color: '#ec4899', fontWeight: 700, fontSize: '0.85rem', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>Question {questionIdx + 1} of {QUESTIONS.length}</p>
+            <p style={{ color: 'var(--accent)', fontWeight: 700, fontSize: '0.85rem', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>Question {questionIdx + 1} of {QUESTIONS.length}</p>
             <h1 className="ob-title" style={{ fontSize: '1.6rem', textAlign: 'left', lineHeight: 1.3 }}>{currentQuestion.title}</h1>
             {currentQuestion.subtitle && <p style={{ color: '#999', fontSize: '0.85rem', marginBottom: 16, textAlign: 'left' }}>{currentQuestion.subtitle}</p>}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 24 }}>
@@ -192,7 +192,7 @@ export default function Onboarding({ onComplete }) {
                       <div style={{
                         width: 24, height: 24, borderRadius: 6, flexShrink: 0,
                         border: isSelected ? 'none' : '2px solid #ccc',
-                        background: isSelected ? '#ec4899' : 'transparent',
+                        background: isSelected ? 'var(--accent)' : 'transparent',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         color: 'white', fontSize: '0.8rem', fontWeight: 700,
                       }}>
@@ -233,12 +233,12 @@ export default function Onboarding({ onComplete }) {
         {/* Building Phase */}
         {phase === 'building' && (
           <div className="animate-in" style={{ width: '100%', maxWidth: 320, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-            <div style={{ width: 120, height: 120, border: '4px solid #fff5f8', borderTopColor: '#ec4899', borderRadius: '50%', animation: 'spin 1s linear infinite', marginBottom: 40 }} />
+            <div style={{ width: 120, height: 120, border: '4px solid #fff5f8', borderTopColor: 'var(--accent)', borderRadius: '50%', animation: 'spin 1s linear infinite', marginBottom: 40 }} />
             <h1 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: 32, color: '#1a1a1a' }}>Building Your Plan...</h1>
             <div style={{ width: '100%', height: 8, background: '#f0f0f0', borderRadius: 4, overflow: 'hidden', marginBottom: 24 }}>
-              <div style={{ width: `${buildProgress}%`, height: '100%', background: 'linear-gradient(90deg, #ec4899, #8b5cf6)', borderRadius: 4, transition: 'width 0.15s ease' }} />
+              <div style={{ width: `${buildProgress}%`, height: '100%', background: 'linear-gradient(90deg, var(--accent), var(--text-muted))', borderRadius: 4, transition: 'width 0.15s ease' }} />
             </div>
-            <p style={{ color: '#ec4899', fontSize: '1rem', fontWeight: 600, minHeight: 24, transition: 'opacity 0.3s' }}>{BUILD_STEPS[buildStep]}</p>
+            <p style={{ color: 'var(--accent)', fontSize: '1rem', fontWeight: 600, minHeight: 24, transition: 'opacity 0.3s' }}>{BUILD_STEPS[buildStep]}</p>
             <style>{`
               @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
             `}</style>

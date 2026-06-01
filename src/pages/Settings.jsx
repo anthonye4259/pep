@@ -105,7 +105,7 @@ export default function Settings() {
       <div className="settings-group">
         <Link to="/referrals" className="settings-item">
           <div>
-            <span style={{ fontWeight: 600, color: '#ec4899' }}>Refer a Friend (Get 1 Month Free)</span>
+            <span style={{ fontWeight: 600, color: 'var(--accent)' }}>Refer a Friend (Get 1 Month Free)</span>
           </div>
           <IoChevronForward color="#999" />
         </Link>

@@ -51,7 +51,7 @@ export default function Home() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
         <div>
-          <h1 style={{ fontSize: '1.6rem' }}>Peptid<span style={{ color: '#39ff14' }}>AI</span></h1>
+          <h1 style={{ fontSize: '1.6rem' }}>Peptid<span style={{ color: 'var(--success)' }}>AI</span></h1>
           <p style={{ color: '#999', fontSize: '0.85rem' }}>Your reconstitution calculator</p>
         </div>
         <button
@@ -67,7 +67,7 @@ export default function Home() {
         className={`scan-hero ${scanning ? 'camera-active' : ''}`}
         onClick={() => !scanning && fileInputRef.current?.click()}
         style={{ 
-          background: 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)', 
+          background: 'linear-gradient(135deg, var(--accent) 0%, var(--text-muted) 100%)', 
           border: 'none',
           boxShadow: '0 20px 40px rgba(236,72,153,0.3)',
           color: 'white',

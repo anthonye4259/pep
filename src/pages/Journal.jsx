@@ -45,8 +45,8 @@ export default function Journal() {
                 }} />
                 <YAxis domain={[1, 10]} tick={{fontSize: 10, fill: '#999'}} axisLine={false} tickLine={false} />
                 <Tooltip contentStyle={{ borderRadius: 8, border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
-                <Line type="monotone" dataKey="energy" stroke="#ec4899" strokeWidth={3} dot={{r: 4}} name="Energy" />
-                <Line type="monotone" dataKey="sleep" stroke="#8b5cf6" strokeWidth={3} dot={{r: 4}} name="Sleep" />
+                <Line type="monotone" dataKey="energy" stroke="var(--accent)" strokeWidth={3} dot={{r: 4}} name="Energy" />
+                <Line type="monotone" dataKey="sleep" stroke="var(--text-muted)" strokeWidth={3} dot={{r: 4}} name="Sleep" />
                 <Line type="monotone" dataKey="recovery" stroke="#34d399" strokeWidth={3} dot={{r: 4}} name="Recovery" />
               </LineChart>
             </ResponsiveContainer>
@@ -62,8 +62,8 @@ export default function Journal() {
                {new Date(entry.date + 'T12:00:00').toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
             </div>
             <div style={{ display: 'flex', gap: 12, fontSize: '0.85rem' }}>
-              <span style={{ color: '#ec4899', fontWeight: 500 }}>Energy: {entry.energy}/10</span>
-              <span style={{ color: '#8b5cf6', fontWeight: 500 }}>Sleep: {entry.sleep}/10</span>
+              <span style={{ color: 'var(--accent)', fontWeight: 500 }}>Energy: {entry.energy}/10</span>
+              <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}>Sleep: {entry.sleep}/10</span>
               <span style={{ color: '#34d399', fontWeight: 500 }}>Recovery: {entry.recovery}/10</span>
             </div>
           </div>
@@ -82,17 +82,17 @@ export default function Journal() {
             <div className="input-group">
               <label style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>Energy Levels</span>
-                <span style={{ color: '#ec4899', fontWeight: 'bold' }}>{form.energy}/10</span>
+                <span style={{ color: 'var(--accent)', fontWeight: 'bold' }}>{form.energy}/10</span>
               </label>
-              <input type="range" min="1" max="10" value={form.energy} onChange={e => setForm({...form, energy: Number(e.target.value)})} style={{ width: '100%', accentColor: '#ec4899' }} />
+              <input type="range" min="1" max="10" value={form.energy} onChange={e => setForm({...form, energy: Number(e.target.value)})} style={{ width: '100%', accentColor: 'var(--accent)' }} />
             </div>
 
             <div className="input-group">
               <label style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>Sleep Quality</span>
-                <span style={{ color: '#8b5cf6', fontWeight: 'bold' }}>{form.sleep}/10</span>
+                <span style={{ color: 'var(--text-muted)', fontWeight: 'bold' }}>{form.sleep}/10</span>
               </label>
-              <input type="range" min="1" max="10" value={form.sleep} onChange={e => setForm({...form, sleep: Number(e.target.value)})} style={{ width: '100%', accentColor: '#8b5cf6' }} />
+              <input type="range" min="1" max="10" value={form.sleep} onChange={e => setForm({...form, sleep: Number(e.target.value)})} style={{ width: '100%', accentColor: 'var(--text-muted)' }} />
             </div>
 
             <div className="input-group">

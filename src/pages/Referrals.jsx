@@ -37,7 +37,7 @@ export default function Referrals() {
 
       <div className="card" style={{ textAlign: 'center', padding: '40px 20px', marginBottom: 20 }}>
         <h2 style={{ fontSize: '1.2rem', marginBottom: 12 }}>Your Invite Code</h2>
-        <div style={{ background: '#fff5f8', color: '#ec4899', padding: '16px', borderRadius: '12px', fontSize: '2rem', letterSpacing: '4px', fontWeight: 700, margin: '20px 0' }}>
+        <div style={{ background: '#fff5f8', color: 'var(--accent)', padding: '16px', borderRadius: '12px', fontSize: '2rem', letterSpacing: '4px', fontWeight: 700, margin: '20px 0' }}>
           {inviteCode}
         </div>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
