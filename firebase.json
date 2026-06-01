@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "peptidai",
     "public": "dist",
     "ignore": [
       "firebase.json",
