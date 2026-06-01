@@ -64,6 +64,43 @@ export default function Settings() {
         </div>
       </div>
 
+      {/* Preferences Section */}
+      <div style={{ marginBottom: 24 }}>
+        <h3 style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12, marginLeft: 4 }}>Preferences</h3>
+        <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', borderBottom: '1px solid var(--border)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span style={{ fontWeight: 600, color: 'var(--text)' }}>Daily Reminders</span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Get notified to check your protocol</span>
+            </div>
+            <label style={{ position: 'relative', display: 'inline-block', width: 44, height: 24 }}>
+              <input 
+                type="checkbox" 
+                style={{ opacity: 0, width: 0, height: 0 }}
+                onChange={async (e) => {
+                  const checked = e.target.checked;
+                  if (checked) {
+                    // Default to 8:00 AM
+                    const success = await useApp().scheduleDailyReminder(8, 0);
+                    if (success) e.target.checked = true;
+                    else { e.target.checked = false; alert("Please enable notifications in your phone's Settings."); }
+                  } else {
+                    await useApp().cancelReminders();
+                  }
+                }} 
+              />
+              <span style={{ position: 'absolute', cursor: 'pointer', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: '#ccc', transition: '.4s', borderRadius: 24 }}>
+                <span style={{ position: 'absolute', content: '""', height: 18, width: 18, left: 3, bottom: 3, backgroundColor: 'white', transition: '.4s', borderRadius: '50%' }} className="slider-knob"></span>
+              </span>
+              <style>{`
+                input:checked + span { background-color: var(--accent); }
+                input:checked + span .slider-knob { transform: translateX(20px); }
+              `}</style>
+            </label>
+          </div>
+        </div>
+      </div>
+
       {/* Menu */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         {menuItems.map((item, i) => (

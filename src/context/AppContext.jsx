@@ -5,6 +5,7 @@ import { collection, doc, setDoc, deleteDoc, onSnapshot, query, orderBy } from '
 import { App as CapApp } from '@capacitor/app';
 import { Purchases } from '@revenuecat/purchases-capacitor';
 import { Health } from '@capgo/capacitor-health';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 const AppContext = createContext();
 
@@ -243,6 +244,42 @@ export function AppProvider({ children }) {
     }
   };
 
+  const scheduleDailyReminder = async (hour, minute) => {
+    try {
+      const permStatus = await LocalNotifications.requestPermissions();
+      if (permStatus.display !== 'granted') return false;
+
+      await LocalNotifications.cancel({ notifications: [{ id: 1 }] });
+      
+      await LocalNotifications.schedule({
+        notifications: [
+          {
+            title: "PeptidAI Check-In",
+            body: "Good morning! Open PeptidAI to check today's protocol and log your biometrics.",
+            id: 1,
+            schedule: { on: { hour, minute }, allowWhileIdle: true },
+            sound: null,
+            attachments: null,
+            actionTypeId: "",
+            extra: null
+          }
+        ]
+      });
+      return true;
+    } catch (e) {
+      console.error("Notification Error:", e);
+      return false;
+    }
+  };
+
+  const cancelReminders = async () => {
+    try {
+      await LocalNotifications.cancel({ notifications: [{ id: 1 }] });
+    } catch (e) {
+      console.error("Cancel Error:", e);
+    }
+  };
+
   return (
     <AppContext.Provider value={{
       appState, setAppState,
@@ -251,7 +288,7 @@ export function AppProvider({ children }) {
       journal, saveJournalEntry,
       userProfile, updateProfileData,
       completeOnboarding, completeAuth, completePaywall, resetApp,
-      syncAppleHealth
+      syncAppleHealth, scheduleDailyReminder, cancelReminders
     }}>
       {children}
     </AppContext.Provider>
