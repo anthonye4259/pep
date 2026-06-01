@@ -20,6 +20,7 @@
     "@capacitor/splash-screen": "^8.0.1",
     "@capacitor/status-bar": "^8.0.2",
     "@capawesome/capacitor-app-review": "^8.0.1",
+    "@capgo/capacitor-health": "^8.6.0",
     "@revenuecat/purchases-capacitor": "^13.1.2",
     "firebase": "^12.13.0",
     "html-to-image": "^1.11.13",

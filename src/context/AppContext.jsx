@@ -4,6 +4,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { collection, doc, setDoc, deleteDoc, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { App as CapApp } from '@capacitor/app';
 import { Purchases } from '@revenuecat/purchases-capacitor';
+import { Health } from '@capgo/capacitor-health';
 
 const AppContext = createContext();
 
@@ -178,11 +179,63 @@ export function AppProvider({ children }) {
     setSchedules([]);
   }
 
+  // Generic function to sync data from Apple Health
+  const syncAppleHealth = async () => {
+    try {
+      await Health.requestAuthorization({
+        read: ['sleepAnalysis', 'activeEnergyBurned'],
+      });
+
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+
+      // Fetch sleep analysis for the last 24 hours
+      const sleepData = await Health.query({
+        sampleType: 'sleepAnalysis',
+        startDate: yesterday.toISOString(),
+        endDate: today.toISOString(),
+      });
+
+      // Calculate total sleep hours
+      let totalSleepHours = 0;
+      if (sleepData && sleepData.resultData) {
+        sleepData.resultData.forEach(entry => {
+          // Apple Health sleepAnalysis values: 0 = inBed, 1 = asleep
+          if (entry.value === 1) {
+            const start = new Date(entry.startDate);
+            const end = new Date(entry.endDate);
+            totalSleepHours += (end - start) / (1000 * 60 * 60);
+          }
+        });
+      }
+
+      // Convert sleep hours to a 1-10 rating (assume 8 hours = 10/10)
+      let sleepRating = 5;
+      if (totalSleepHours > 0) {
+        sleepRating = Math.min(10, Math.round((totalSleepHours / 8) * 10));
+      }
+
+      return {
+        sleepHours: Math.round(totalSleepHours * 10) / 10,
+        sleepRating,
+        success: true
+      };
+    } catch (e) {
+      console.error('Apple Health Sync Error:', e);
+      return { success: false, error: e.message };
+    }
+  };
+
   return (
     <AppContext.Provider value={{
-      appState, vials, schedules, journal, userProfile,
-      saveVial, deleteVial, saveSchedule, deleteSchedule, saveJournalEntry, updateProfileData,
+      appState, setAppState,
+      vials, setVials, saveVial, deleteVial,
+      schedules, saveSchedule, deleteSchedule,
+      journal, saveJournalEntry,
+      userProfile, updateProfileData,
       completeOnboarding, completeAuth, completePaywall, resetApp,
+      syncAppleHealth
     }}>
       {children}
     </AppContext.Provider>

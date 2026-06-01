@@ -1,27 +1,46 @@
 import { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { IoAdd } from 'react-icons/io5';
+import { IoAdd, IoClose, IoFlashOutline, IoFitnessOutline, IoMoonOutline, IoWatchOutline } from 'react-icons/io5';
 
 export default function Journal() {
-  const { journal, saveJournalEntry } = useApp();
+  const { journal, saveJournalEntry, syncAppleHealth } = useApp();
   const [showLog, setShowLog] = useState(false);
-  const [form, setForm] = useState({ date: new Date().toISOString().split('T')[0], energy: 5, sleep: 5, recovery: 5 });
-
-  function handleSave() {
-    saveJournalEntry(form);
-    setShowLog(false);
-  }
+  const [form, setForm] = useState({ date: new Date().toISOString().split('T')[0], energy: 5, sleep: 5, recovery: 5, notes: '' });
+  const [syncing, setSyncing] = useState(false);
 
   // Format data for chart
   const data = [...journal].sort((a, b) => new Date(a.date) - new Date(b.date));
 
+  async function handleHealthSync() {
+    setSyncing(true);
+    const result = await syncAppleHealth();
+    if (result.success && result.sleepRating) {
+      setForm(prev => ({ 
+        ...prev, 
+        sleep: result.sleepRating, 
+        notes: prev.notes + (prev.notes ? '\n' : '') + `Auto-synced: ${result.sleepHours} hrs sleep.` 
+      }));
+    } else {
+      alert('Could not sync Apple Health data. Please check permissions.');
+    }
+    setSyncing(false);
+  }
+
+  function handleSave() {
+    saveJournalEntry(form);
+    setShowLog(false);
+    setForm({ date: new Date().toISOString().split('T')[0], energy: 5, sleep: 5, recovery: 5, notes: '' });
+  }
+
   return (
-    <div className="page">
+    <div className="page" style={{ paddingBottom: 100 }}>
       <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h1>Journal</h1>
-          <p>Track your transformation</p>
+          <h1 style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            Journal <IoFlashOutline color="var(--accent)" />
+          </h1>
+          <p>Track your wellness progress</p>
         </div>
         <button className="btn btn-primary btn-sm" onClick={() => setShowLog(true)} style={{ padding: '6px 12px' }}>
           <IoAdd size={18} style={{ marginRight: 6 }} /> Log
@@ -31,23 +50,23 @@ export default function Journal() {
       <div className="card" style={{ marginBottom: 20 }}>
         <h2 style={{ fontSize: '1.1rem', marginBottom: 16 }}>30-Day Trends</h2>
         {data.length === 0 ? (
-          <div style={{ padding: '40px 20px', textAlign: 'center', color: '#999', fontSize: '0.9rem' }}>
+          <div style={{ padding: '40px 20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
             No journal entries yet. Start logging to see your progress!
           </div>
         ) : (
           <div style={{ height: 250, width: '100%', marginLeft: -10 }}>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={data}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                <XAxis dataKey="date" tick={{fontSize: 10, fill: '#999'}} tickFormatter={(str) => {
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
+                <XAxis dataKey="date" tick={{fontSize: 10, fill: 'var(--text-secondary)'}} tickFormatter={(str) => {
                   const d = new Date(str);
                   return `${d.getMonth()+1}/${d.getDate()}`;
-                }} />
-                <YAxis domain={[1, 10]} tick={{fontSize: 10, fill: '#999'}} axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={{ borderRadius: 8, border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
+                }} axisLine={false} tickLine={false} />
+                <YAxis domain={[1, 10]} tick={{fontSize: 10, fill: 'var(--text-secondary)'}} axisLine={false} tickLine={false} />
+                <Tooltip contentStyle={{ borderRadius: 12, border: 'none', boxShadow: 'var(--shadow)' }} />
                 <Line type="monotone" dataKey="energy" stroke="var(--accent)" strokeWidth={3} dot={{r: 4}} name="Energy" />
                 <Line type="monotone" dataKey="sleep" stroke="var(--text-muted)" strokeWidth={3} dot={{r: 4}} name="Sleep" />
-                <Line type="monotone" dataKey="recovery" stroke="#34d399" strokeWidth={3} dot={{r: 4}} name="Recovery" />
+                <Line type="monotone" dataKey="recovery" stroke="var(--success)" strokeWidth={3} dot={{r: 4}} name="Recovery" />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -57,53 +76,76 @@ export default function Journal() {
       <div className="section">
         <h3 style={{ fontSize: '1rem', marginBottom: 12 }}>History</h3>
         {data.slice().reverse().map(entry => (
-          <div key={entry.date} className="vial-card" style={{ cursor: 'default', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-            <div style={{ fontWeight: 600, marginBottom: 8, color: '#1a1a1a' }}>
+          <div key={entry.date} className="card" style={{ cursor: 'default', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginBottom: 10 }}>
+            <div style={{ fontWeight: 600, marginBottom: 8, color: 'var(--text)' }}>
                {new Date(entry.date + 'T12:00:00').toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
             </div>
-            <div style={{ display: 'flex', gap: 12, fontSize: '0.85rem' }}>
+            <div style={{ display: 'flex', gap: 12, fontSize: '0.85rem', marginBottom: entry.notes ? 8 : 0 }}>
               <span style={{ color: 'var(--accent)', fontWeight: 500 }}>Energy: {entry.energy}/10</span>
               <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}>Sleep: {entry.sleep}/10</span>
-              <span style={{ color: '#34d399', fontWeight: 500 }}>Recovery: {entry.recovery}/10</span>
+              <span style={{ color: 'var(--success)', fontWeight: 500 }}>Recovery: {entry.recovery}/10</span>
             </div>
+            {entry.notes && (
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.4, whiteSpace: 'pre-wrap' }}>
+                {entry.notes}
+              </div>
+            )}
           </div>
         ))}
       </div>
 
       {showLog && (
-        <div className="modal-overlay" onClick={() => setShowLog(false)}>
-          <div className="modal" onClick={e => e.stopPropagation()}>
-            <h2 style={{ marginBottom: 20 }}>Daily Check-In</h2>
+        <div className="modal-overlay" onClick={() => setShowLog(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 100, display: 'flex', alignItems: 'flex-end' }}>
+          <div className="modal" onClick={e => e.stopPropagation()} style={{ background: 'var(--bg)', width: '100%', padding: 24, paddingBottom: 'calc(24px + env(safe-area-inset-bottom))', borderRadius: '24px 24px 0 0' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+              <h2 style={{ margin: 0 }}>Daily Check-In</h2>
+              <button className="btn btn-icon btn-sm" style={{ background: 'none', border: 'none', color: 'var(--text-muted)' }} onClick={() => setShowLog(false)}><IoClose size={24} /></button>
+            </div>
+            
+            <button 
+              type="button" 
+              onClick={handleHealthSync} 
+              disabled={syncing}
+              style={{ width: '100%', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: 14, borderRadius: 12, background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600, cursor: 'pointer' }}>
+              <IoWatchOutline size={20} color="var(--accent)" />
+              {syncing ? 'Syncing...' : 'Sync Apple Watch Sleep'}
+            </button>
+
             <div className="input-group">
               <label>Date</label>
               <input type="date" className="input" value={form.date} onChange={e => setForm({...form, date: e.target.value})} />
             </div>
             
             <div className="input-group">
-              <label style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>Energy Levels</span>
+              <label style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><IoFitnessOutline /> Energy Levels</span>
                 <span style={{ color: 'var(--accent)', fontWeight: 'bold' }}>{form.energy}/10</span>
               </label>
               <input type="range" min="1" max="10" value={form.energy} onChange={e => setForm({...form, energy: Number(e.target.value)})} style={{ width: '100%', accentColor: 'var(--accent)' }} />
             </div>
 
             <div className="input-group">
-              <label style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>Sleep Quality</span>
+              <label style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><IoMoonOutline /> Sleep Quality</span>
                 <span style={{ color: 'var(--text-muted)', fontWeight: 'bold' }}>{form.sleep}/10</span>
               </label>
               <input type="range" min="1" max="10" value={form.sleep} onChange={e => setForm({...form, sleep: Number(e.target.value)})} style={{ width: '100%', accentColor: 'var(--text-muted)' }} />
             </div>
 
             <div className="input-group">
-              <label style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <label style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
                 <span>Recovery & Tone</span>
-                <span style={{ color: '#34d399', fontWeight: 'bold' }}>{form.recovery}/10</span>
+                <span style={{ color: 'var(--success)', fontWeight: 'bold' }}>{form.recovery}/10</span>
               </label>
-              <input type="range" min="1" max="10" value={form.recovery} onChange={e => setForm({...form, recovery: Number(e.target.value)})} style={{ width: '100%', accentColor: '#34d399' }} />
+              <input type="range" min="1" max="10" value={form.recovery} onChange={e => setForm({...form, recovery: Number(e.target.value)})} style={{ width: '100%', accentColor: 'var(--success)' }} />
+            </div>
+            
+            <div className="input-group">
+              <label>Notes (Auto-fills with sync)</label>
+              <textarea className="input" rows={2} value={form.notes} onChange={e => setForm({...form, notes: e.target.value})} placeholder="How are you feeling today?" />
             </div>
 
-            <button className="btn btn-primary btn-full" onClick={handleSave} style={{ marginTop: 20 }}>Save Entry</button>
+            <button className="btn btn-primary btn-full" onClick={handleSave} style={{ marginTop: 8 }}>Save Entry</button>
           </div>
         </div>
       )}
