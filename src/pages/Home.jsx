@@ -20,20 +20,29 @@ export default function Home() {
   const hasVials = recentVials.length > 0;
 
   async function handleCapture(e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setScanning(true);
     try {
-      const base64 = await fileToBase64(file);
-      const extracted = await extractVialLabel(base64);
+      const file = e?.target?.files?.[0];
+      if (!file) return;
 
-      navigate('/guide', { state: { ...extracted } });
-    } catch (err) {
-      console.error('Scan failed:', err);
-      navigate('/guide');
-    } finally {
+      setScanning(true);
+      try {
+        const base64 = await fileToBase64(file);
+        const extracted = await extractVialLabel(base64);
+        navigate('/guide', { state: { ...extracted } });
+      } catch (err) {
+        console.error('Scan failed:', err);
+        navigate('/guide');
+      } finally {
+        setScanning(false);
+      }
+    } catch (outerErr) {
+      console.error('handleCapture outer error:', outerErr);
       setScanning(false);
+      navigate('/guide');
+    }
+    // Reset the file input so the same file can be selected again
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   }
 
@@ -92,7 +101,7 @@ export default function Home() {
             <div style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.9)', fontWeight: 500 }}>Our AI extracts the math instantly</div>
           </div>
         )}
-        <input ref={fileInputRef} type="file" accept="image/*" capture="environment" style={{ display: 'none' }} onChange={handleCapture} />
+        <input ref={fileInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleCapture} />
       </div>
       <style>{`@keyframes shimmer { 100% { transform: skewX(-20deg) translateX(150%); } }`}</style>
 
