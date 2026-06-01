@@ -23,27 +23,10 @@ export default function Home() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Invisible Rate Limit Check
-    const today = new Date().toISOString().split('T')[0];
-    let usage = userProfile?.aiUsage || {};
-    if (usage.lastScanDate !== today) {
-      usage.scansToday = 0;
-      usage.lastScanDate = today;
-    }
-    
-    if (usage.scansToday >= 5) {
-      alert('To ensure accurate tracking, please limit scanning to 5 vials per day. Your AI scanner will recalibrate at midnight.');
-      return;
-    }
-
     setScanning(true);
     try {
       const base64 = await fileToBase64(file);
       const extracted = await extractVialLabel(base64);
-      
-      // Increment limit
-      usage.scansToday += 1;
-      await updateProfileData({ aiUsage: usage });
 
       navigate('/guide', { state: { ...extracted } });
     } catch (err) {

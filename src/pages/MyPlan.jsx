@@ -4,7 +4,7 @@ import { generateProtocol } from '../lib/gemini';
 import { IoSparkles, IoCheckmarkCircle, IoRefreshCircle, IoFlameOutline } from 'react-icons/io5';
 
 export default function MyPlan() {
-  const { appState, userProfile, updateProfileData } = useApp();
+  const { appState, userProfile, updateProfileData, vials } = useApp();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -20,7 +20,7 @@ export default function MyPlan() {
     try {
       setLoading(true);
       const answers = appState.onboardingAnswers || { goal: 'Wellness', sleep: 'Average', energy: 'Average', peptides: [] };
-      const generated = await generateProtocol(answers);
+      const generated = await generateProtocol(answers, vials);
       const now = new Date().toISOString();
       await updateProfileData({ 
         protocol: generated,
@@ -53,7 +53,7 @@ export default function MyPlan() {
       <div className="page" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
         <div className="spinner" style={{ width: 40, height: 40, borderColor: '#fce7f3', borderTopColor: '#ec4899', marginBottom: 20 }} />
         <h2 style={{ fontSize: '1.2rem', color: '#1a1a1a', fontWeight: 700 }}>Synthesizing your Plan...</h2>
-        <p style={{ color: '#999', fontSize: '0.9rem', marginTop: 8 }}>Gemini AI is analyzing your goals.</p>
+        <p style={{ color: '#999', fontSize: '0.9rem', marginTop: 8 }}>Gemini AI is analyzing your goals & inventory.</p>
       </div>
     );
   }
@@ -76,7 +76,7 @@ export default function MyPlan() {
           <h1 style={{ fontSize: '1.8rem', display: 'flex', alignItems: 'center', gap: 8 }}>
             AI Health Plan <IoSparkles color="#ec4899" size={24} />
           </h1>
-          <p style={{ color: '#ec4899', fontWeight: 600, fontSize: '0.9rem' }}>Hyper-Personalized 30-Day Research Plan</p>
+          <p style={{ color: '#ec4899', fontWeight: 600, fontSize: '0.9rem' }}>Hyper-Personalized 12-Week Protocol</p>
         </div>
         <button onClick={handleRegenerate} style={{ background: 'transparent', border: 'none', color: '#999', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <IoRefreshCircle size={28} />
@@ -97,21 +97,31 @@ export default function MyPlan() {
         ))}
       </div>
 
-      <h3 style={{ fontSize: '1.2rem', marginBottom: 16 }}>Daily Routine</h3>
+      {protocol.inventoryAdvice && (
+        <div style={{ background: 'var(--bg-card)', padding: 16, borderRadius: 12, marginBottom: 32, border: '1px solid var(--border)' }}>
+          <h4 style={{ fontSize: '0.9rem', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: 8 }}>📦 Inventory Forecast</h4>
+          <p style={{ fontSize: '0.9rem', color: 'var(--text)', lineHeight: 1.5 }}>{protocol.inventoryAdvice}</p>
+        </div>
+      )}
+
+      <h3 style={{ fontSize: '1.2rem', marginBottom: 16 }}>12-Week Schedule</h3>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 32 }}>
-        {protocol.dailyRoutine?.map((step, i) => (
-          <div key={i} style={{ background: 'white', padding: 16, borderRadius: 12, display: 'flex', alignItems: 'flex-start', gap: 12, boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
-            <div style={{ background: '#ec4899', color: 'white', fontSize: '0.75rem', fontWeight: 800, padding: '4px 10px', borderRadius: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>
-              {step.time}
+        {protocol.schedule?.map((item, i) => (
+          <div key={i} style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: 12, padding: 16 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+              <div style={{ background: '#ec4899', color: 'white', width: 8, height: 8, borderRadius: '50%' }} />
+              <span style={{ fontWeight: 700, color: 'var(--text)', fontSize: '1rem' }}>{item.week}</span>
             </div>
-            <div style={{ fontSize: '0.95rem', color: '#1a1a1a', lineHeight: 1.4, flex: 1 }}>{step.action}</div>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginLeft: 20, marginBottom: 4 }}>{item.action}</p>
+            <p style={{ color: 'var(--text)', fontSize: '0.9rem', fontWeight: 600, marginLeft: 20 }}>{item.dosage}</p>
           </div>
         ))}
       </div>
 
-      <div style={{ background: '#fffbeb', border: '1px solid #fde68a', padding: 16, borderRadius: 12 }}>
-        <h4 style={{ color: '#d97706', fontSize: '0.85rem', marginBottom: 4, textTransform: 'uppercase', fontWeight: 700 }}>Safety Reminder</h4>
-        <p style={{ color: '#92400e', fontSize: '0.8rem', lineHeight: 1.5, margin: 0 }}>{protocol.safetyNote}</p>
+      <div style={{ background: '#fef2f2', border: '1px solid #fecaca', padding: 16, borderRadius: 12 }}>
+        <p style={{ fontSize: '0.8rem', color: '#ef4444', lineHeight: 1.4 }}>
+          <strong>Safety Note:</strong> {protocol.safetyNote}
+        </p>
       </div>
     </div>
   );

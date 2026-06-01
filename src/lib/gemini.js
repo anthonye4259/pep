@@ -51,24 +51,26 @@ Example response: {"peptideName": "Compound X", "peptideMg": 10}`
   };
 }
 
-export async function generateProtocol(answers) {
-  const prompt = `You are a wellness and research education AI coach. Generate a personalized 30-day research plan based on the following user data:
+export async function generateProtocol(answers, vials = []) {
+  const inventoryStr = vials.map(v => `${v.peptideName}: ${v.peptideMg}mg`).join(', ') || 'No current inventory recorded.';
+  const prompt = `You are an expert wellness and research education AI coach. Generate a personalized 12-week research plan based on the following user data:
 Goals: ${answers.goal || 'General wellness'}
 Sleep: ${answers.sleep || 'Average'}
 Energy: ${answers.energy || 'Average'}
 Interested Compounds: ${(answers.peptides || []).join(', ') || 'None specified'}
+Current Inventory (Vials): ${inventoryStr}
 
 Return a strict JSON object with this exact structure:
 {
   "summary": "A 2-sentence encouraging summary of their path forward.",
   "focusAreas": ["area 1", "area 2", "area 3"],
-  "dailyRoutine": [
-    { "time": "Morning", "action": "Take..." },
-    { "time": "Evening", "action": "Do..." }
+  "schedule": [
+    { "week": "Weeks 1-4", "action": "5 days on, 2 days off of Compound X", "dosage": "250mcg daily" },
+    { "week": "Weeks 5-8", "action": "Increase dose or cycle off", "dosage": "500mcg daily" }
   ],
+  "inventoryAdvice": "Based on their current inventory, when will they need to order more vials? e.g. 'You have enough Compound X for 4 weeks.'",
   "safetyNote": "A brief reminder that this is for research purposes only and is not medical advice."
 }`;
-
 
   const response = await fetch(API_URL, {
     method: 'POST',
