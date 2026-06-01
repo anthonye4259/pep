@@ -21,10 +21,24 @@ workflows:
           npm run build
       - name: Add iOS platform
         script: |
-          npx cap add ios
+          npx cap add ios || true
       - name: Sync Capacitor
         script: |
           npx cap sync ios
+      - name: Inject Info.plist privacy keys
+        script: |
+          PLIST="ios/App/App/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :NSCameraUsageDescription 'PeptidAI uses your camera to scan peptide vial labels and extract dosage information automatically.'" "$PLIST" 2>/dev/null || \
+          /usr/libexec/PlistBuddy -c "Add :NSCameraUsageDescription string 'PeptidAI uses your camera to scan peptide vial labels and extract dosage information automatically.'" "$PLIST"
+          /usr/libexec/PlistBuddy -c "Set :NSPhotoLibraryUsageDescription 'PeptidAI needs access to your photo library so you can select a photo of your peptide vial label.'" "$PLIST" 2>/dev/null || \
+          /usr/libexec/PlistBuddy -c "Add :NSPhotoLibraryUsageDescription string 'PeptidAI needs access to your photo library so you can select a photo of your peptide vial label.'" "$PLIST"
+          /usr/libexec/PlistBuddy -c "Set :NSHealthShareUsageDescription 'We use Apple Health to sync your daily energy and sleep metrics to your AI health tutor.'" "$PLIST" 2>/dev/null || \
+          /usr/libexec/PlistBuddy -c "Add :NSHealthShareUsageDescription string 'We use Apple Health to sync your daily energy and sleep metrics to your AI health tutor.'" "$PLIST"
+          /usr/libexec/PlistBuddy -c "Set :NSHealthUpdateUsageDescription 'We use Apple Health to sync your daily energy and sleep metrics to your AI health tutor.'" "$PLIST" 2>/dev/null || \
+          /usr/libexec/PlistBuddy -c "Add :NSHealthUpdateUsageDescription string 'We use Apple Health to sync your daily energy and sleep metrics to your AI health tutor.'" "$PLIST"
+          echo "=== Info.plist privacy keys verified ==="
+          /usr/libexec/PlistBuddy -c "Print :NSCameraUsageDescription" "$PLIST"
+          /usr/libexec/PlistBuddy -c "Print :NSHealthShareUsageDescription" "$PLIST"
       - name: Generate App Icons
         script: |
           npx @capacitor/assets generate --iconBackgroundColor '#FDF1F4' --iconBackgroundColorDark '#FDF1F4' --splashBackgroundColor '#FDF1F4' --splashBackgroundColorDark '#FDF1F4'
