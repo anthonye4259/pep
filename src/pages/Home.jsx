@@ -5,9 +5,9 @@ import { useApp } from '../context/AppContext';
 import { extractVialLabel } from '../lib/gemini';
 
 const QUICK_START = [
-  { name: 'Compound A', mg: 5, mcg: 250 },
-  { name: 'Compound B', mg: 10, mcg: 2500 },
-  { name: 'Compound C', mg: 5, mcg: 250 },
+  { name: 'Sample Solution A', mg: 5, mcg: 250 },
+  { name: 'Sample Solution B', mg: 10, mcg: 2.5 },
+  { name: 'Sample Solution C', mg: 5, mcg: 250 }
 ];
 
 export default function Home() {
@@ -61,7 +61,7 @@ export default function Home() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
         <div>
           <h1 style={{ fontSize: '1.6rem' }}>Peptid<span style={{ color: 'var(--success)' }}>AI</span></h1>
-          <p style={{ color: '#999', fontSize: '0.85rem' }}>Your reconstitution calculator</p>
+          <p style={{ color: '#999', fontSize: '0.85rem' }}>Your mathematical laboratory tool</p>
         </div>
         <button
           onClick={() => navigate('/settings')}
@@ -139,7 +139,7 @@ export default function Home() {
         <div className="section mt-20">
           <div className="section-header"><span className="section-title">Recent Configurations</span></div>
           {recentVials.map((vial, i) => (
-            <button key={vial.id || i} className="vial-card" onClick={() => navigate('/guide', { state: vial })}>
+            <div key={vial.id || i} className="vial-card" onClick={() => navigate('/guide', { state: vial })}>
               <div className="vial-icon"><IoFlaskOutline size={22} /></div>
               <div className="vial-info">
                 <div className="vial-name">{vial.peptideName}</div>
@@ -149,10 +149,17 @@ export default function Home() {
                 )}
               </div>
               <div className="vial-arrow"><IoChevronForward size={18} /></div>
-            </button>
+            </div>
           ))}
         </div>
       )}
+
+      {/* Subtle Disclaimer Footer */}
+      <div style={{ textAlign: 'center', marginTop: '24px', paddingBottom: '32px' }}>
+        <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+          For research and educational math purposes only.<br />Not a medical device. Not for human use.
+        </p>
+      </div>
     </div>
   );
 }

@@ -41,15 +41,16 @@ export default function SyringeGuide() {
         <button className="btn btn-icon btn-secondary" onClick={() => navigate(-1)}><IoArrowBack size={20} /></button>
         <div>
           <h1 style={{ fontSize: '1.3rem' }}>Research Volume Calculator</h1>
+          <h1 style={{ fontSize: '1.3rem' }}>Measurement Device Calculator</h1>
           <p className="text-muted text-sm">Research math visualizer</p>
         </div>
       </div>
 
       {/* User-driven inputs */}
       <div className="card" style={{ marginBottom: 20 }}>
-        <div className="input-group">
-          <label>Peptide Name (your label)</label>
-          <input type="text" className="input" placeholder="e.g. Compound A" value={peptideName} onChange={e => setPeptideName(e.target.value)} />
+        <div className="form-group mb-24">
+          <label className="label">Sample Label (Optional)</label>
+          <input type="text" className="input" placeholder="e.g. Sample Solution A" value={peptideName} onChange={e => setPeptideName(e.target.value)} />
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
           <div className="input-group" style={{ marginBottom: 0 }}>
@@ -65,9 +66,14 @@ export default function SyringeGuide() {
             <input type="number" className="input" placeholder="250" value={targetMcg} onChange={e => setTargetMcg(e.target.value)} />
           </div>
         </div>
+        <div style={{ textAlign: 'center', marginTop: '32px' }}>
+          <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+            For research and educational math purposes only.<br />Not a medical device. Not for human use.
+          </p>
+        </div>
       </div>
 
-      {/* Syringe visualization */}
+      {/* Measurement device visualization */}
       {hasValues && (
         <div className="animate-in">
           {/* Persistent disclaimer above syringe */}
