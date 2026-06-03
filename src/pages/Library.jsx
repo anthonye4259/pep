@@ -3,22 +3,22 @@ import { useNavigate } from 'react-router-dom';
 import { IoSearch, IoFlaskOutline, IoChevronForward } from 'react-icons/io5';
 
 const peptideLibrary = [
-  { name: 'Compound A', category: 'Recovery', desc: 'Recovery-focused research peptide. Commonly studied for tissue repair applications.', defaultMg: 5, defaultMcg: 250 },
-  { name: 'Compound B', category: 'Recovery', desc: 'Thymosin fragment. Studied for flexibility and repair in research settings.', defaultMg: 5, defaultMcg: 2500 },
-  { name: 'Compound C', category: 'Metabolic', desc: 'Receptor agonist compound. Studied for metabolic research applications.', defaultMg: 5, defaultMcg: 250 },
-  { name: 'Compound D', category: 'Metabolic', desc: 'Dual-action compound. Studied for metabolic pathway research.', defaultMg: 10, defaultMcg: 2500 },
-  { name: 'Compound E', category: 'Growth Hormone', desc: 'GHRH analog compound. Commonly paired in research stacks.', defaultMg: 5, defaultMcg: 100 },
-  { name: 'Compound F', category: 'Growth Hormone', desc: 'Selective secretagogue. Studied for GH pulse research applications.', defaultMg: 5, defaultMcg: 200 },
-  { name: 'Compound G', category: 'Growth Hormone', desc: 'Oral secretagogue. Studied for IGF-1 and GH research.', defaultMg: 25, defaultMcg: 25000 },
-  { name: 'Compound H', category: 'Anti-Aging', desc: 'Copper peptide. Studied for skin and collagen synthesis research.', defaultMg: 50, defaultMcg: 200 },
-  { name: 'Compound I', category: 'Anti-Aging', desc: 'Telomerase activator. Studied for cellular longevity research.', defaultMg: 10, defaultMcg: 5000 },
-  { name: 'Compound J', category: 'Other', desc: 'Melanocortin receptor agonist. Studied in various research applications.', defaultMg: 10, defaultMcg: 1750 },
-  { name: 'Compound K', category: 'Immune', desc: 'Immune modulator peptide. Studied for immune system research.', defaultMg: 5, defaultMcg: 1600 },
-  { name: 'Compound L', category: 'Anti-Aging', desc: 'Mitochondrial-targeted peptide. Studied for cellular energy research.', defaultMg: 5, defaultMcg: 500 },
-  { name: 'Compound M', category: 'Other', desc: 'Anxiolytic peptide. Studied for cognitive enhancement research.', defaultMg: 5, defaultMcg: 250 },
-  { name: 'Compound N', category: 'Other', desc: 'Nootropic peptide. Studied for cognitive function research.', defaultMg: 5, defaultMcg: 200 },
-  { name: 'Compound O', category: 'Other', desc: 'Sleep-regulating peptide. Studied for sleep pattern research.', defaultMg: 5, defaultMcg: 100 },
-  { name: 'Compound P', category: 'Metabolic', desc: 'GH fragment. Studied for metabolic pathway research.', defaultMg: 5, defaultMcg: 300 },
+  { name: 'BPC-157', category: 'Recovery', desc: 'Recovery-focused research peptide. Commonly studied for tissue repair applications.', defaultMg: 5, defaultMcg: 250 },
+  { name: 'TB-500', category: 'Recovery', desc: 'Thymosin Beta-4 fragment. Studied for flexibility and repair in research settings.', defaultMg: 5, defaultMcg: 2500 },
+  { name: 'Semaglutide', category: 'Metabolic', desc: 'GLP-1 receptor agonist. Studied for metabolic research applications.', defaultMg: 5, defaultMcg: 250 },
+  { name: 'Tirzepatide', category: 'Metabolic', desc: 'Dual GIP/GLP-1 receptor agonist. Studied for metabolic pathway research.', defaultMg: 10, defaultMcg: 2500 },
+  { name: 'CJC-1295', category: 'Growth Hormone', desc: 'GHRH analog. Commonly paired with Ipamorelin in research stacks.', defaultMg: 5, defaultMcg: 100 },
+  { name: 'Ipamorelin', category: 'Growth Hormone', desc: 'Selective GH secretagogue. Studied for GH pulse research applications.', defaultMg: 5, defaultMcg: 200 },
+  { name: 'MK-677', category: 'Growth Hormone', desc: 'Oral GH secretagogue. Studied for IGF-1 and GH research.', defaultMg: 25, defaultMcg: 25000 },
+  { name: 'GHK-Cu', category: 'Anti-Aging', desc: 'Copper peptide complex. Studied for skin and collagen synthesis research.', defaultMg: 50, defaultMcg: 200 },
+  { name: 'Epitalon', category: 'Anti-Aging', desc: 'Telomerase activator. Studied for cellular longevity research.', defaultMg: 10, defaultMcg: 5000 },
+  { name: 'Melanotan II', category: 'Other', desc: 'Melanocortin receptor agonist. Studied in various research applications.', defaultMg: 10, defaultMcg: 1750 },
+  { name: 'Thymosin Alpha-1', category: 'Immune', desc: 'Immune modulator peptide. Studied for immune system research.', defaultMg: 5, defaultMcg: 1600 },
+  { name: 'SS-31', category: 'Anti-Aging', desc: 'Mitochondrial-targeted peptide. Studied for cellular energy research.', defaultMg: 5, defaultMcg: 500 },
+  { name: 'Selank', category: 'Other', desc: 'Anxiolytic peptide. Studied for cognitive enhancement research.', defaultMg: 5, defaultMcg: 250 },
+  { name: 'Semax', category: 'Other', desc: 'Nootropic peptide. Studied for cognitive function research.', defaultMg: 5, defaultMcg: 200 },
+  { name: 'DSIP', category: 'Other', desc: 'Delta sleep-inducing peptide. Studied for sleep pattern research.', defaultMg: 5, defaultMcg: 100 },
+  { name: 'AOD-9604', category: 'Metabolic', desc: 'GH fragment 176-191. Studied for metabolic pathway research.', defaultMg: 5, defaultMcg: 300 },
 ];
 
 const categories = ['All', ...new Set(peptideLibrary.map(p => p.category))];

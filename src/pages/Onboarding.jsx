@@ -239,7 +239,7 @@ export default function Onboarding({ onComplete }) {
             <div style={{ marginBottom: 32, background: 'var(--bg-secondary)', width: 100, height: 100, borderRadius: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                <IoWatchOutline size={50} color="var(--accent)" />
             </div>
-            <h1 className="ob-title" style={{ fontSize: '1.6rem', lineHeight: 1.3, marginBottom: 12 }}>Connect Apple Health</h1>
+            <h1 className="ob-title" style={{ fontSize: '1.6rem', lineHeight: 1.3, marginBottom: 12 }}>Connect Apple Health (HealthKit)</h1>
             <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: 1.5, maxWidth: 300, marginBottom: 40 }}>
               Allow PeptidAI to securely sync your Apple Watch sleep and energy data to build a smarter, more accurate protocol.
             </p>
@@ -251,7 +251,7 @@ export default function Onboarding({ onComplete }) {
                 setPhase('rating');
               }} 
               style={{ fontSize: '1.1rem', fontWeight: 700, padding: 18, borderRadius: 100, marginBottom: 16 }}>
-              Sync Apple Watch
+              Sync Apple Health (HealthKit)
             </button>
             <button 
               onClick={() => setPhase('rating')} 

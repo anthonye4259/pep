@@ -17,6 +17,7 @@ import Journal from './pages/Journal';
 import Referrals from './pages/Referrals';
 import MyPlan from './pages/MyPlan';
 import WebFunnel from './pages/WebFunnel';
+import DisclaimerModal from './components/DisclaimerModal';
 
 const HIDE_NAV = ['/guide', '/privacy', '/terms', '/settings', '/reconstitution-guide', '/referrals', '/web-funnel'];
 
@@ -75,6 +76,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <AppProvider>
+        <DisclaimerModal />
         <AppShell />
       </AppProvider>
     </BrowserRouter>

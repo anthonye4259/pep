@@ -4,7 +4,7 @@ import { IoArrowBack, IoSave, IoCheckmarkCircle, IoInformationCircleOutline, IoS
 import NeonSyringe from '../components/NeonSyringe';
 import { useApp } from '../context/AppContext';
 
-const DISCLAIMER = 'FOR LABORATORY RESEARCH PURPOSES ONLY. NOT FOR HUMAN CONSUMPTION OR MEDICAL USE. This is an informational mathematical visualization tool, not medical advice. Verify all calculations independently. You are solely responsible for your use of this information.';
+const DISCLAIMER = 'For informational purposes only. PeptidAI cannot provide dosing, preparation, administration, or medical advice. All calculations are estimates and must be verified independently.';
 
 export default function SyringeGuide() {
   const navigate = useNavigate();

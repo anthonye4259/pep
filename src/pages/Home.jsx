@@ -5,9 +5,9 @@ import { useApp } from '../context/AppContext';
 import { extractVialLabel } from '../lib/gemini';
 
 const QUICK_START = [
-  { name: 'Compound A', mg: 5, mcg: 250 },
-  { name: 'Compound B', mg: 10, mcg: 2500 },
-  { name: 'Compound C', mg: 5, mcg: 250 },
+  { name: 'Semaglutide', mg: 5, mcg: 250 },
+  { name: 'Tirzepatide', mg: 10, mcg: 2500 },
+  { name: 'BPC-157', mg: 5, mcg: 250 },
 ];
 
 export default function Home() {
