@@ -38,15 +38,15 @@ export default function DisclaimerModal() {
         </div>
 
         <h2 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: 16, color: '#1a1a1a' }}>
-          PeptidAI
+          Health Disclaimer
         </h2>
 
-        <p style={{ fontSize: '0.9rem', color: '#555', lineHeight: 1.6, marginBottom: 24 }}>
-          PeptidAI can use a minimal summary of your saved app data, such as tracked peptides, schedules, logs, and AI Insights, to answer personal app questions and navigate you to relevant screens. It cannot provide dosing, preparation, administration, or medical advice.
+        <p style={{ fontSize: '0.9rem', color: '#555', lineHeight: 1.6, marginBottom: 24, textAlign: 'left' }}>
+          PeptidAI is designed for tracking and educational purposes only. It is not intended to provide medical advice, diagnosis, treatment recommendations, or dosing instructions.
         </p>
 
-        <p style={{ fontSize: '0.8rem', color: '#999', lineHeight: 1.5, marginBottom: 24 }}>
-          PeptidAI is for informational and record-keeping purposes only.
+        <p style={{ fontSize: '0.9rem', color: '#555', lineHeight: 1.6, marginBottom: 24, textAlign: 'left' }}>
+          Always consult with your healthcare provider for any medical decisions or health concerns. All features are for personal record-keeping and educational reference only.
         </p>
 
         <button
