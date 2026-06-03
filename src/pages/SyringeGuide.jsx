@@ -54,7 +54,7 @@ export default function SyringeGuide() {
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
           <div className="input-group" style={{ marginBottom: 0 }}>
-            <label>Vial (mg)</label>
+            <label>Container (mg)</label>
             <input type="number" className="input" placeholder="10" value={peptideMg} onChange={e => setPeptideMg(e.target.value)} />
           </div>
           <div className="input-group" style={{ marginBottom: 0 }}>
@@ -93,7 +93,7 @@ export default function SyringeGuide() {
             </button>
           </div>
           <button className="btn btn-secondary btn-full" style={{ marginTop: 10 }} onClick={() => {
-            const text = `PeptidAI Research Calculation\n${peptideName || 'Peptide'} | ${peptideMg}mg vial + ${waterMl}mL water\nTarget: ${targetMcg}mcg → Result: ${((Number(targetMcg) / ((Number(peptideMg) * 1000) / Number(waterMl))) * (syringeSize === 'u100' ? 100 : syringeSize === 'u50' ? 50 : 30)).toFixed(1)} units\n\nCalculated with PeptidAI`;
+            const text = `PeptidAI Research Calculation\n${peptideName || 'Sample'} | ${peptideMg}mg container + ${waterMl}mL water\nTarget: ${targetMcg}mcg → Result: ${((Number(targetMcg) / ((Number(peptideMg) * 1000) / Number(waterMl))) * (syringeSize === 'u100' ? 100 : syringeSize === 'u50' ? 50 : 30)).toFixed(1)} units\n\nCalculated with PeptidAI`;
             if (navigator.share) { navigator.share({ text }); } else { navigator.clipboard.writeText(text); alert('Copied to clipboard!'); }
           }}><IoShareOutline size={18} /> Share Calculation</button>
         </div>

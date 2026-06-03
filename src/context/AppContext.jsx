@@ -46,9 +46,9 @@ export function AppProvider({ children }) {
             const data = url.searchParams.get('data');
             if (data) {
               const decoded = JSON.parse(atob(data));
-              if (window.confirm(`Import Protocol Template: ${decoded.name || 'Custom Protocol'}?`)) {
+              if (window.confirm(`Import Configuration Template: ${decoded.name || 'Custom Configuration'}?`)) {
                 saveSchedule({ ...decoded, id: Date.now().toString() });
-                alert('Protocol imported successfully!');
+                alert('Configuration imported successfully!');
               }
             }
           }
@@ -255,7 +255,7 @@ export function AppProvider({ children }) {
         notifications: [
           {
             title: "PeptidAI Check-In",
-            body: "Good morning! Open PeptidAI to check today's protocol and log your biometrics.",
+            body: "Good morning! Open PeptidAI to check today's schedule and log your biometrics.",
             id: 1,
             schedule: { on: { hour, minute }, allowWhileIdle: true },
             sound: null,

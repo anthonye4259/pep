@@ -17,7 +17,7 @@ export default function Privacy() {
         <p>We collect the following information when you use the App:</p>
         <ul style={{ paddingLeft: 20, marginTop: 8 }}>
           <li><strong>Account Information:</strong> Email address and display name when you create an account.</li>
-          <li><strong>User-Entered Data:</strong> Vial configurations, calculation inputs, and usage logs that you voluntarily enter into the App.</li>
+          <li><strong>User-Entered Data:</strong> Container configurations, calculation inputs, and usage logs that you voluntarily enter into the App.</li>
           <li><strong>Device Information:</strong> Device type, operating system, and app version for troubleshooting purposes.</li>
         </ul>
 
@@ -42,7 +42,7 @@ export default function Privacy() {
         <h3 style={{ color: '#1a1a1a', marginTop: 20, marginBottom: 8 }}>6. Third-Party Services</h3>
         <ul style={{ paddingLeft: 20, marginTop: 8 }}>
           <li>Google Firebase (authentication, data storage)</li>
-          <li>Google Gemini API (vial label text extraction)</li>
+          <li>Google Gemini API (container label text extraction)</li>
           <li>Apple App Store (subscription billing)</li>
         </ul>
 

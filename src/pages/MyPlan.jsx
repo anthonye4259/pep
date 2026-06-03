@@ -76,7 +76,7 @@ export default function MyPlan() {
           <h1 style={{ fontSize: '1.8rem', display: 'flex', alignItems: 'center', gap: 8 }}>
             AI Health Plan <IoSparkles color="var(--accent)" size={24} />
           </h1>
-          <p style={{ color: 'var(--accent)', fontWeight: 600, fontSize: '0.9rem' }}>Hyper-Personalized 12-Week Protocol</p>
+          <p style={{ color: 'var(--accent)', fontWeight: 600, fontSize: '0.9rem' }}>Hyper-Personalized 12-Week Plan</p>
         </div>
         <button onClick={handleRegenerate} style={{ background: 'transparent', border: 'none', color: '#999', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <IoRefreshCircle size={28} />

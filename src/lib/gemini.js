@@ -15,9 +15,9 @@ export async function extractVialLabel(base64Image) {
             }
           },
           {
-            text: `Analyze this peptide vial label image. Extract the following information and return ONLY a JSON object with these fields:
+            text: `Analyze this container label image. Extract the following information and return ONLY a JSON object with these fields:
 - peptideName: the name of the compound on the label
-- peptideMg: the total milligrams of compound in the vial as a number (e.g. 10, 5, 15)
+- peptideMg: the total milligrams of compound in the container as a number (e.g. 10, 5, 15)
 
 If you cannot determine a value, set it to null. Return ONLY the JSON object, no other text.
 Example response: {"peptideName": "Compound X", "peptideMg": 10}`
@@ -53,22 +53,22 @@ Example response: {"peptideName": "Compound X", "peptideMg": 10}`
 
 export async function generateProtocol(answers, vials = []) {
   const inventoryStr = vials.map(v => `${v.peptideName}: ${v.peptideMg}mg`).join(', ') || 'No current inventory recorded.';
-  const prompt = `You are an expert wellness and research education AI coach. Generate a personalized 12-week research plan based on the following user data:
-Goals: ${answers.goal || 'General wellness'}
+  const prompt = `You are an expert research education AI coach. Generate a personalized 12-week research plan based on the following user data:
+Goals: ${answers.goal || 'General research'}
 Sleep: ${answers.sleep || 'Average'}
 Energy: ${answers.energy || 'Average'}
 Interested Compounds: ${(answers.peptides || []).join(', ') || 'None specified'}
-Current Inventory (Vials): ${inventoryStr}
+Current Inventory: ${inventoryStr}
 
 Return a strict JSON object with this exact structure:
 {
   "summary": "A 2-sentence encouraging summary of their path forward.",
   "focusAreas": ["area 1", "area 2", "area 3"],
   "schedule": [
-    { "week": "Weeks 1-4", "action": "5 days on, 2 days off of Compound X", "dosage": "250mcg daily" },
-    { "week": "Weeks 5-8", "action": "Increase dose or cycle off", "dosage": "500mcg daily" }
+    { "week": "Weeks 1-4", "action": "5 days on, 2 days off of Compound X", "amount": "250mcg daily" },
+    { "week": "Weeks 5-8", "action": "Increase dose or cycle off", "amount": "500mcg daily" }
   ],
-  "inventoryAdvice": "Based on their current inventory, when will they need to order more vials? e.g. 'You have enough Compound X for 4 weeks.'",
+  "inventoryAdvice": "Based on their current inventory, when will they need to reorder? e.g. 'You have enough Compound X for 4 weeks.'",
   "safetyNote": "A brief reminder that this is for research purposes only and is not medical advice."
 }`;
 

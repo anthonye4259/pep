@@ -115,7 +115,7 @@ export default function Home() {
           <div className="section-header">
             <span className="section-title"><IoSparkles size={12} style={{ marginRight: 4 }} />Quick Start</span>
           </div>
-          <p style={{ fontSize: '0.8rem', color: '#999', marginBottom: 12 }}>Tap a common peptide to try the calculator:</p>
+          <p style={{ fontSize: '0.8rem', color: '#999', marginBottom: 12 }}>Tap a sample to try the calculator:</p>
           {QUICK_START.map((p, i) => (
             <button
               key={i}
@@ -125,7 +125,7 @@ export default function Home() {
               <div className="vial-icon"><IoFlaskOutline size={22} /></div>
               <div className="vial-info">
                 <div className="vial-name">{p.name}</div>
-                <div className="vial-detail">{p.mg}mg vial · {p.mcg >= 1000 ? `${p.mcg/1000}mg` : `${p.mcg}mcg`} reference amount</div>
+                <div className="vial-detail">{p.mg}mg container · {p.mcg >= 1000 ? `${p.mcg/1000}mg` : `${p.mcg}mcg`} reference amount</div>
               </div>
               <div className="vial-arrow"><IoChevronForward size={18} /></div>
             </button>

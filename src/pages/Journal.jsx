@@ -47,7 +47,7 @@ export default function Journal() {
           <h1 style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             Journal <IoFlashOutline color="var(--accent)" />
           </h1>
-          <p>Track your wellness progress</p>
+          <p>Track your daily progress</p>
         </div>
         <button className="btn btn-primary btn-sm" onClick={() => setShowLog(true)} style={{ padding: '6px 12px' }}>
           <IoAdd size={18} style={{ marginRight: 6 }} /> Log
@@ -59,7 +59,7 @@ export default function Journal() {
         <div className="card" style={{ marginBottom: 20, background: 'linear-gradient(135deg, #fffafa, #fff0f5)', border: '1px solid #ffe4e1' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
             <IoWatchOutline size={20} color="var(--accent)" />
-            <h2 style={{ fontSize: '1rem', margin: 0, color: '#1a1a1a' }}>Apple Health Insights</h2>
+            <h2 style={{ fontSize: '1rem', margin: 0, color: '#1a1a1a' }}>Apple Health (HealthKit) Insights</h2>
           </div>
           <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: -12, marginBottom: 16 }}>Latest Sync: {new Date(latestEntry.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</p>
           
@@ -152,7 +152,7 @@ export default function Journal() {
               disabled={syncing}
               style={{ width: '100%', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: 14, borderRadius: 12, background: form.rawSleep ? 'var(--bg)' : 'var(--bg-card)', border: '1px solid var(--border)', color: form.rawSleep ? 'var(--success)' : 'var(--text)', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}>
               <IoWatchOutline size={20} color={form.rawSleep ? 'var(--success)' : 'var(--accent)'} />
-              {syncing ? 'Syncing...' : form.rawSleep ? 'Synced!' : 'Sync Apple Watch'}
+              {syncing ? 'Syncing...' : form.rawSleep ? 'Synced!' : 'Sync Apple Health (HealthKit)'}
             </button>
 
             <div className="input-group">

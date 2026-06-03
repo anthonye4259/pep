@@ -29,8 +29,8 @@ export default function ShareGraphic({ title, subtitle, items = [], onClose }) {
       });
 
       await Share.share({
-        title: 'My Protocol',
-        text: 'Check out my wellness protocol on PeptidAI!',
+        title: 'My Routine',
+        text: 'Check out my research routine on PeptidAI!',
         url: savedFile.uri,
         dialogTitle: 'Share to Instagram Story'
       });

@@ -13,9 +13,9 @@ const plans = [
 ];
 
 const features = [
-  'AI vial label text extraction',
-  'Interactive syringe visualization',
-  'Multiple syringe sizes (U-100, U-50, U-30)',
+  'AI label text extraction',
+  'Interactive measurement visualization',
+  'Multiple measurement scales',
   'Save unlimited configurations',
   'Usage logging & history calendar',
   'Peptide reference library',

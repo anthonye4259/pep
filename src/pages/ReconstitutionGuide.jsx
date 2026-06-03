@@ -27,7 +27,7 @@ const steps = [
     title: '4. Add Water to Sample Container',
     items: [
       'Insert the needle through the rubber stopper at an angle',
-      'SLOWLY inject the water down the side of the vial',
+      'SLOWLY add the water down the side of the container',
       'Do NOT spray directly onto the powder',
       'Let the powder dissolve — gently swirl if needed, never shake',
     ],
@@ -74,7 +74,7 @@ export default function ReconstitutionGuide() {
       {/* Water amount guide */}
       <h2 style={{ fontSize: '1.1rem', marginTop: 28, marginBottom: 14 }}>How Much Water Should I Add?</h2>
       <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: 16, lineHeight: 1.5 }}>
-        For a standard <strong>5mg vial</strong>, here's how water amount affects your concentration:
+        For a standard <strong>5mg container</strong>, here's how water amount affects your concentration:
       </p>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {waterGuide.map((row, i) => (
