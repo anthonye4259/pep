@@ -23,8 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-# Capacitor - ignore build artifacts but track config
-ios/App/App/public/
-ios/App/Pods/
+# Capacitor
+ios/
 android/
 paywall_screenshot.png
