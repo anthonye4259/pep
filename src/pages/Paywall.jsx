@@ -118,8 +118,10 @@ export default function Paywall({ onSubscribe }) {
       <div className="paywall-inner">
         <div className="paywall-header">
           <div style={{ marginBottom: 12 }}><IoFlask size={40} color="white" /></div>
-          <h1 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '8px' }}>Peptid<span style={{ color: 'var(--success)' }}>AI</span></h1>
-          <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.6)' }}>Your mathematical laboratory tool</p>
+          <h1 style={{ fontSize: '1.8rem', marginBottom: 4, color: 'white' }}>
+            Peptid<span style={{ fontWeight: 800 }}>AI</span> Pro
+          </h1>
+          <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.6)' }}>Your reconstitution math tool</p>
         </div>
 
         {/* Social proof */}
