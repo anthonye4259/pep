@@ -13,7 +13,7 @@ export default function Referrals() {
     try {
       await Share.share({
         title: 'Join PeptidAI',
-        text: 'I use PeptidAI to track my research routines. Use my code to join the community!',
+        text: 'I use PeptidAI to track my wellness protocols. Use my code to join the community!',
         url: url,
         dialogTitle: 'Share Invite Link'
       });

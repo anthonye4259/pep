@@ -161,7 +161,7 @@ export default function Calendar() {
           <div className="modal" onClick={e => e.stopPropagation()}>
             <h2 style={{ marginBottom: 20 }}>Add Schedule</h2>
             <div className="input-group">
-              <label>Compound Name</label>
+              <label>Peptide Name</label>
               <input type="text" className="input" placeholder="e.g. Compound A" value={scheduleForm.peptideName} onChange={e => setScheduleForm({ ...scheduleForm, peptideName: e.target.value })} />
             </div>
             <div className="input-group">
@@ -188,7 +188,7 @@ export default function Calendar() {
 
       {showGraphic && (
         <ShareGraphic 
-          title="My Schedule" 
+          title="My Protocol Stack" 
           subtitle="Weekly Routine" 
           items={schedules.map(s => ({ title: s.peptideName, value: s.days.join(', ') }))} 
           onClose={() => setShowGraphic(false)} 

@@ -53,7 +53,7 @@ export default function DisclaimerModal() {
             This application is a mathematical tool designed <strong>exclusively for academic laboratory research and dilution calculations</strong>.
           </p>
           <p style={{ margin: '0 0 12px 0' }}>
-            It is <strong>NOT a medical device</strong>. It does not provide medical advice and must not be used to determine amounts for human or animal consumption.
+            It is <strong>NOT a medical device</strong>. It does not provide medical advice and must not be used to calculate dosages for human or animal consumption.
           </p>
           <p style={{ margin: 0 }}>
             By continuing, you acknowledge that this tool is for educational and research purposes only.

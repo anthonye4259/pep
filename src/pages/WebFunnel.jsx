@@ -66,7 +66,7 @@ export default function WebFunnel() {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#fff', padding: '40px 20px' }}>
         <h2 style={{ textAlign: 'center', marginBottom: 20, color: '#1a1a1a', fontWeight: 800 }}>Choose Your Plan</h2>
-        <p style={{ textAlign: 'center', marginBottom: 40, color: '#666' }}>Your custom configuration is securely saved to your account.</p>
+        <p style={{ textAlign: 'center', marginBottom: 40, color: '#666' }}>Your custom protocol is securely saved to your account.</p>
         <stripe-pricing-table 
           pricing-table-id="prctbl_1Tagch06I3eFkRUmLUHyPyhs"
           publishable-key="pk_live_51Rfsym06I3eFkRUmipmmgFo6bqX8Al08OhJZm1N6b6UvO6ZnLUDuhOQpNNaSeJlbFAmETOt64P6oRMboXLsnm3tJ00ClGq74Lv"
@@ -85,7 +85,7 @@ export default function WebFunnel() {
       <div style={{ background: 'linear-gradient(135deg, #1a1a1a 0%, #000 100%)', padding: '60px 20px 40px', textAlign: 'center', borderBottom: '1px solid #333' }}>
         <h1 style={{ fontSize: '2.5rem', color: '#fff', marginBottom: 16 }}>Unlock Your <span style={{ color: 'var(--accent)' }}>AI Health Tutor</span></h1>
         <p style={{ color: '#aaa', fontSize: '1.1rem', maxWidth: 400, margin: '0 auto', lineHeight: 1.5 }}>
-          Create your account to generate your hyper-personalized 30-day plan and unlock the AI Label Scanner.
+          Create your account to generate your hyper-personalized 30-day protocol and unlock the AI Vial Scanner.
         </p>
       </div>
 
@@ -93,9 +93,9 @@ export default function WebFunnel() {
       <div style={{ padding: '40px 20px', background: '#000' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 400, margin: '0 auto' }}>
           {[
-            'Custom 30-Day Research Plan',
-            'Unlimited AI Label Scanning',
-            'Visual Math Guide',
+            'Custom 30-Day Health Protocol',
+            'Unlimited AI Vial Scanning',
+            'Visual Syringe Math Guide',
             'Daily Transformation Journal'
           ].map((benefit, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>

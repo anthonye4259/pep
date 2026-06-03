@@ -7,9 +7,9 @@ const DISCLAIMER = `FOR LABORATORY RESEARCH PURPOSES ONLY. NOT FOR HUMAN CONSUMP
 
 const TUTORIAL_STEPS = [
   {
-    title: 'Snap a photo of your label.\nAI does the rest.',
+    title: 'Snap a photo of your vial.\nAI does the rest.',
     icon: <IoScanOutline size={100} color="var(--accent)" />,
-    desc: 'Our intelligent scanner instantly extracts the compound name, mass, and concentration.'
+    desc: 'Our intelligent scanner instantly extracts the peptide name, mass, and concentration.'
   },
   {
     title: 'Never guess your amounts.\nSee the exact math.',
@@ -26,7 +26,7 @@ const TUTORIAL_STEPS = [
 const QUESTIONS = [
   {
     id: 'goal',
-    title: 'What is your primary research goal?',
+    title: 'What is your primary wellness goal?',
     options: ['Anti-Aging & Longevity', 'Fat Loss & Metabolism', 'Muscle Growth & Recovery', 'Cognitive Focus', 'Injury Repair'],
   },
   {
@@ -43,7 +43,7 @@ const QUESTIONS = [
     id: 'peptides',
     title: 'Which compounds are you researching?',
     subtitle: 'Select all that apply',
-    options: ['Weight Management Compounds', 'Recovery & Repair Compounds', 'Growth Hormone Compounds', 'Cellular Health Compounds', 'Other'],
+    options: ['Weight Management Compounds', 'Recovery & Repair Compounds', 'Growth Hormone Peptides', 'Cellular Health Compounds', 'Other'],
     multi: true,
   }
 ];
@@ -239,9 +239,9 @@ export default function Onboarding({ onComplete }) {
             <div style={{ marginBottom: 32, background: 'var(--bg-secondary)', width: 100, height: 100, borderRadius: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                <IoWatchOutline size={50} color="var(--accent)" />
             </div>
-            <h1 className="ob-title" style={{ fontSize: '1.6rem', lineHeight: 1.3, marginBottom: 12 }}>Connect Apple Health (HealthKit)</h1>
+            <h1 className="ob-title" style={{ fontSize: '1.6rem', lineHeight: 1.3, marginBottom: 12 }}>Connect Apple Health</h1>
             <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: 1.5, maxWidth: 300, marginBottom: 40 }}>
-              Allow PeptidAI to securely sync your Apple Watch sleep and energy data via HealthKit to build a smarter, more accurate schedule.
+              Allow PeptidAI to securely sync your Apple Watch sleep and energy data to build a smarter, more accurate protocol.
             </p>
             
             <button 
@@ -251,7 +251,7 @@ export default function Onboarding({ onComplete }) {
                 setPhase('rating');
               }} 
               style={{ fontSize: '1.1rem', fontWeight: 700, padding: 18, borderRadius: 100, marginBottom: 16 }}>
-              Sync Apple Health (HealthKit)
+              Sync Apple Watch
             </button>
             <button 
               onClick={() => setPhase('rating')} 

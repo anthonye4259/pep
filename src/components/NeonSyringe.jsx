@@ -119,7 +119,7 @@ export default function NeonSyringe({
           </div>
           <div className="result-stat">
             <div className="result-stat-value">{result.totalDoses}</div>
-            <div className="result-stat-label">Total servings</div>
+            <div className="result-stat-label">Servings in vial</div>
           </div>
         </div>
       )}
@@ -127,7 +127,7 @@ export default function NeonSyringe({
       {/* Warning if over capacity */}
       {result && !result.isValid && result.doseUnits > 0 && (
         <div style={{ color: '#ff3b30', fontSize: '0.85rem', marginTop: 16, textAlign: 'center' }}>
-          Calculated volume exceeds {maxUnits}-unit measurement device capacity. Adjust your input values.
+          Calculated volume exceeds {maxUnits}-unit syringe capacity. Adjust your input values.
         </div>
       )}
     </div>

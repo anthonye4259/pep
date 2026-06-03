@@ -44,7 +44,7 @@ export default function Settings() {
 
   const menuItems = [
     { label: 'Manage Subscription', icon: IoCardOutline, action: () => window.open(manageUrl, '_blank') },
-    { label: 'Dilution Guide', icon: IoHelpCircleOutline, action: () => navigate('/reconstitution-guide') },
+    { label: 'Reconstitution Guide', icon: IoHelpCircleOutline, action: () => navigate('/reconstitution-guide') },
     { label: 'Privacy Policy', icon: IoShieldCheckmarkOutline, action: () => navigate('/privacy') },
     { label: 'Terms of Service', icon: IoDocumentTextOutline, action: () => navigate('/terms') },
     { label: 'Contact Support', icon: IoMailOutline, action: () => window.open('mailto:support@peptidai.com') },
@@ -71,7 +71,7 @@ export default function Settings() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', borderBottom: '1px solid var(--border)' }}>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <span style={{ fontWeight: 600, color: 'var(--text)' }}>Daily Reminders</span>
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Get notified to check your schedule</span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Get notified to check your protocol</span>
             </div>
             <label style={{ position: 'relative', display: 'inline-block', width: 44, height: 24 }}>
               <input 
@@ -153,7 +153,7 @@ export default function Settings() {
         <div className="modal-overlay" onClick={() => setShowDelete(false)}>
           <div className="modal" onClick={e => e.stopPropagation()}>
             <h2 style={{ marginBottom: 8 }}>Delete Account?</h2>
-            <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: 20 }}>This will permanently delete your account, saved configurations, and all data. This cannot be undone.</p>
+            <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: 20 }}>This will permanently delete your account, saved vials, and all data. This cannot be undone.</p>
             <button className="btn btn-full" style={{ background: '#ff3b30', color: 'white', marginBottom: 8 }} onClick={handleDeleteAccount}>Delete Permanently</button>
             <button className="btn btn-secondary btn-full" onClick={() => setShowDelete(false)}>Cancel</button>
           </div>

@@ -9,17 +9,17 @@ export default function MyVials() {
   return (
     <div className="page">
       <div className="page-header">
-        <h1>My Saved</h1>
+        <h1>My Vials</h1>
         <p>Your saved configurations</p>
       </div>
 
       {(!vials || vials.length === 0) ? (
         <div className="empty-state">
           <div className="empty-icon"><IoFlaskOutline size={48} /></div>
-          <div className="empty-title">No saved items</div>
-          <div className="empty-text">Scan a label or enter details manually to save your first configuration</div>
+          <div className="empty-title">No saved vials</div>
+          <div className="empty-text">Scan a vial or enter details manually to save your first configuration</div>
           <button className="btn btn-primary" onClick={() => navigate('/')}>
-            Scan a Label
+            Scan a Vial
           </button>
         </div>
       ) : (
@@ -39,7 +39,7 @@ export default function MyVials() {
                   </div>
                   {vial.lastInjected && (
                     <div className="vial-injected">
-                      Last logged: {new Date(vial.lastInjected).toLocaleDateString()}
+                      Last injected: {new Date(vial.lastInjected).toLocaleDateString()}
                     </div>
                   )}
                 </div>

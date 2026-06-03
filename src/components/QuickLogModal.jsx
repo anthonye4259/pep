@@ -51,18 +51,18 @@ export default function QuickLogModal({ onClose }) {
         </div>
 
         <div className="input-group">
-          <label>Compound</label>
+          <label>Peptide</label>
           <select value={peptideId} onChange={e => handlePeptideChange(e.target.value)}>
-            <option value="">Select compound...</option>
+            <option value="">Select peptide...</option>
             {protocol.length > 0 && (
-              <optgroup label="My Saved">
+              <optgroup label="My Protocol">
                 {protocol.map(p => {
                   const db = peptideDatabase.find(pp => pp.id === p.peptideId);
                   return <option key={p.id} value={p.peptideId}>{db?.name || p.peptideId}</option>;
                 })}
               </optgroup>
             )}
-            <optgroup label="All Compounds">
+            <optgroup label="All Peptides">
               {peptideDatabase.filter(p => !protocol.find(pp => pp.peptideId === p.id)).map(p => (
                 <option key={p.id} value={p.id}>{p.name}</option>
               ))}
@@ -76,10 +76,10 @@ export default function QuickLogModal({ onClose }) {
             <input className="input" type="number" value={doseMcg} onChange={e => setDoseMcg(e.target.value)} placeholder="250" />
           </div>
           <div className="input-group">
-            <label>Method</label>
+            <label>Route</label>
             <select value={route} onChange={e => setRoute(e.target.value)}>
-              <option>Standard</option>
-              <option>Alternative</option>
+              <option>Subcutaneous</option>
+              <option>Intramuscular</option>
               <option>Oral</option>
               <option>Topical</option>
             </select>

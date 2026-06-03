@@ -61,7 +61,7 @@ function AppShell() {
             {({ isActive }) => (<><span className="nav-icon">{isActive ? <IoCalendar size={24} /> : <IoCalendarOutline size={24} />}</span><span>History</span></>)}
           </NavLink>
           <NavLink to="/vials" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-            {({ isActive }) => (<><span className="nav-icon">{isActive ? <IoFlask size={24} /> : <IoFlaskOutline size={24} />}</span><span>Saved</span></>)}
+            {({ isActive }) => (<><span className="nav-icon">{isActive ? <IoFlask size={24} /> : <IoFlaskOutline size={24} />}</span><span>Vials</span></>)}
           </NavLink>
           <NavLink to="/journal" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
             {({ isActive }) => (<><span className="nav-icon">{isActive ? <div style={{fontWeight: 'bold', fontSize: 24}}>J</div> : <div style={{fontSize: 24}}>J</div>}</span><span>Journal</span></>)}
