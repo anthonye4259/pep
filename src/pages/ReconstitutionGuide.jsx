@@ -105,7 +105,7 @@ export default function ReconstitutionGuide() {
           </div>
         </div>
         <div style={{ marginTop: 16, fontSize: '0.82rem', color: '#555', lineHeight: 1.6 }}>
-          <strong>Example:</strong> If your target amount is 2.5mg, that equals 2,500mcg. In the calculator, enter <strong>2500</strong> in the "Target amount (mcg)" field.
+          <strong>Example:</strong> If your vial contains 5mg of peptide, that equals 5,000mcg total. When adding water, you are diluting those 5,000mcg into a liquid volume.
         </div>
       </div>
     </div>

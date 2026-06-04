@@ -6,26 +6,27 @@ const SYRINGE_SIZES = [
   { id: 'u30', label: 'U-30', units: 30, desc: '0.3mL' },
 ];
 
-function calculateDose({ peptideMg, waterMl, targetMcg, syringeUnits }) {
-  if (!peptideMg || !waterMl || !targetMcg) return null;
+function calculateConcentration({ peptideMg, waterMl, syringeUnits, explorerUnits }) {
+  if (!peptideMg || !waterMl) return null;
   const concentrationMcgPerMl = (peptideMg * 1000) / waterMl;
   const concentrationMcgPerUnit = concentrationMcgPerMl / syringeUnits;
-  const doseUnits = targetMcg / concentrationMcgPerUnit;
-  const doseVolumeMl = targetMcg / concentrationMcgPerMl;
-  const totalDoses = Math.floor((peptideMg * 1000) / targetMcg);
+  
+  const totalMcgInExplorer = (explorerUnits || 0) * concentrationMcgPerUnit;
+  const volumeMlInExplorer = ((explorerUnits || 0) / syringeUnits);
+
   return {
-    doseUnits: Math.round(doseUnits * 10) / 10,
-    doseVolumeMl: Math.round(doseVolumeMl * 1000) / 1000,
     concentrationMcgPerUnit: Math.round(concentrationMcgPerUnit * 10) / 10,
-    totalDoses,
-    isValid: doseUnits > 0 && doseUnits <= syringeUnits,
+    concentrationMcgPerMl: Math.round(concentrationMcgPerMl * 10) / 10,
+    totalMcgInExplorer: Math.round(totalMcgInExplorer * 10) / 10,
+    volumeMlInExplorer: Math.round(volumeMlInExplorer * 1000) / 1000,
+    isValid: true,
   };
 }
 
 export default function NeonSyringe({
   peptideMg,
   waterMl,
-  targetMcg,
+  explorerUnits = 10,
   syringeSize = 'u100',
   onSyringeChange,
   height = 320,
@@ -34,8 +35,8 @@ export default function NeonSyringe({
   const maxUnits = syringeConfig.units;
 
   const result = useMemo(() =>
-    calculateDose({ peptideMg, waterMl, targetMcg, syringeUnits: maxUnits }),
-    [peptideMg, waterMl, targetMcg, maxUnits]
+    calculateConcentration({ peptideMg, waterMl, syringeUnits: maxUnits, explorerUnits }),
+    [peptideMg, waterMl, maxUnits, explorerUnits]
   );
 
   // Generate tick marks
@@ -51,8 +52,8 @@ export default function NeonSyringe({
     return t;
   }, [maxUnits]);
 
-  const fillPercent = result && result.isValid ? (result.doseUnits / maxUnits) * 100 : 0;
-  const targetBottom = result && result.isValid ? (result.doseUnits / maxUnits) * 100 : 0;
+  const fillPercent = (explorerUnits / maxUnits) * 100;
+  const targetBottom = (explorerUnits / maxUnits) * 100;
 
   return (
     <div className="syringe-wrap">
@@ -75,16 +76,14 @@ export default function NeonSyringe({
           <div className="syringe-plunger" />
           <div className="syringe-body" style={{ height }}>
             {/* Fill */}
-            <div className="syringe-fill" style={{ height: `${fillPercent}%` }} />
+            <div className="syringe-fill" style={{ height: `${Math.min(100, fillPercent)}%` }} />
 
             {/* Target line */}
-            {result && result.isValid && (
-              <div className="syringe-target-line" style={{ bottom: `${targetBottom}%` }}>
-                <div className="syringe-target-label">
-                  Result → {result.doseUnits} units
-                </div>
+            <div className="syringe-target-line" style={{ bottom: `${Math.min(100, targetBottom)}%` }}>
+              <div className="syringe-target-label" style={{ background: 'var(--accent)', color: '#fff' }}>
+                {explorerUnits} units = {result ? result.totalMcgInExplorer : 0} mcg
               </div>
-            )}
+            </div>
 
             {/* Tick marks */}
             <div className="syringe-ticks">
@@ -103,35 +102,24 @@ export default function NeonSyringe({
       </div>
 
       {/* Result stats */}
-      {result && result.isValid && (
+      {result && (
         <div className="result-stats" style={{ width: '100%', maxWidth: 340, marginTop: 20 }}>
           <div className="result-stat">
-            <div className="result-stat-value">{result.doseUnits}</div>
-            <div className="result-stat-label">Calculated units</div>
-          </div>
-          <div className="result-stat">
-            <div className="result-stat-value">{result.doseVolumeMl} mL</div>
-            <div className="result-stat-label">Volume</div>
+            <div className="result-stat-value" style={{ color: 'var(--accent)' }}>{result.totalMcgInExplorer}</div>
+            <div className="result-stat-label">mcg in {explorerUnits} units</div>
           </div>
           <div className="result-stat">
             <div className="result-stat-value">{result.concentrationMcgPerUnit}</div>
             <div className="result-stat-label">mcg / unit</div>
           </div>
           <div className="result-stat">
-            <div className="result-stat-value">{result.totalDoses}</div>
-            <div className="result-stat-label">Servings in vial</div>
+            <div className="result-stat-value">{result.volumeMlInExplorer} mL</div>
+            <div className="result-stat-label">Volume drawn</div>
           </div>
-        </div>
-      )}
-
-      {/* Warning if over capacity */}
-      {result && !result.isValid && result.doseUnits > 0 && (
-        <div style={{ color: '#ff3b30', fontSize: '0.85rem', marginTop: 16, textAlign: 'center' }}>
-          Calculated volume exceeds {maxUnits}-unit syringe capacity. Adjust your input values.
         </div>
       )}
     </div>
   );
 }
 
-export { SYRINGE_SIZES, calculateDose };
+export { SYRINGE_SIZES, calculateConcentration };

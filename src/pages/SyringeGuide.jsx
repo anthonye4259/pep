@@ -4,7 +4,7 @@ import { IoArrowBack, IoSave, IoCheckmarkCircle, IoInformationCircleOutline, IoS
 import NeonSyringe from '../components/NeonSyringe';
 import { useApp } from '../context/AppContext';
 
-const DISCLAIMER = 'For informational purposes only. PeptidAI cannot provide dosing, preparation, administration, or medical advice. All calculations are estimates and must be verified independently.';
+const DISCLAIMER = 'For informational purposes only. PeptidAI does not provide dosing, preparation, administration, or medical advice. All calculations are mathematical estimates of concentration and must be verified independently.';
 
 export default function SyringeGuide() {
   const navigate = useNavigate();
@@ -15,23 +15,25 @@ export default function SyringeGuide() {
   const [peptideName, setPeptideName] = useState(prefill.peptideName || '');
   const [peptideMg, setPeptideMg] = useState(prefill.peptideMg || '');
   const [waterMl, setWaterMl] = useState(prefill.waterMl || '');
-  const [targetMcg, setTargetMcg] = useState(prefill.targetMcg || '');
+  const [explorerUnits, setExplorerUnits] = useState(10);
   const [syringeSize, setSyringeSize] = useState(prefill.syringeSize || 'u100');
   const [saved, setSaved] = useState(false);
   const [logged, setLogged] = useState(false);
 
-  const hasValues = peptideMg && waterMl && targetMcg;
+  const hasValues = peptideMg && waterMl;
+  
+  const maxUnitsForSyringe = syringeSize === 'u100' ? 100 : syringeSize === 'u50' ? 50 : 30;
 
   async function handleSave() {
     if (!peptideName.trim()) return;
-    await saveVial({ peptideName: peptideName.trim(), peptideMg: Number(peptideMg), waterMl: Number(waterMl), targetMcg: Number(targetMcg), syringeSize });
+    await saveVial({ peptideName: peptideName.trim(), peptideMg: Number(peptideMg), waterMl: Number(waterMl), targetMcg: null, syringeSize });
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   }
 
   async function handleLog() {
     setLogged(true);
-    await saveVial({ peptideName: peptideName.trim() || 'Unknown', peptideMg: Number(peptideMg), waterMl: Number(waterMl), targetMcg: Number(targetMcg), syringeSize, lastInjected: new Date().toISOString() });
+    await saveVial({ peptideName: peptideName.trim() || 'Unknown', peptideMg: Number(peptideMg), waterMl: Number(waterMl), targetMcg: null, syringeSize, lastInjected: new Date().toISOString() });
     setTimeout(() => setLogged(false), 3000);
   }
 
@@ -40,7 +42,7 @@ export default function SyringeGuide() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
         <button className="btn btn-icon btn-secondary" onClick={() => navigate(-1)}><IoArrowBack size={20} /></button>
         <div>
-          <h1 style={{ fontSize: '1.3rem' }}>Research Volume Calculator</h1>
+          <h1 style={{ fontSize: '1.3rem' }}>Concentration Visualizer</h1>
           <p className="text-muted text-sm">Research math visualizer</p>
         </div>
       </div>
@@ -51,20 +53,33 @@ export default function SyringeGuide() {
           <label>Peptide Name (your label)</label>
           <input type="text" className="input" placeholder="e.g. Compound A" value={peptideName} onChange={e => setPeptideName(e.target.value)} />
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
           <div className="input-group" style={{ marginBottom: 0 }}>
-            <label>Vial (mg)</label>
+            <label>Vial Amount (mg)</label>
             <input type="number" className="input" placeholder="10" value={peptideMg} onChange={e => setPeptideMg(e.target.value)} />
           </div>
           <div className="input-group" style={{ marginBottom: 0 }}>
             <label>Water added (mL)</label>
             <input type="number" className="input" placeholder="2" value={waterMl} onChange={e => setWaterMl(e.target.value)} />
           </div>
-          <div className="input-group" style={{ marginBottom: 0 }}>
-            <label>Target Amount (mcg)</label>
-            <input type="number" className="input" placeholder="250" value={targetMcg} onChange={e => setTargetMcg(e.target.value)} />
-          </div>
         </div>
+        
+        {hasValues && (
+          <div className="input-group" style={{ marginTop: 20, marginBottom: 0 }}>
+            <label style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span>Explore Volume (Units)</span>
+              <span style={{ color: 'var(--accent)', fontWeight: 700 }}>{explorerUnits} units</span>
+            </label>
+            <input 
+              type="range" 
+              min="1" 
+              max={maxUnitsForSyringe} 
+              value={explorerUnits} 
+              onChange={e => setExplorerUnits(Number(e.target.value))}
+              style={{ width: '100%', accentColor: 'var(--accent)', margin: '10px 0' }}
+            />
+          </div>
+        )}
       </div>
 
       {/* Syringe visualization */}
@@ -76,20 +91,32 @@ export default function SyringeGuide() {
             <p style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}><strong>{DISCLAIMER}</strong></p>
           </div>
 
-          <NeonSyringe peptideMg={Number(peptideMg)} waterMl={Number(waterMl)} targetMcg={Number(targetMcg)} syringeSize={syringeSize} onSyringeChange={setSyringeSize} height={340} />
+          <NeonSyringe 
+            peptideMg={Number(peptideMg)} 
+            waterMl={Number(waterMl)} 
+            explorerUnits={explorerUnits} 
+            syringeSize={syringeSize} 
+            onSyringeChange={(size) => {
+              setSyringeSize(size);
+              const newMax = size === 'u100' ? 100 : size === 'u50' ? 50 : 30;
+              if (explorerUnits > newMax) setExplorerUnits(newMax);
+            }} 
+            height={340} 
+          />
 
           <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
             <button className="btn btn-secondary" style={{ flex: 1 }} onClick={handleSave}>
-              {saved ? <><IoCheckmarkCircle size={18} /> Saved</> : <><IoSave size={18} /> Save Config</>}
+              {saved ? <><IoCheckmarkCircle size={18} /> Saved</> : <><IoSave size={18} /> Save Vial</>}
             </button>
             <button className="btn btn-primary" style={{ flex: 1, opacity: logged ? 0.6 : 1 }} onClick={handleLog}>
               {logged ? <><IoCheckmarkCircle size={18} /> Logged</> : 'Log Record'}
             </button>
           </div>
           <button className="btn btn-secondary btn-full" style={{ marginTop: 10 }} onClick={() => {
-            const text = `PeptidAI Research Calculation\n${peptideName || 'Peptide'} | ${peptideMg}mg vial + ${waterMl}mL water\nTarget: ${targetMcg}mcg → Result: ${((Number(targetMcg) / ((Number(peptideMg) * 1000) / Number(waterMl))) * (syringeSize === 'u100' ? 100 : syringeSize === 'u50' ? 50 : 30)).toFixed(1)} units\n\nCalculated with PeptidAI`;
+            const concentration = ((Number(peptideMg) * 1000) / Number(waterMl)) / maxUnitsForSyringe;
+            const text = `PeptidAI Concentration Math\n${peptideName || 'Peptide'} | ${peptideMg}mg vial + ${waterMl}mL water\nConcentration: ${concentration.toFixed(1)} mcg per unit\n\nCalculated with PeptidAI`;
             if (navigator.share) { navigator.share({ text }); } else { navigator.clipboard.writeText(text); alert('Copied to clipboard!'); }
-          }}><IoShareOutline size={18} /> Share Calculation</button>
+          }}><IoShareOutline size={18} /> Share Math</button>
         </div>
       )}
     </div>
