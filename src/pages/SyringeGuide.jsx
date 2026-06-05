@@ -4,7 +4,7 @@ import { IoArrowBack, IoSave, IoCheckmarkCircle, IoInformationCircleOutline, IoS
 import NeonSyringe from '../components/NeonSyringe';
 import { useApp } from '../context/AppContext';
 
-const DISCLAIMER = 'For informational purposes only. PeptidAI does not provide dosing, preparation, administration, or medical advice. All calculations are mathematical estimates of concentration and must be verified independently.';
+const DISCLAIMER = 'For laboratory research use only. Not for human or medical use. Does not calculate medical dosages. All calculations are mathematical estimates of concentration and must be verified independently.';
 
 export default function SyringeGuide() {
   const navigate = useNavigate();
@@ -42,15 +42,15 @@ export default function SyringeGuide() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
         <button className="btn btn-icon btn-secondary" onClick={() => navigate(-1)}><IoArrowBack size={20} /></button>
         <div>
-          <h1 style={{ fontSize: '1.3rem' }}>Concentration Visualizer</h1>
-          <p className="text-muted text-sm">Research math visualizer</p>
+          <h1 style={{ fontSize: '1.3rem' }}>Research Volume Guide</h1>
+          <p className="text-muted text-sm">Laboratory math visualizer</p>
         </div>
       </div>
 
       {/* User-driven inputs */}
       <div className="card" style={{ marginBottom: 20 }}>
         <div className="input-group">
-          <label>Peptide Name (your label)</label>
+          <label>Compound Name (your label)</label>
           <input type="text" className="input" placeholder="e.g. Compound A" value={peptideName} onChange={e => setPeptideName(e.target.value)} />
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
@@ -67,8 +67,8 @@ export default function SyringeGuide() {
         {hasValues && (
           <div className="input-group" style={{ marginTop: 20, marginBottom: 0 }}>
             <label style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span>Explore Volume (Units)</span>
-              <span style={{ color: 'var(--accent)', fontWeight: 700 }}>{explorerUnits} units</span>
+              <span>Explore Sample Volume</span>
+              <span style={{ color: 'var(--accent)', fontWeight: 700 }}>{explorerUnits} marks</span>
             </label>
             <input 
               type="range" 
@@ -114,7 +114,7 @@ export default function SyringeGuide() {
           </div>
           <button className="btn btn-secondary btn-full" style={{ marginTop: 10 }} onClick={() => {
             const concentration = ((Number(peptideMg) * 1000) / Number(waterMl)) / maxUnitsForSyringe;
-            const text = `PeptidAI Concentration Math\n${peptideName || 'Peptide'} | ${peptideMg}mg vial + ${waterMl}mL water\nConcentration: ${concentration.toFixed(1)} mcg per unit\n\nCalculated with PeptidAI`;
+            const text = `PeptidAI Concentration Math\n${peptideName || 'Compound'} | ${peptideMg}mg vial + ${waterMl}mL water\nConcentration: ${concentration.toFixed(1)} mcg per mark\n\nCalculated with PeptidAI`;
             if (navigator.share) { navigator.share({ text }); } else { navigator.clipboard.writeText(text); alert('Copied to clipboard!'); }
           }}><IoShareOutline size={18} /> Share Math</button>
         </div>

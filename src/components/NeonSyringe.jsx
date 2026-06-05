@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 
 const SYRINGE_SIZES = [
-  { id: 'u100', label: 'U-100', units: 100, desc: '1mL' },
-  { id: 'u50', label: 'U-50', units: 50, desc: '0.5mL' },
-  { id: 'u30', label: 'U-30', units: 30, desc: '0.3mL' },
+  { id: 'u100', label: '1mL Size', units: 100, desc: '100 marks' },
+  { id: 'u50', label: '0.5mL Size', units: 50, desc: '50 marks' },
+  { id: 'u30', label: '0.3mL Size', units: 30, desc: '30 marks' },
 ];
 
 function calculateConcentration({ peptideMg, waterMl, syringeUnits, explorerUnits }) {
@@ -70,18 +70,18 @@ export default function NeonSyringe({
         ))}
       </div>
 
-      {/* Syringe */}
+      {/* Vial Container */}
       <div className="syringe-container">
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <div className="syringe-plunger" />
-          <div className="syringe-body" style={{ height }}>
+          {/* Replaced syringe plunger/needle with a generic flat-top vial body */}
+          <div className="syringe-body" style={{ height, borderRadius: '4px', borderTop: '2px solid rgba(255,255,255,0.3)', marginTop: 10 }}>
             {/* Fill */}
-            <div className="syringe-fill" style={{ height: `${Math.min(100, fillPercent)}%` }} />
+            <div className="syringe-fill" style={{ height: `${Math.min(100, fillPercent)}%`, background: 'var(--accent)' }} />
 
             {/* Target line */}
             <div className="syringe-target-line" style={{ bottom: `${Math.min(100, targetBottom)}%` }}>
               <div className="syringe-target-label" style={{ background: 'var(--accent)', color: '#fff' }}>
-                {explorerUnits} units = {result ? result.totalMcgInExplorer : 0} mcg
+                {explorerUnits} marks = {result ? result.totalMcgInExplorer : 0} mcg
               </div>
             </div>
 
@@ -97,7 +97,6 @@ export default function NeonSyringe({
               ))}
             </div>
           </div>
-          <div className="syringe-needle" />
         </div>
       </div>
 
@@ -106,15 +105,15 @@ export default function NeonSyringe({
         <div className="result-stats" style={{ width: '100%', maxWidth: 340, marginTop: 20 }}>
           <div className="result-stat">
             <div className="result-stat-value" style={{ color: 'var(--accent)' }}>{result.totalMcgInExplorer}</div>
-            <div className="result-stat-label">mcg in {explorerUnits} units</div>
+            <div className="result-stat-label">mcg in {explorerUnits} marks</div>
           </div>
           <div className="result-stat">
             <div className="result-stat-value">{result.concentrationMcgPerUnit}</div>
-            <div className="result-stat-label">mcg / unit</div>
+            <div className="result-stat-label">mcg / mark</div>
           </div>
           <div className="result-stat">
             <div className="result-stat-value">{result.volumeMlInExplorer} mL</div>
-            <div className="result-stat-label">Volume drawn</div>
+            <div className="result-stat-label">Sample volume</div>
           </div>
         </div>
       )}

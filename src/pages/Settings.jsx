@@ -68,6 +68,32 @@ export default function Settings() {
       <div style={{ marginBottom: 24 }}>
         <h3 style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12, marginLeft: 4 }}>Preferences</h3>
         <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+          
+          {/* Apple Health Sync */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', borderBottom: '1px solid var(--border)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', paddingRight: 12 }}>
+              <span style={{ fontWeight: 600, color: 'var(--text)' }}>Apple Health Sync</span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Automatically sync Sleep Analysis and Active Energy Burned to prepopulate your daily journal entries.</span>
+            </div>
+            <button 
+              className="btn btn-secondary" 
+              style={{ padding: '8px 12px', fontSize: '0.8rem', whiteSpace: 'nowrap' }}
+              onClick={async () => {
+                try {
+                  const { Health } = await import('@capgo/capacitor-health');
+                  await Health.requestAuthorization([
+                    { read: ['sleepAnalysis', 'activeEnergyBurned'] }
+                  ]);
+                  alert('Apple Health permission requested. Check your Settings app if prompted.');
+                } catch (e) {
+                  alert('Could not open Apple Health permissions.');
+                }
+              }}
+            >
+              Connect
+            </button>
+          </div>
+
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', borderBottom: '1px solid var(--border)' }}>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <span style={{ fontWeight: 600, color: 'var(--text)' }}>Daily Reminders</span>
