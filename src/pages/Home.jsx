@@ -61,7 +61,7 @@ export default function Home() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
         <div>
           <h1 style={{ fontSize: '1.6rem' }}>Peptid<span style={{ color: 'var(--success)' }}>AI</span></h1>
-          <p style={{ color: '#999', fontSize: '0.85rem' }}>Your reconstitution calculator</p>
+          <p style={{ color: '#999', fontSize: '0.85rem' }}>Your research volume tool</p>
         </div>
         <button
           onClick={() => navigate('/settings')}
@@ -115,7 +115,7 @@ export default function Home() {
           <div className="section-header">
             <span className="section-title"><IoSparkles size={12} style={{ marginRight: 4 }} />Quick Start</span>
           </div>
-          <p style={{ fontSize: '0.8rem', color: '#999', marginBottom: 12 }}>Tap a common peptide to try the calculator:</p>
+          <p style={{ fontSize: '0.8rem', color: '#999', marginBottom: 12 }}>Tap a common compound to try the visualizer:</p>
           {QUICK_START.map((p, i) => (
             <button
               key={i}
