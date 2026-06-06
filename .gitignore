@@ -23,7 +23,9 @@ dist-ssr
 *.sln
 *.sw?
 
-# Capacitor
-ios/
+# Capacitor build artifacts
+ios/App/Pods/
+ios/App/build/
+ios/App/DerivedData/
 android/
 paywall_screenshot.png
