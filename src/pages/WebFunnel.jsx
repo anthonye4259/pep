@@ -83,9 +83,9 @@ export default function WebFunnel() {
       
       {/* Header */}
       <div style={{ background: 'linear-gradient(135deg, #1a1a1a 0%, #000 100%)', padding: '60px 20px 40px', textAlign: 'center', borderBottom: '1px solid #333' }}>
-        <h1 style={{ fontSize: '2.5rem', color: '#fff', marginBottom: 16 }}>Unlock Your <span style={{ color: 'var(--accent)' }}>AI Health Tutor</span></h1>
+        <h1 style={{ fontSize: '2.5rem', color: '#fff', marginBottom: 16 }}>Unlock Your <span style={{ color: 'var(--accent)' }}>AI Research Companion</span></h1>
         <p style={{ color: '#aaa', fontSize: '1.1rem', maxWidth: 400, margin: '0 auto', lineHeight: 1.5 }}>
-          Create your account to generate your hyper-personalized 30-day protocol and unlock the AI Vial Scanner.
+          Create your account to generate your personalized research plan and unlock the AI Label Scanner.
         </p>
       </div>
 
@@ -95,7 +95,7 @@ export default function WebFunnel() {
           {[
             'Custom 30-Day Health Protocol',
             'Unlimited AI Vial Scanning',
-            'Visual Syringe Math Guide',
+            'Visual Concentration Guide',
             'Daily Transformation Journal'
           ].map((benefit, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>

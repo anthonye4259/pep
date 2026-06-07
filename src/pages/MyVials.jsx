@@ -39,7 +39,7 @@ export default function MyVials() {
                   </div>
                   {vial.lastInjected && (
                     <div className="vial-injected">
-                      Last injected: {new Date(vial.lastInjected).toLocaleDateString()}
+                      Last logged: {new Date(vial.lastInjected).toLocaleDateString()}
                     </div>
                   )}
                 </div>

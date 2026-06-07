@@ -5,7 +5,7 @@ const steps = [
   {
     icon: IoMedkit,
     title: '1. Gather Your Supplies',
-    items: ['Your peptide vial (freeze-dried powder)', 'Bacteriostatic water (BAC water)', 'Syringe(s) for reconstitution', 'Alcohol swabs'],
+    items: ['Your compound vial (lyophilized powder)', 'Bacteriostatic water (BAC water)', 'Sterile transfer tools', 'Alcohol swabs'],
   },
   {
     icon: IoHandLeft,
@@ -16,7 +16,7 @@ const steps = [
     icon: IoWater,
     title: '3. Draw the Water',
     items: [
-      'Using a fresh syringe, draw your chosen amount of BAC water',
+      'Using a sterile transfer tool, draw your chosen amount of BAC water',
       'Common amounts: 1mL, 2mL, or 3mL',
       'More water = lower concentration = easier to measure small amounts',
       'Less water = higher concentration = fewer draws needed',
@@ -26,8 +26,8 @@ const steps = [
     icon: IoFlask,
     title: '4. Add Water to Peptide Vial',
     items: [
-      'Insert the needle through the rubber stopper at an angle',
-      'SLOWLY inject the water down the side of the vial',
+      'Insert the transfer tip through the rubber stopper at an angle',
+      'SLOWLY dispense the water down the side of the vial',
       'Do NOT spray directly onto the powder',
       'Let the powder dissolve — gently swirl if needed, never shake',
     ],
@@ -48,7 +48,7 @@ export default function ReconstitutionGuide() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
         <button className="btn btn-icon btn-secondary" onClick={() => navigate(-1)}><IoArrowBack size={20} /></button>
         <div>
-          <h1 style={{ fontSize: '1.3rem' }}>How to Reconstitute</h1>
+          <h1 style={{ fontSize: '1.3rem' }}>How to Prepare</h1>
           <p className="text-muted text-sm">Step-by-step preparation guide</p>
         </div>
       </div>
