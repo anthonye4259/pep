@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext';
 import { peptideDatabase } from '../data/peptides';
 import { IoClose, IoCheckmark } from 'react-icons/io5';
 
-const INJECTION_SITES = ['Left Abdomen', 'Right Abdomen', 'Left Thigh', 'Right Thigh', 'Left Deltoid', 'Right Deltoid', 'Left Glute', 'Right Glute'];
+const APPLICATION_AREAS = ['Area A', 'Area B', 'Area C', 'Area D', 'Area E', 'Area F', 'Area G', 'Area H'];
 
 export default function QuickLogModal({ onClose }) {
   const { state, dispatch } = useApp();
@@ -11,7 +11,7 @@ export default function QuickLogModal({ onClose }) {
 
   const [peptideId, setPeptideId] = useState(protocol[0]?.peptideId || '');
   const [doseMcg, setDoseMcg] = useState('');
-  const [route, setRoute] = useState('Subcutaneous');
+  const [route, setRoute] = useState('Standard');
   const [site, setSite] = useState('');
   const [notes, setNotes] = useState('');
 
@@ -21,7 +21,7 @@ export default function QuickLogModal({ onClose }) {
     const protocolItem = protocol.find(p => p.peptideId === id);
     if (protocolItem) {
       setDoseMcg(protocolItem.doseMcg || '');
-      setRoute(protocolItem.route || 'Subcutaneous');
+      setRoute(protocolItem.route || 'Standard');
     }
   }
 
@@ -78,8 +78,8 @@ export default function QuickLogModal({ onClose }) {
           <div className="input-group">
             <label>Route</label>
             <select value={route} onChange={e => setRoute(e.target.value)}>
-              <option>Subcutaneous</option>
-              <option>Intramuscular</option>
+              <option>Standard</option>
+              <option>Alternative</option>
               <option>Oral</option>
               <option>Topical</option>
             </select>
@@ -89,7 +89,7 @@ export default function QuickLogModal({ onClose }) {
         <div className="input-group">
           <label>Application Area</label>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-            {INJECTION_SITES.map(s => (
+            {APPLICATION_AREAS.map(s => (
               <button key={s} className={`category-chip ${site === s ? 'active' : ''}`}
                 style={{ fontSize: '0.75rem', padding: '6px 10px' }}
                 onClick={() => setSite(site === s ? '' : s)}>

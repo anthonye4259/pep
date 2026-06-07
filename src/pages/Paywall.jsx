@@ -13,18 +13,19 @@ const plans = [
 ];
 
 const features = [
-  'AI vial label text extraction',
-  'Interactive syringe visualization',
-  'Multiple syringe sizes (U-100, U-50, U-30)',
+  'AI label text extraction',
+  'Interactive concentration visualizer',
+  'Multiple container sizes',
   'Save unlimited configurations',
-  'Usage logging & history calendar',
-  'Peptide reference library',
+  'Research logging & history calendar',
+  'Compound reference library',
 ];
 
 export default function Paywall({ onSubscribe }) {
   const [selected, setSelected] = useState('annual');
   const [loading, setLoading] = useState(false);
   const [timeLeft, setTimeLeft] = useState(14 * 60 + 59); // 14:59 countdown
+  const [dynamicPlans, setDynamicPlans] = useState(plans);
 
   useEffect(() => {
     const timer = setInterval(() => setTimeLeft(prev => prev > 0 ? prev - 1 : 0), 1000);
@@ -44,6 +45,31 @@ export default function Paywall({ onSubscribe }) {
     triggerReview();
 
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    async function fetchPrices() {
+      try {
+        const offerings = await Purchases.getOfferings();
+        const current = offerings.current;
+        if (current && current.availablePackages.length > 0) {
+          setDynamicPlans(prev => prev.map(plan => {
+            let pkg;
+            if (plan.id === 'annual') pkg = current.availablePackages.find(p => p.packageType === 'ANNUAL');
+            else if (plan.id === 'monthly') pkg = current.availablePackages.find(p => p.packageType === 'MONTHLY');
+            else if (plan.id === 'lifetime') pkg = current.availablePackages.find(p => p.packageType === 'LIFETIME');
+            else pkg = current.availablePackages.find(p => p.packageType === 'WEEKLY');
+            if (pkg?.product?.priceString) {
+              return { ...plan, price: pkg.product.priceString };
+            }
+            return plan;
+          }));
+        }
+      } catch (e) {
+        console.warn('Could not fetch RC prices:', e);
+      }
+    }
+    fetchPrices();
   }, []);
 
   const minutes = Math.floor(timeLeft / 60);
@@ -121,7 +147,7 @@ export default function Paywall({ onSubscribe }) {
           <h1 style={{ fontSize: '1.8rem', marginBottom: 4, color: 'white' }}>
             Peptid<span style={{ fontWeight: 800 }}>AI</span> Pro
           </h1>
-          <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.6)' }}>Your reconstitution math tool</p>
+          <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.6)' }}>Your research companion</p>
         </div>
 
         {/* Social proof */}
@@ -145,7 +171,7 @@ export default function Paywall({ onSubscribe }) {
 
         {/* Plans */}
         <div className="paywall-plans">
-          {plans.map(plan => (
+          {dynamicPlans.map(plan => (
             <div key={plan.id} className={`paywall-plan ${selected === plan.id ? 'selected' : ''}`} onClick={() => setSelected(plan.id)}>
               {plan.badge && <div className="paywall-badge">{plan.badge}</div>}
               <div className="paywall-plan-radio"><div className={`radio-dot ${selected === plan.id ? 'active' : ''}`} /></div>
@@ -178,7 +204,7 @@ export default function Paywall({ onSubscribe }) {
             {loading ? <span className="spinner" /> : 'Subscribe & Unlock Pro'}
           </button>
           <p className="paywall-trial-note">
-            {selected === 'annual' ? '$39.99/year' : selected === 'monthly' ? '$7.99/month' : selected === 'lifetime' ? '$99.99 once' : '$2.99/week'}. {selected !== 'lifetime' && 'Cancel anytime.'}
+            {dynamicPlans.find(p => p.id === selected)?.price}{selected !== 'lifetime' ? dynamicPlans.find(p => p.id === selected)?.period : ' once'}. {selected !== 'lifetime' && 'Cancel anytime.'}
           </p>
           <button className="paywall-restore" onClick={handleRestore}>Restore Purchases</button>
         </div>

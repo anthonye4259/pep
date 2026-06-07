@@ -44,7 +44,7 @@ export default function Settings() {
 
   const menuItems = [
     { label: 'Manage Subscription', icon: IoCardOutline, action: () => window.open(manageUrl, '_blank') },
-    { label: 'Reconstitution Guide', icon: IoHelpCircleOutline, action: () => navigate('/reconstitution-guide') },
+    { label: 'Preparation Guide', icon: IoHelpCircleOutline, action: () => navigate('/reconstitution-guide') },
     { label: 'Privacy Policy', icon: IoShieldCheckmarkOutline, action: () => navigate('/privacy') },
     { label: 'Terms of Service', icon: IoDocumentTextOutline, action: () => navigate('/terms') },
     { label: 'Contact Support', icon: IoMailOutline, action: () => window.open('mailto:support@peptidai.com') },
@@ -80,13 +80,24 @@ export default function Settings() {
               style={{ padding: '8px 12px', fontSize: '0.8rem', whiteSpace: 'nowrap' }}
               onClick={async () => {
                 try {
+                  const { Capacitor } = await import('@capacitor/core');
+                  if (!Capacitor.isNativePlatform()) {
+                    alert('Apple Health sync is only available on iPhone.');
+                    return;
+                  }
                   const { Health } = await import('@capgo/capacitor-health');
-                  await Health.requestAuthorization([
-                    { read: ['sleepAnalysis', 'activeEnergyBurned'] }
-                  ]);
-                  alert('Apple Health permission requested. Check your Settings app if prompted.');
+                  const available = await Health.isAvailable();
+                  if (!available || !available.available) {
+                    alert('Apple Health is not available on this device. This feature requires an iPhone with the Health app.');
+                    return;
+                  }
+                  await Health.requestAuthorization({
+                    read: ['sleepAnalysis', 'activeEnergyBurned'],
+                  });
+                  alert('Apple Health connected successfully!');
                 } catch (e) {
-                  alert('Could not open Apple Health permissions.');
+                  console.error('Health connect error:', e);
+                  alert('Apple Health is not available on this device.');
                 }
               }}
             >
