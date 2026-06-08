@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
+import { Capacitor } from '@capacitor/core';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { IoAdd, IoClose, IoFlashOutline, IoFitnessOutline, IoMoonOutline, IoWatchOutline, IoFlameOutline } from 'react-icons/io5';
 
@@ -8,6 +9,19 @@ export default function Journal() {
   const [showLog, setShowLog] = useState(false);
   const [form, setForm] = useState({ date: new Date().toISOString().split('T')[0], energy: 5, sleep: 5, recovery: 5, notes: '', rawSleep: null, rawEnergy: null });
   const [syncing, setSyncing] = useState(false);
+  const [healthAvailable, setHealthAvailable] = useState(false);
+
+  // Check if Apple Health is available on this device
+  useEffect(() => {
+    (async () => {
+      if (!Capacitor.isNativePlatform()) return;
+      try {
+        const { Health } = await import('@capgo/capacitor-health');
+        const result = await Health.isAvailable();
+        if (result && result.available) setHealthAvailable(true);
+      } catch { /* not available */ }
+    })();
+  }, []);
 
   // Format data for chart
   const data = [...journal].sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -18,6 +32,7 @@ export default function Journal() {
   }, [data]);
 
   async function handleHealthSync() {
+    if (!healthAvailable) return;
     setSyncing(true);
     const result = await syncAppleHealth();
     if (result.success && result.sleepRating) {
@@ -28,8 +43,6 @@ export default function Journal() {
         rawEnergy: result.activeCalories,
         notes: prev.notes + (prev.notes ? '\n' : '') + `Auto-synced from Apple Watch.` 
       }));
-    } else {
-      alert('Could not sync Apple Health data. Please check permissions.');
     }
     setSyncing(false);
   }
@@ -54,8 +67,8 @@ export default function Journal() {
         </button>
       </div>
 
-      {/* Apple Health Biometrics Dashboard */}
-      {latestEntry && (
+      {/* Apple Health Biometrics Dashboard — only show on iPhone */}
+      {healthAvailable && latestEntry && (
         <div className="card" style={{ marginBottom: 20, background: 'linear-gradient(135deg, #fffafa, #fff0f5)', border: '1px solid #ffe4e1' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
             <IoWatchOutline size={20} color="var(--accent)" />
@@ -146,18 +159,22 @@ export default function Journal() {
               <button className="btn btn-icon btn-sm" style={{ background: 'none', border: 'none', color: 'var(--text-muted)' }} onClick={() => setShowLog(false)}><IoClose size={24} /></button>
             </div>
             
-            <button 
-              type="button" 
-              onClick={handleHealthSync} 
-              disabled={syncing}
-              style={{ width: '100%', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: 14, borderRadius: 12, background: form.rawSleep ? 'var(--bg)' : 'var(--bg-card)', border: '1px solid var(--border)', color: form.rawSleep ? 'var(--success)' : 'var(--text)', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}>
-              <IoWatchOutline size={20} color={form.rawSleep ? 'var(--success)' : 'var(--accent)'} />
-              {syncing ? 'Syncing...' : form.rawSleep ? 'Synced!' : 'Sync Apple Health'}
-            </button>
-            
-            <p style={{ fontSize: '0.75rem', color: '#666', lineHeight: 1.4, margin: '0 0 20px 0', textAlign: 'center' }}>
-              We use <strong>Apple Health</strong> to securely import your Sleep Analysis and Active Energy Burned to prepopulate your journal.
-            </p>
+            {healthAvailable && (
+              <>
+                <button 
+                  type="button" 
+                  onClick={handleHealthSync} 
+                  disabled={syncing}
+                  style={{ width: '100%', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: 14, borderRadius: 12, background: form.rawSleep ? 'var(--bg)' : 'var(--bg-card)', border: '1px solid var(--border)', color: form.rawSleep ? 'var(--success)' : 'var(--text)', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}>
+                  <IoWatchOutline size={20} color={form.rawSleep ? 'var(--success)' : 'var(--accent)'} />
+                  {syncing ? 'Syncing...' : form.rawSleep ? 'Synced!' : 'Sync Apple Health'}
+                </button>
+                
+                <p style={{ fontSize: '0.75rem', color: '#666', lineHeight: 1.4, margin: '0 0 20px 0', textAlign: 'center' }}>
+                  We use <strong>Apple Health</strong> to securely import your Sleep Analysis and Active Energy Burned to prepopulate your journal.
+                </p>
+              </>
+            )}
 
             <div className="input-group">
               <label>Date</label>

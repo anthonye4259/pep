@@ -12,6 +12,7 @@ export default function Settings() {
   const { appState, resetApp } = useApp();
   const [showDelete, setShowDelete] = useState(false);
   const [manageUrl, setManageUrl] = useState('https://apps.apple.com/account/subscriptions');
+  const [healthAvailable, setHealthAvailable] = useState(false);
   const user = appState.user;
 
   useEffect(() => {
@@ -21,6 +22,15 @@ export default function Settings() {
           setManageUrl(info.customerInfo.managementURL);
         }
       }).catch(e => console.error('RC CustomerInfo error:', e));
+
+      // Check if Apple Health is available (iPhone only, not iPad)
+      (async () => {
+        try {
+          const { Health } = await import('@capgo/capacitor-health');
+          const result = await Health.isAvailable();
+          if (result && result.available) setHealthAvailable(true);
+        } catch { /* not available */ }
+      })();
     }
   }, []);
 
@@ -69,41 +79,33 @@ export default function Settings() {
         <h3 style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12, marginLeft: 4 }}>Preferences</h3>
         <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
           
-          {/* Apple Health Sync */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', borderBottom: '1px solid var(--border)' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', paddingRight: 12 }}>
-              <span style={{ fontWeight: 600, color: 'var(--text)' }}>Apple Health Sync</span>
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Automatically sync Sleep Analysis and Active Energy Burned to prepopulate your daily journal entries.</span>
+          {/* Apple Health Sync — only show on iPhone */}
+          {healthAvailable && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', borderBottom: '1px solid var(--border)' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', paddingRight: 12 }}>
+                <span style={{ fontWeight: 600, color: 'var(--text)' }}>Apple Health Sync</span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Automatically sync Sleep Analysis and Active Energy Burned to prepopulate your daily journal entries.</span>
+              </div>
+              <button 
+                className="btn btn-secondary" 
+                style={{ padding: '8px 12px', fontSize: '0.8rem', whiteSpace: 'nowrap' }}
+                onClick={async () => {
+                  try {
+                    const { Health } = await import('@capgo/capacitor-health');
+                    await Health.requestAuthorization({
+                      read: ['sleepAnalysis', 'activeEnergyBurned'],
+                    });
+                    alert('Apple Health connected successfully!');
+                  } catch (e) {
+                    console.error('Health connect error:', e);
+                    alert('Could not connect to Apple Health.');
+                  }
+                }}
+              >
+                Connect
+              </button>
             </div>
-            <button 
-              className="btn btn-secondary" 
-              style={{ padding: '8px 12px', fontSize: '0.8rem', whiteSpace: 'nowrap' }}
-              onClick={async () => {
-                try {
-                  const { Capacitor } = await import('@capacitor/core');
-                  if (!Capacitor.isNativePlatform()) {
-                    alert('Apple Health sync is only available on iPhone.');
-                    return;
-                  }
-                  const { Health } = await import('@capgo/capacitor-health');
-                  const available = await Health.isAvailable();
-                  if (!available || !available.available) {
-                    alert('Apple Health is not available on this device. This feature requires an iPhone with the Health app.');
-                    return;
-                  }
-                  await Health.requestAuthorization({
-                    read: ['sleepAnalysis', 'activeEnergyBurned'],
-                  });
-                  alert('Apple Health connected successfully!');
-                } catch (e) {
-                  console.error('Health connect error:', e);
-                  alert('Apple Health is not available on this device.');
-                }
-              }}
-            >
-              Connect
-            </button>
-          </div>
+          )}
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', borderBottom: '1px solid var(--border)' }}>
             <div style={{ display: 'flex', flexDirection: 'column' }}>

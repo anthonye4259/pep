@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { IoArrowForward, IoShieldCheckmark, IoScanOutline, IoColorFillOutline, IoTrendingUpOutline, IoWatchOutline, IoCheckmark } from 'react-icons/io5';
 import { useApp } from '../context/AppContext';
+import { Capacitor } from '@capacitor/core';
 import RatingPhase from '../components/RatingPhase';
 
 const DISCLAIMER = `FOR LABORATORY RESEARCH PURPOSES ONLY. NOT FOR HUMAN CONSUMPTION OR MEDICAL USE. This app is an informational record-keeping and mathematical visualization tool. It does not provide medical advice, diagnosis, or recommendations. You assume full responsibility for verifying all calculations independently.`;
@@ -227,7 +228,24 @@ export default function Onboarding({ onComplete }) {
               <p style={{ fontSize: '0.9rem', color: '#555', lineHeight: 1.7, maxWidth: 340, textAlign: 'left', margin: 0, fontWeight: 500 }}>{DISCLAIMER}</p>
             </div>
             
-            <button className="btn btn-primary btn-full" onClick={() => setPhase('healthkit')} style={{ fontSize: '1.1rem', fontWeight: 700, padding: 18, marginTop: 40, borderRadius: 100 }}>
+            <button className="btn btn-primary btn-full" onClick={async () => {
+              // Skip HealthKit on iPad / non-iPhone devices
+              if (!Capacitor.isNativePlatform()) {
+                setPhase('rating');
+                return;
+              }
+              try {
+                const { Health } = await import('@capgo/capacitor-health');
+                const available = await Health.isAvailable();
+                if (available && available.available) {
+                  setPhase('healthkit');
+                } else {
+                  setPhase('rating');
+                }
+              } catch {
+                setPhase('rating');
+              }
+            }} style={{ fontSize: '1.1rem', fontWeight: 700, padding: 18, marginTop: 40, borderRadius: 100 }}>
               I Understand & Agree
             </button>
           </div>

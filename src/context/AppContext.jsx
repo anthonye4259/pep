@@ -3,6 +3,7 @@ import { auth, db } from '../lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { collection, doc, setDoc, deleteDoc, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { App as CapApp } from '@capacitor/app';
+import { Capacitor } from '@capacitor/core';
 import { Purchases } from '@revenuecat/purchases-capacitor';
 import { Health } from '@capgo/capacitor-health';
 import { LocalNotifications } from '@capacitor/local-notifications';
@@ -183,6 +184,15 @@ export function AppProvider({ children }) {
   // Generic function to sync data from Apple Health
   const syncAppleHealth = async () => {
     try {
+      // Guard: Only works on native iPhone (not iPad, not web)
+      if (!Capacitor.isNativePlatform()) {
+        return { success: false, error: 'Not a native platform' };
+      }
+      const available = await Health.isAvailable();
+      if (!available || !available.available) {
+        return { success: false, error: 'Apple Health is not available on this device.' };
+      }
+
       await Health.requestAuthorization({
         read: ['sleepAnalysis', 'activeEnergyBurned'],
       });
