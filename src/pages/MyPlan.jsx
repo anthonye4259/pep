@@ -20,7 +20,7 @@ export default function MyPlan() {
     try {
       setLoading(true);
       const answers = appState.onboardingAnswers || { goal: 'Wellness', sleep: 'Average', energy: 'Average', peptides: [] };
-      const generated = await generateProtocol(answers, vials);
+      const generated = await generateProtocol(answers);
       const now = new Date().toISOString();
       await updateProfileData({ 
         protocol: generated,

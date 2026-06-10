@@ -5,23 +5,23 @@ import { Capacitor } from '@capacitor/core';
 import { shouldShowHealthKit } from '../lib/deviceCheck';
 import RatingPhase from '../components/RatingPhase';
 
-const DISCLAIMER = `FOR LABORATORY RESEARCH PURPOSES ONLY. NOT FOR HUMAN CONSUMPTION OR MEDICAL USE. This app is an informational record-keeping and mathematical visualization tool. It does not provide medical advice, diagnosis, or recommendations. You assume full responsibility for verifying all calculations independently.`;
+const DISCLAIMER = `FOR EDUCATIONAL AND WELLNESS TRACKING PURPOSES ONLY. This app is a wellness journal and AI coaching tool. It does not provide medical advice, diagnosis, or treatment recommendations. Always consult a qualified healthcare professional before making changes to your health routine.`;
 
 const TUTORIAL_STEPS = [
   {
-    title: 'Snap a photo of your vial.\nAI does the rest.',
+    title: 'Your AI Wellness Coach.\nAlways learning.',
     icon: <IoScanOutline size={100} color="var(--accent)" />,
-    desc: 'Our intelligent scanner instantly extracts the peptide name, mass, and concentration.'
+    desc: 'Get a personalized 12-week wellness plan powered by AI that adapts to your goals.'
   },
   {
-    title: 'Never guess your amounts.\nSee the exact math.',
+    title: 'Track what matters.\nSee real progress.',
     icon: <IoColorFillOutline size={100} color="var(--accent)" />,
-    desc: 'We calculate the volume and display it on an interactive visual guide.'
+    desc: 'Log your energy, sleep, and recovery daily. Visualize trends over time.'
   },
   {
-    title: 'Track your body\'s\ntransformation day by day.',
+    title: 'Your body\'s story,\ntold by data.',
     icon: <IoTrendingUpOutline size={100} color="var(--accent)" />,
-    desc: 'Log your energy, sleep, and recovery. Visualize your 30-day trends instantly.'
+    desc: 'Understand how your habits affect your wellness with beautiful charts and insights.'
   }
 ];
 
@@ -43,9 +43,9 @@ const QUESTIONS = [
   },
   {
     id: 'peptides',
-    title: 'Which compounds are you researching?',
+    title: 'What wellness areas interest you?',
     subtitle: 'Select all that apply',
-    options: ['Weight Management Compounds', 'Recovery & Repair Compounds', 'Growth Hormone Peptides', 'Cellular Health Compounds', 'Other'],
+    options: ['Weight Management', 'Recovery & Repair', 'Hormone Health', 'Cellular Health', 'Cognitive Performance'],
     multi: true,
   }
 ];
