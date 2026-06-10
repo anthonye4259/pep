@@ -13,12 +13,12 @@ const plans = [
 ];
 
 const features = [
-  'AI label text extraction',
-  'Interactive concentration visualizer',
-  'Multiple container sizes',
-  'Save unlimited configurations',
-  'Research logging & history calendar',
-  'Compound reference library',
+  'AI-powered wellness coaching',
+  'Personalized 12-week plan',
+  'Daily wellness journal with trends',
+  'Apple Health integration (iPhone)',
+  'Knowledge base & education',
+  'Unlimited plan regenerations',
 ];
 
 export default function Paywall({ onSubscribe }) {
