@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { Capacitor } from '@capacitor/core';
+import { shouldShowHealthKit } from '../lib/deviceCheck';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { IoAdd, IoClose, IoFlashOutline, IoFitnessOutline, IoMoonOutline, IoWatchOutline, IoFlameOutline } from 'react-icons/io5';
 
@@ -11,10 +12,10 @@ export default function Journal() {
   const [syncing, setSyncing] = useState(false);
   const [healthAvailable, setHealthAvailable] = useState(false);
 
-  // Check if Apple Health is available on this device
+  // Check if Apple Health is available on this device (iPhone only)
   useEffect(() => {
     (async () => {
-      if (!Capacitor.isNativePlatform()) return;
+      if (!Capacitor.isNativePlatform() || !shouldShowHealthKit()) return;
       try {
         const { Health } = await import('@capgo/capacitor-health');
         const result = await Health.isAvailable();

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { IoArrowForward, IoShieldCheckmark, IoScanOutline, IoColorFillOutline, IoTrendingUpOutline, IoWatchOutline, IoCheckmark } from 'react-icons/io5';
 import { useApp } from '../context/AppContext';
 import { Capacitor } from '@capacitor/core';
+import { shouldShowHealthKit } from '../lib/deviceCheck';
 import RatingPhase from '../components/RatingPhase';
 
 const DISCLAIMER = `FOR LABORATORY RESEARCH PURPOSES ONLY. NOT FOR HUMAN CONSUMPTION OR MEDICAL USE. This app is an informational record-keeping and mathematical visualization tool. It does not provide medical advice, diagnosis, or recommendations. You assume full responsibility for verifying all calculations independently.`;
@@ -229,8 +230,8 @@ export default function Onboarding({ onComplete }) {
             </div>
             
             <button className="btn btn-primary btn-full" onClick={async () => {
-              // Skip HealthKit on iPad / non-iPhone devices
-              if (!Capacitor.isNativePlatform()) {
+              // Skip HealthKit on iPad and non-native platforms
+              if (!Capacitor.isNativePlatform() || !shouldShowHealthKit()) {
                 setPhase('rating');
                 return;
               }

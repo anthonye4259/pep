@@ -1,60 +1,43 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { IoSearch, IoFlaskOutline, IoChevronForward } from 'react-icons/io5';
+import { IoSearch, IoBookOutline, IoChevronForward } from 'react-icons/io5';
 
-const peptideLibrary = [
-  { name: 'BPC-157', category: 'Recovery', desc: 'Recovery-focused research peptide. Commonly studied for tissue repair applications.', defaultMg: 5, defaultMcg: 250 },
-  { name: 'TB-500', category: 'Recovery', desc: 'Thymosin Beta-4 fragment. Studied for flexibility and repair in research settings.', defaultMg: 5, defaultMcg: 2500 },
-  { name: 'Semaglutide', category: 'Metabolic', desc: 'GLP-1 receptor agonist. Studied for metabolic research applications.', defaultMg: 5, defaultMcg: 250 },
-  { name: 'Tirzepatide', category: 'Metabolic', desc: 'Dual GIP/GLP-1 receptor agonist. Studied for metabolic pathway research.', defaultMg: 10, defaultMcg: 2500 },
-  { name: 'CJC-1295', category: 'Growth Hormone', desc: 'GHRH analog. Commonly paired with Ipamorelin in research stacks.', defaultMg: 5, defaultMcg: 100 },
-  { name: 'Ipamorelin', category: 'Growth Hormone', desc: 'Selective GH secretagogue. Studied for GH pulse research applications.', defaultMg: 5, defaultMcg: 200 },
-  { name: 'MK-677', category: 'Growth Hormone', desc: 'Oral GH secretagogue. Studied for IGF-1 and GH research.', defaultMg: 25, defaultMcg: 25000 },
-  { name: 'GHK-Cu', category: 'Anti-Aging', desc: 'Copper peptide complex. Studied for skin and collagen synthesis research.', defaultMg: 50, defaultMcg: 200 },
-  { name: 'Epitalon', category: 'Anti-Aging', desc: 'Telomerase activator. Studied for cellular longevity research.', defaultMg: 10, defaultMcg: 5000 },
-  { name: 'Melanotan II', category: 'Other', desc: 'Melanocortin receptor agonist. Studied in various research applications.', defaultMg: 10, defaultMcg: 1750 },
-  { name: 'Thymosin Alpha-1', category: 'Immune', desc: 'Immune modulator peptide. Studied for immune system research.', defaultMg: 5, defaultMcg: 1600 },
-  { name: 'SS-31', category: 'Anti-Aging', desc: 'Mitochondrial-targeted peptide. Studied for cellular energy research.', defaultMg: 5, defaultMcg: 500 },
-  { name: 'Selank', category: 'Other', desc: 'Anxiolytic peptide. Studied for cognitive enhancement research.', defaultMg: 5, defaultMcg: 250 },
-  { name: 'Semax', category: 'Other', desc: 'Nootropic peptide. Studied for cognitive function research.', defaultMg: 5, defaultMcg: 200 },
-  { name: 'DSIP', category: 'Other', desc: 'Delta sleep-inducing peptide. Studied for sleep pattern research.', defaultMg: 5, defaultMcg: 100 },
-  { name: 'AOD-9604', category: 'Metabolic', desc: 'GH fragment 176-191. Studied for metabolic pathway research.', defaultMg: 5, defaultMcg: 300 },
+const educationalTopics = [
+  { title: 'What Are Peptides?', category: 'Basics', desc: 'Short chains of amino acids that serve as building blocks for proteins. Learn about the science behind peptide research.' },
+  { title: 'Understanding Amino Acids', category: 'Basics', desc: 'The fundamental units of peptides and proteins. Explore the 20 standard amino acids and their roles.' },
+  { title: 'Peptide Bonds Explained', category: 'Basics', desc: 'How amino acids link together through peptide bonds to form chains and structures.' },
+  { title: 'Lyophilization', category: 'Lab Science', desc: 'The freeze-drying process used to preserve biological materials for research. Understanding powder forms.' },
+  { title: 'Bacteriostatic Water', category: 'Lab Science', desc: 'Sterile water containing 0.9% benzyl alcohol, used in laboratory research for reconstitution.' },
+  { title: 'Concentration Basics', category: 'Lab Science', desc: 'Understanding mg, mcg, and mL. How to calculate concentrations in research solutions.' },
+  { title: 'Lab Safety', category: 'Safety', desc: 'Best practices for handling research materials safely. Sterile technique fundamentals.' },
+  { title: 'Proper Storage', category: 'Safety', desc: 'Temperature and light requirements for research material preservation. Shelf life considerations.' },
+  { title: 'Understanding Half-Lives', category: 'Science', desc: 'The concept of biological half-life and why it matters in research protocols.' },
+  { title: 'Sleep & Recovery Science', category: 'Wellness', desc: 'How sleep quality affects cellular repair, hormone regulation, and overall wellness.' },
+  { title: 'Metabolic Health', category: 'Wellness', desc: 'Understanding metabolism, energy balance, and the science of metabolic research.' },
+  { title: 'Immune System Basics', category: 'Wellness', desc: 'How the immune system works and the role of peptides in immune research.' },
 ];
 
-const categories = ['All', ...new Set(peptideLibrary.map(p => p.category))];
+const categories = ['All', ...new Set(educationalTopics.map(p => p.category))];
 
 export default function Library() {
-  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All');
 
-  const filtered = peptideLibrary.filter(p => {
-    const matchSearch = !search || p.name.toLowerCase().includes(search.toLowerCase());
+  const filtered = educationalTopics.filter(p => {
+    const matchSearch = !search || p.title.toLowerCase().includes(search.toLowerCase());
     const matchCat = category === 'All' || p.category === category;
     return matchSearch && matchCat;
   });
 
-  function handleSelect(peptide) {
-    navigate('/guide', {
-      state: {
-        peptideName: peptide.name,
-        peptideMg: peptide.defaultMg,
-        targetMcg: peptide.defaultMcg,
-        waterMl: '',
-      }
-    });
-  }
-
   return (
     <div className="page">
       <div className="page-header">
-        <h1>Reference Library</h1>
-        <p>{peptideLibrary.length} compounds</p>
+        <h1>Knowledge Base</h1>
+        <p>Learn the fundamentals</p>
       </div>
 
       <div className="search-bar">
         <IoSearch className="search-icon" size={18} />
-        <input type="text" className="input" placeholder="Search compounds..." value={search} onChange={e => setSearch(e.target.value)} />
+        <input type="text" className="input" placeholder="Search topics..." value={search} onChange={e => setSearch(e.target.value)} />
       </div>
 
       <div className="category-filter">
@@ -64,15 +47,14 @@ export default function Library() {
       </div>
 
       {filtered.map((p, i) => (
-        <button key={i} className="peptide-card" onClick={() => handleSelect(p)} style={{ width: '100%', textAlign: 'left', border: 'none' }}>
-          <div className="peptide-icon"><IoFlaskOutline size={20} /></div>
+        <div key={i} className="peptide-card" style={{ width: '100%', textAlign: 'left', border: 'none', cursor: 'default' }}>
+          <div className="peptide-icon"><IoBookOutline size={20} /></div>
           <div className="peptide-info">
-            <div className="peptide-name">{p.name}</div>
+            <div className="peptide-name">{p.title}</div>
             <div className="peptide-cat">{p.category}</div>
             <div className="peptide-desc">{p.desc}</div>
           </div>
-          <IoChevronForward size={16} color="#999" />
-        </button>
+        </div>
       ))}
     </div>
   );

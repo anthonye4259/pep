@@ -28,8 +28,7 @@ export default function MyVials() {
             <div key={vial.id || i} style={{ display: 'flex', gap: 8, alignItems: 'stretch' }}>
               <button
                 className="vial-card"
-                style={{ flex: 1 }}
-                onClick={() => navigate('/guide', { state: vial })}
+                style={{ flex: 1, cursor: 'default' }}
               >
                 <div className="vial-icon"><IoFlaskOutline size={22} /></div>
                 <div className="vial-info">

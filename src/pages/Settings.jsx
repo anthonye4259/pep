@@ -6,6 +6,7 @@ import { signOut, deleteUser } from 'firebase/auth';
 import { useApp } from '../context/AppContext';
 import { Purchases } from '@revenuecat/purchases-capacitor';
 import { Capacitor } from '@capacitor/core';
+import { shouldShowHealthKit } from '../lib/deviceCheck';
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -23,14 +24,16 @@ export default function Settings() {
         }
       }).catch(e => console.error('RC CustomerInfo error:', e));
 
-      // Check if Apple Health is available (iPhone only, not iPad)
-      (async () => {
-        try {
-          const { Health } = await import('@capgo/capacitor-health');
-          const result = await Health.isAvailable();
-          if (result && result.available) setHealthAvailable(true);
-        } catch { /* not available */ }
-      })();
+      // Only show HealthKit on iPhone — iPad reports available but doesn't work
+      if (shouldShowHealthKit()) {
+        (async () => {
+          try {
+            const { Health } = await import('@capgo/capacitor-health');
+            const result = await Health.isAvailable();
+            if (result && result.available) setHealthAvailable(true);
+          } catch { /* not available */ }
+        })();
+      }
     }
   }, []);
 
@@ -54,7 +57,6 @@ export default function Settings() {
 
   const menuItems = [
     { label: 'Manage Subscription', icon: IoCardOutline, action: () => window.open(manageUrl, '_blank') },
-    { label: 'Preparation Guide', icon: IoHelpCircleOutline, action: () => navigate('/reconstitution-guide') },
     { label: 'Privacy Policy', icon: IoShieldCheckmarkOutline, action: () => navigate('/privacy') },
     { label: 'Terms of Service', icon: IoDocumentTextOutline, action: () => navigate('/terms') },
     { label: 'Contact Support', icon: IoMailOutline, action: () => window.open('mailto:support@peptidai.com') },

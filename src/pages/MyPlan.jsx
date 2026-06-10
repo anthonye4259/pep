@@ -52,8 +52,8 @@ export default function MyPlan() {
     return (
       <div className="page" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
         <div className="spinner" style={{ width: 40, height: 40, borderColor: 'var(--bg-card)', borderTopColor: 'var(--accent)', marginBottom: 20 }} />
-        <h2 style={{ fontSize: '1.2rem', color: '#1a1a1a', fontWeight: 700 }}>Synthesizing your Plan...</h2>
-        <p style={{ color: '#999', fontSize: '0.9rem', marginTop: 8 }}>Gemini AI is analyzing your goals & inventory.</p>
+        <h2 style={{ fontSize: '1.2rem', color: '#1a1a1a', fontWeight: 700 }}>Creating your Wellness Plan...</h2>
+        <p style={{ color: '#999', fontSize: '0.9rem', marginTop: 8 }}>AI is analyzing your goals & preferences.</p>
       </div>
     );
   }
@@ -74,9 +74,9 @@ export default function MyPlan() {
       <div className="page-header" style={{ marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
           <h1 style={{ fontSize: '1.8rem', display: 'flex', alignItems: 'center', gap: 8 }}>
-            AI Health Plan <IoSparkles color="var(--accent)" size={24} />
+            AI Wellness Plan <IoSparkles color="var(--accent)" size={24} />
           </h1>
-          <p style={{ color: 'var(--accent)', fontWeight: 600, fontSize: '0.9rem' }}>Hyper-Personalized 12-Week Protocol</p>
+          <p style={{ color: 'var(--accent)', fontWeight: 600, fontSize: '0.9rem' }}>Personalized 12-Week Wellness Journey</p>
         </div>
         <button onClick={handleRegenerate} style={{ background: 'transparent', border: 'none', color: '#999', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <IoRefreshCircle size={28} />
@@ -99,7 +99,7 @@ export default function MyPlan() {
 
       {protocol.inventoryAdvice && (
         <div style={{ background: 'var(--bg-card)', padding: 16, borderRadius: 12, marginBottom: 32, border: '1px solid var(--border)' }}>
-          <h4 style={{ fontSize: '0.9rem', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: 8 }}>Inventory Forecast</h4>
+          <h4 style={{ fontSize: '0.9rem', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: 8 }}>Wellness Tip</h4>
           <p style={{ fontSize: '0.9rem', color: 'var(--text)', lineHeight: 1.5 }}>{protocol.inventoryAdvice}</p>
         </div>
       )}

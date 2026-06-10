@@ -7,6 +7,7 @@ import { Capacitor } from '@capacitor/core';
 import { Purchases } from '@revenuecat/purchases-capacitor';
 import { Health } from '@capgo/capacitor-health';
 import { LocalNotifications } from '@capacitor/local-notifications';
+import { shouldShowHealthKit } from '../lib/deviceCheck';
 
 const AppContext = createContext();
 
@@ -185,8 +186,8 @@ export function AppProvider({ children }) {
   const syncAppleHealth = async () => {
     try {
       // Guard: Only works on native iPhone (not iPad, not web)
-      if (!Capacitor.isNativePlatform()) {
-        return { success: false, error: 'Not a native platform' };
+      if (!Capacitor.isNativePlatform() || !shouldShowHealthKit()) {
+        return { success: false, error: 'Not available on this device' };
       }
       const available = await Health.isAvailable();
       if (!available || !available.available) {

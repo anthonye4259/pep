@@ -1,59 +1,14 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IoCameraOutline, IoFlaskOutline, IoChevronForward, IoCreateOutline, IoSettingsOutline, IoSparkles } from 'react-icons/io5';
+import { IoCameraOutline, IoFlaskOutline, IoChevronForward, IoSettingsOutline, IoSparkles, IoJournalOutline, IoCalendarOutline } from 'react-icons/io5';
 import { useApp } from '../context/AppContext';
-import { extractVialLabel } from '../lib/gemini';
-
-const QUICK_START = [
-  { name: 'Semaglutide', mg: 5, mcg: 250 },
-  { name: 'Tirzepatide', mg: 10, mcg: 2500 },
-  { name: 'BPC-157', mg: 5, mcg: 250 },
-];
 
 export default function Home() {
   const navigate = useNavigate();
-  const { vials, userProfile, updateProfileData } = useApp();
-  const fileInputRef = useRef(null);
-  const [scanning, setScanning] = useState(false);
+  const { vials, userProfile } = useApp();
 
   const recentVials = (vials || []).slice(0, 4);
   const hasVials = recentVials.length > 0;
-
-  async function handleCapture(e) {
-    try {
-      const file = e?.target?.files?.[0];
-      if (!file) return;
-
-      setScanning(true);
-      try {
-        const base64 = await fileToBase64(file);
-        const extracted = await extractVialLabel(base64);
-        navigate('/guide', { state: { ...extracted } });
-      } catch (err) {
-        console.error('Scan failed:', err);
-        navigate('/guide');
-      } finally {
-        setScanning(false);
-      }
-    } catch (outerErr) {
-      console.error('handleCapture outer error:', outerErr);
-      setScanning(false);
-      navigate('/guide');
-    }
-    // Reset the file input so the same file can be selected again
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  }
-
-  function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result.split(',')[1]);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
 
   return (
     <div className="page">
@@ -61,7 +16,7 @@ export default function Home() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
         <div>
           <h1 style={{ fontSize: '1.6rem' }}>Peptid<span style={{ color: 'var(--success)' }}>AI</span></h1>
-          <p style={{ color: '#999', fontSize: '0.85rem' }}>Your research volume tool</p>
+          <p style={{ color: '#999', fontSize: '0.85rem' }}>Your wellness research companion</p>
         </div>
         <button
           onClick={() => navigate('/settings')}
@@ -71,85 +26,71 @@ export default function Home() {
         </button>
       </div>
 
-      {/* Scan Hero */}
+      {/* Quick Actions */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 24 }}>
+        <button
+          className="card"
+          onClick={() => navigate('/journal')}
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, padding: 20, cursor: 'pointer', border: '1px solid var(--border)', background: 'var(--bg-card)' }}
+        >
+          <IoJournalOutline size={28} color="var(--accent)" />
+          <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>Daily Journal</span>
+          <span style={{ fontSize: '0.75rem', color: '#999' }}>Log your wellness data</span>
+        </button>
+
+        <button
+          className="card"
+          onClick={() => navigate('/calendar')}
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, padding: 20, cursor: 'pointer', border: '1px solid var(--border)', background: 'var(--bg-card)' }}
+        >
+          <IoCalendarOutline size={28} color="var(--accent)" />
+          <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>History</span>
+          <span style={{ fontSize: '0.75rem', color: '#999' }}>Track your progress</span>
+        </button>
+      </div>
+
+      {/* AI Plan CTA */}
       <div
-        className={`scan-hero ${scanning ? 'camera-active' : ''}`}
-        onClick={() => !scanning && fileInputRef.current?.click()}
+        onClick={() => navigate('/plan')}
         style={{ 
           background: 'linear-gradient(135deg, var(--accent) 0%, var(--text-muted) 100%)', 
           border: 'none',
           boxShadow: '0 20px 40px rgba(236,72,153,0.3)',
           color: 'white',
           position: 'relative',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          borderRadius: 20,
+          padding: '28px 24px',
+          cursor: 'pointer',
+          marginBottom: 24
         }}
       >
-        {/* Subtle shimmer effect */}
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)', transform: 'skewX(-20deg) translateX(-150%)', animation: 'shimmer 3s infinite' }} />
-
-        {scanning ? (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, position: 'relative', zIndex: 2 }}>
-            <div className="spinner" style={{ width: 36, height: 36, borderColor: 'rgba(255,255,255,0.3)', borderTopColor: '#ffffff' }} />
-            <span style={{ fontWeight: 700, color: '#ffffff', fontSize: '1.1rem', letterSpacing: 0.5 }}>AI Analyzing Label...</span>
+        <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.2)', width: 60, height: 60, borderRadius: 30, marginBottom: 12 }}>
+             <IoSparkles size={32} color="white" />
           </div>
-        ) : (
-          <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.2)', width: 80, height: 80, borderRadius: 40, marginBottom: 16 }}>
-               <IoCameraOutline size={48} color="white" />
-            </div>
-            <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'white', marginBottom: 6 }}>Tap to Auto-Scan</div>
-            <div style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.9)', fontWeight: 500 }}>Our AI extracts the math instantly</div>
-          </div>
-        )}
-        <input ref={fileInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleCapture} />
+          <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'white', marginBottom: 6 }}>AI Wellness Plan</div>
+          <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)', fontWeight: 500 }}>Personalized 12-week protocol</div>
+        </div>
       </div>
       <style>{`@keyframes shimmer { 100% { transform: skewX(-20deg) translateX(150%); } }`}</style>
 
-      <button className="btn btn-secondary btn-full mt-12" onClick={() => navigate('/guide')} style={{ gap: 8 }}>
-        <IoCreateOutline size={18} /> Enter manually
-      </button>
-
-      {/* Quick start — only show when no saved vials */}
-      {!hasVials && (
-        <div className="section mt-20">
-          <div className="section-header">
-            <span className="section-title"><IoSparkles size={12} style={{ marginRight: 4 }} />Quick Start</span>
-          </div>
-          <p style={{ fontSize: '0.8rem', color: '#999', marginBottom: 12 }}>Tap a common compound to try the visualizer:</p>
-          {QUICK_START.map((p, i) => (
-            <button
-              key={i}
-              className="vial-card"
-              onClick={() => navigate('/guide', { state: { peptideName: p.name, peptideMg: p.mg, targetMcg: p.mcg, waterMl: '' } })}
-            >
-              <div className="vial-icon"><IoFlaskOutline size={22} /></div>
-              <div className="vial-info">
-                <div className="vial-name">{p.name}</div>
-                <div className="vial-detail">{p.mg}mg vial · {p.mcg >= 1000 ? `${p.mcg/1000}mg` : `${p.mcg}mcg`} reference amount</div>
-              </div>
-              <div className="vial-arrow"><IoChevronForward size={18} /></div>
-            </button>
-          ))}
-          <p style={{ fontSize: '0.7rem', color: '#bbb', textAlign: 'center', marginTop: 10 }}>You will enter your own water amount and verify all values</p>
-        </div>
-      )}
-
-      {/* Recent Vials — show when user has saved configs */}
+      {/* Saved Configurations */}
       {hasVials && (
         <div className="section mt-20">
-          <div className="section-header"><span className="section-title">Recent Configurations</span></div>
+          <div className="section-header"><span className="section-title">Saved Compounds</span></div>
           {recentVials.map((vial, i) => (
-            <button key={vial.id || i} className="vial-card" onClick={() => navigate('/guide', { state: vial })}>
+            <div key={vial.id || i} className="vial-card" style={{ cursor: 'default' }}>
               <div className="vial-icon"><IoFlaskOutline size={22} /></div>
               <div className="vial-info">
                 <div className="vial-name">{vial.peptideName}</div>
-                <div className="vial-detail">{vial.peptideMg}mg / {vial.waterMl}mL / {vial.targetMcg}mcg</div>
+                <div className="vial-detail">{vial.peptideMg}mg / {vial.waterMl}mL</div>
                 {vial.lastInjected && (
                   <div className="vial-injected">Last logged: {new Date(vial.lastInjected).toLocaleDateString()}</div>
                 )}
               </div>
-              <div className="vial-arrow"><IoChevronForward size={18} /></div>
-            </button>
+            </div>
           ))}
         </div>
       )}

@@ -8,18 +8,16 @@ import Home from './pages/Home';
 import Calendar from './pages/Calendar';
 import Library from './pages/Library';
 import MyVials from './pages/MyVials';
-import SyringeGuide from './pages/SyringeGuide';
 import Settings from './pages/Settings';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
-import ReconstitutionGuide from './pages/ReconstitutionGuide';
 import Journal from './pages/Journal';
 import Referrals from './pages/Referrals';
 import MyPlan from './pages/MyPlan';
 import WebFunnel from './pages/WebFunnel';
 import DisclaimerModal from './components/DisclaimerModal';
 
-const HIDE_NAV = ['/guide', '/privacy', '/terms', '/settings', '/reconstitution-guide', '/referrals', '/web-funnel'];
+const HIDE_NAV = ['/privacy', '/terms', '/settings', '/referrals', '/web-funnel'];
 
 function AppShell() {
   const { appState, completeOnboarding, completeAuth, completePaywall } = useApp();
@@ -40,11 +38,9 @@ function AppShell() {
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/library" element={<Library />} />
         <Route path="/vials" element={<MyVials />} />
-        <Route path="/guide" element={<SyringeGuide />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
-        <Route path="/reconstitution-guide" element={<ReconstitutionGuide />} />
         <Route path="/journal" element={<Journal />} />
         <Route path="/referrals" element={<Referrals />} />
       </Routes>
