@@ -113,7 +113,7 @@ export default function MyPlan() {
               <span style={{ fontWeight: 700, color: 'var(--text)', fontSize: '1rem' }}>{item.week}</span>
             </div>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginLeft: 20, marginBottom: 4 }}>{item.action}</p>
-            <p style={{ color: 'var(--text)', fontSize: '0.9rem', fontWeight: 600, marginLeft: 20 }}>{item.dosage}</p>
+            <p style={{ color: 'var(--text)', fontSize: '0.9rem', fontWeight: 600, marginLeft: 20 }}>{item.focus || item.dosage}</p>
           </div>
         ))}
       </div>

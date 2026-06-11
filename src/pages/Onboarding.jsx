@@ -252,35 +252,29 @@ export default function Onboarding({ onComplete }) {
           </div>
         )}
 
-        {/* HealthKit Phase */}
+        {/* HealthKit Phase — only shown on iPhone (iPad skips via disclaimer button) */}
         {phase === 'healthkit' && (
           <div className="animate-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, textAlign: 'center' }}>
             <div style={{ marginBottom: 32, background: 'var(--bg-secondary)', width: 100, height: 100, borderRadius: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                <IoWatchOutline size={50} color="var(--accent)" />
             </div>
-            <h1 className="ob-title" style={{ fontSize: '1.6rem', lineHeight: 1.3, marginBottom: 12 }}>Connect Apple Health</h1>
-            <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: 1.5, maxWidth: 300, marginBottom: 16 }}>
-              Allow PeptidAI to securely sync your Apple Watch sleep and energy data to build a smarter, more accurate protocol.
+            <h1 className="ob-title" style={{ fontSize: '1.6rem', lineHeight: 1.3, marginBottom: 12 }}>Apple Health</h1>
+            <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: 1.5, maxWidth: 300, marginBottom: 40 }}>
+              PeptidAI uses Apple Health to sync your sleep and activity data for your daily journal.
             </p>
-            <div style={{ background: '#f5f5f7', padding: '12px 16px', borderRadius: 12, marginBottom: 40, textAlign: 'left' }}>
-              <p style={{ fontSize: '0.8rem', color: '#666', margin: 0, lineHeight: 1.5 }}>
-                <strong>Why we use Apple Health:</strong> We read your <strong>Sleep Analysis</strong> and <strong>Active Energy Burned</strong> data to automatically populate your daily journal, helping you track how your protocol affects your recovery and fitness.
-              </p>
-            </div>
             
             <button 
               className="btn btn-primary btn-full" 
               onClick={async () => {
-                await syncAppleHealth();
+                try {
+                  await syncAppleHealth();
+                } catch (e) {
+                  console.warn('Health sync skipped:', e);
+                }
                 setPhase('rating');
               }} 
-              style={{ fontSize: '1.1rem', fontWeight: 700, padding: 18, borderRadius: 100, marginBottom: 16 }}>
-              Sync Apple Health (HealthKit)
-            </button>
-            <button 
-              onClick={() => setPhase('rating')} 
-              style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '1rem', fontWeight: 600, cursor: 'pointer' }}>
-              Skip for now
+              style={{ fontSize: '1.1rem', fontWeight: 700, padding: 18, borderRadius: 100 }}>
+              Continue
             </button>
           </div>
         )}
