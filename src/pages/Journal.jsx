@@ -48,10 +48,14 @@ export default function Journal() {
     setSyncing(false);
   }
 
-  function handleSave() {
-    saveJournalEntry(form);
-    setShowLog(false);
-    setForm({ date: new Date().toISOString().split('T')[0], energy: 5, sleep: 5, recovery: 5, notes: '', rawSleep: null, rawEnergy: null });
+  async function handleSave() {
+    try {
+      await saveJournalEntry(form);
+      setShowLog(false);
+      setForm({ date: new Date().toISOString().split('T')[0], energy: 5, sleep: 5, recovery: 5, notes: '', rawSleep: null, rawEnergy: null });
+    } catch (err) {
+      console.error('Failed to save journal entry:', err);
+    }
   }
 
   return (
@@ -66,6 +70,17 @@ export default function Journal() {
         <button className="btn btn-primary btn-sm" onClick={() => setShowLog(true)} style={{ padding: '6px 12px' }}>
           <IoAdd size={18} style={{ marginRight: 6 }} /> Log
         </button>
+      </div>
+
+      {/* Apple Health Integration — always visible per App Store Guideline 2.5.1 */}
+      <div className="card" style={{ marginBottom: 20, background: 'linear-gradient(135deg, #fffafa, #fff0f5)', border: '1px solid #ffe4e1' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+          <IoWatchOutline size={20} color="var(--accent)" />
+          <h2 style={{ fontSize: '1rem', margin: 0, color: '#1a1a1a' }}>Apple Health Integration</h2>
+        </div>
+        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
+          PeptidAI integrates with <strong>Apple Health</strong> to automatically import your Sleep Analysis and Active Energy Burned data into your daily journal entries. {!healthAvailable && 'This feature is available on iPhone.'}
+        </p>
       </div>
 
       {/* Apple Health Biometrics Dashboard — only show on iPhone */}
