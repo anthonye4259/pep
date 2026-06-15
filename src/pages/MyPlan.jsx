@@ -2,19 +2,32 @@ import { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { generateProtocol } from '../lib/gemini';
 import { IoSparkles, IoCheckmarkCircle, IoRefreshCircle, IoFlameOutline } from 'react-icons/io5';
+import AIConsentModal from '../components/AIConsentModal';
 
 export default function MyPlan() {
   const { appState, userProfile, updateProfileData, vials } = useApp();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showAIConsent, setShowAIConsent] = useState(false);
 
   const protocol = userProfile?.protocol;
+  const hasConsented = localStorage.getItem('peptidai_ai_consent') === 'true';
 
   useEffect(() => {
     if (userProfile && !protocol && !loading && !error) {
-      generateInitialProtocol();
+      if (hasConsented) {
+        generateInitialProtocol();
+      } else {
+        setShowAIConsent(true);
+      }
     }
   }, [userProfile, protocol]);
+
+  function handleConsentAccept() {
+    localStorage.setItem('peptidai_ai_consent', 'true');
+    setShowAIConsent(false);
+    generateInitialProtocol();
+  }
 
   async function generateInitialProtocol() {
     try {
@@ -44,7 +57,6 @@ export default function MyPlan() {
         return;
       }
     }
-    // If passed 14 days, they can regenerate
     generateInitialProtocol();
   }
 
@@ -67,7 +79,21 @@ export default function MyPlan() {
     );
   }
 
-  if (!protocol) return null;
+  if (!protocol) {
+    return (
+      <>
+        <AIConsentModal isOpen={showAIConsent} onAccept={handleConsentAccept} onDecline={() => setShowAIConsent(false)} />
+        <div className="page" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+          <IoSparkles size={48} color="var(--accent)" />
+          <h2 style={{ fontSize: '1.2rem', marginTop: 16 }}>Ready to create your plan</h2>
+          <p style={{ color: '#999', fontSize: '0.9rem', marginTop: 8, textAlign: 'center', maxWidth: 280 }}>Tap below to generate your personalized AI wellness plan.</p>
+          <button className="btn btn-primary" style={{ marginTop: 20 }} onClick={() => {
+            if (hasConsented) { generateInitialProtocol(); } else { setShowAIConsent(true); }
+          }}>Generate My Plan</button>
+        </div>
+      </>
+    );
+  }
 
   return (
     <div className="page" style={{ paddingBottom: 100 }}>
