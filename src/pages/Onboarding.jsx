@@ -7,6 +7,16 @@ import RatingPhase from '../components/RatingPhase';
 
 const DISCLAIMER = `FOR EDUCATIONAL AND WELLNESS TRACKING PURPOSES ONLY. This app is a wellness journal and AI coaching tool. It does not provide medical advice, diagnosis, or treatment recommendations. Always consult a qualified healthcare professional before making changes to your health routine.`;
 
+const AI_DISCLOSURE = `PeptidAI uses Google's Gemini AI, a third-party AI service by Google LLC, to generate your personalized wellness plan.
+
+When you use AI features, the following data is sent to Google's Gemini API:
+• Your wellness goals
+• Your sleep quality responses
+• Your energy level responses
+• General health preferences from onboarding
+
+Google processes this data per their Privacy Policy. PeptidAI does not sell your personal data.`;
+
 const TUTORIAL_STEPS = [
   {
     title: 'Your AI Wellness Coach.\nAlways learning.',
@@ -218,18 +228,36 @@ export default function Onboarding({ onComplete }) {
           </div>
         )}
 
-        {/* Disclaimer Phase */}
+        {/* Disclaimer + AI Data Consent Phase */}
         {phase === 'disclaimer' && (
-          <div className="animate-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-            <div style={{ marginBottom: 32, background: '#f5f5f5', width: 100, height: 100, borderRadius: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-               <IoShieldCheckmark size={50} color="#1a1a1a" />
+          <div className="animate-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, overflowY: 'auto', padding: '20px 0' }}>
+            <div style={{ marginBottom: 24, background: '#f5f5f5', width: 80, height: 80, borderRadius: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+               <IoShieldCheckmark size={40} color="#1a1a1a" />
             </div>
-            <h1 className="ob-title" style={{ fontSize: '1.6rem', lineHeight: 1.3 }}>Important Disclaimer</h1>
-            <div style={{ background: '#f8f8f8', padding: 24, borderRadius: 16, marginTop: 20 }}>
-              <p style={{ fontSize: '0.9rem', color: '#555', lineHeight: 1.7, maxWidth: 340, textAlign: 'left', margin: 0, fontWeight: 500 }}>{DISCLAIMER}</p>
+            <h1 className="ob-title" style={{ fontSize: '1.4rem', lineHeight: 1.3, marginBottom: 4 }}>Before We Begin</h1>
+            <p style={{ fontSize: '0.85rem', color: '#999', marginBottom: 20 }}>Please review and agree to continue</p>
+
+            {/* AI Data Sharing Disclosure */}
+            <div style={{ background: '#fff5f8', border: '1px solid #fecdd3', padding: 20, borderRadius: 16, marginBottom: 16, width: '100%', maxWidth: 360 }}>
+              <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#1a1a1a', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <IoScanOutline size={18} color="var(--accent)" /> AI Data Sharing
+              </h3>
+              <p style={{ fontSize: '0.82rem', color: '#555', lineHeight: 1.7, margin: 0, fontWeight: 500, whiteSpace: 'pre-line' }}>{AI_DISCLOSURE}</p>
             </div>
+
+            {/* Health Disclaimer */}
+            <div style={{ background: '#f8f8f8', padding: 20, borderRadius: 16, width: '100%', maxWidth: 360 }}>
+              <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#1a1a1a', marginBottom: 10 }}>Health Disclaimer</h3>
+              <p style={{ fontSize: '0.82rem', color: '#555', lineHeight: 1.7, margin: 0, fontWeight: 500 }}>{DISCLAIMER}</p>
+            </div>
+
+            <p style={{ fontSize: '0.75rem', color: '#999', marginTop: 16, textAlign: 'center' }}>
+              By tapping "I Agree", you consent to the above data sharing. <a href="/privacy" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</a>
+            </p>
             
             <button className="btn btn-primary btn-full" onClick={async () => {
+              // Store AI consent
+              localStorage.setItem('peptidai_ai_consent', 'true');
               // Skip HealthKit on iPad and non-native platforms
               if (!Capacitor.isNativePlatform() || !shouldShowHealthKit()) {
                 setPhase('rating');
@@ -246,7 +274,7 @@ export default function Onboarding({ onComplete }) {
               } catch {
                 setPhase('rating');
               }
-            }} style={{ fontSize: '1.1rem', fontWeight: 700, padding: 18, marginTop: 40, borderRadius: 100 }}>
+            }} style={{ fontSize: '1.1rem', fontWeight: 700, padding: 18, marginTop: 16, borderRadius: 100 }}>
               I Understand & Agree
             </button>
           </div>
