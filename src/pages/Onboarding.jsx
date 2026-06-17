@@ -3,7 +3,7 @@ import { IoArrowForward, IoShieldCheckmark, IoScanOutline, IoColorFillOutline, I
 import { useApp } from '../context/AppContext';
 import { Capacitor } from '@capacitor/core';
 import { shouldShowHealthKit } from '../lib/deviceCheck';
-import RatingPhase from '../components/RatingPhase';
+
 
 const DISCLAIMER = `FOR EDUCATIONAL AND WELLNESS TRACKING PURPOSES ONLY. This app is a wellness journal and AI coaching tool. It does not provide medical advice, diagnosis, or treatment recommendations. Always consult a qualified healthcare professional before making changes to your health routine.`;
 
@@ -252,7 +252,7 @@ export default function Onboarding({ onComplete }) {
             </div>
 
             <p style={{ fontSize: '0.75rem', color: '#999', marginTop: 16, textAlign: 'center' }}>
-              By tapping "I Agree", you consent to the above data sharing. <a href="/privacy" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</a>
+              By tapping "I Agree", you consent to the above data sharing. <a href="https://peptidai.web.app/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</a>
             </p>
             
             <button className="btn btn-primary btn-full" onClick={async () => {
@@ -260,7 +260,7 @@ export default function Onboarding({ onComplete }) {
               localStorage.setItem('peptidai_ai_consent', 'true');
               // Skip HealthKit on iPad and non-native platforms
               if (!Capacitor.isNativePlatform() || !shouldShowHealthKit()) {
-                setPhase('rating');
+                setPhase('building');
                 return;
               }
               try {
@@ -269,10 +269,10 @@ export default function Onboarding({ onComplete }) {
                 if (available && available.available) {
                   setPhase('healthkit');
                 } else {
-                  setPhase('rating');
+                  setPhase('building');
                 }
               } catch {
-                setPhase('rating');
+                setPhase('building');
               }
             }} style={{ fontSize: '1.1rem', fontWeight: 700, padding: 18, marginTop: 16, borderRadius: 100 }}>
               I Understand & Agree
@@ -299,7 +299,7 @@ export default function Onboarding({ onComplete }) {
                 } catch (e) {
                   console.warn('Health sync skipped:', e);
                 }
-                setPhase('rating');
+                setPhase('building');
               }} 
               style={{ fontSize: '1.1rem', fontWeight: 700, padding: 18, borderRadius: 100 }}>
               Continue
@@ -307,10 +307,7 @@ export default function Onboarding({ onComplete }) {
           </div>
         )}
 
-        {/* Rating Phase */}
-        {phase === 'rating' && (
-          <RatingPhase onNext={() => setPhase('building')} />
-        )}
+
 
         {/* Building Phase */}
         {phase === 'building' && (

@@ -73,7 +73,7 @@ export default function DisclaimerModal() {
         </div>
 
         <p style={{ fontSize: '0.72rem', color: '#999', textAlign: 'center', marginBottom: 16 }}>
-          By tapping "I Agree", you consent to the AI data sharing described above. <a href="/privacy" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</a>
+          By tapping "I Agree", you consent to the AI data sharing described above. <a href="https://peptidai.web.app/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</a>
         </p>
 
         <button
