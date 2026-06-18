@@ -29,3 +29,4 @@ ios/App/build/
 ios/App/DerivedData/
 android/
 paywall_screenshot.png
+.env
