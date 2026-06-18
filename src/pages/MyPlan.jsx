@@ -48,15 +48,6 @@ export default function MyPlan() {
   }
 
   function handleRegenerate() {
-    const lastGen = userProfile?.aiUsage?.protocolGeneratedDate;
-    const now = new Date();
-    if (lastGen) {
-      const diffDays = (now - new Date(lastGen)) / (1000 * 60 * 60 * 24);
-      if (diffDays < 14) {
-        alert('Your AI Tutor is currently monitoring your progress on this plan. Please complete 14 days of data logging before requesting a new synthesis.');
-        return;
-      }
-    }
     generateInitialProtocol();
   }
 
