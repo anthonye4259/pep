@@ -1,7 +1,9 @@
+import AppleIntelligence from '../plugins/AppleIntelligence';
+
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
-// Fallback plan when API is unavailable
+// Fallback plan when both AI providers are unavailable
 const FALLBACK_PLAN = {
   summary: "Your wellness journey starts with building strong daily habits. Focus on consistent sleep, balanced nutrition, and regular movement to create a foundation for lasting health.",
   focusAreas: ["Sleep Optimization", "Nutrition Balance", "Active Recovery"],
@@ -15,20 +17,14 @@ const FALLBACK_PLAN = {
 };
 
 export async function generateProtocol(answers) {
-  try {
-    if (!GEMINI_API_KEY) {
-      console.warn('No Gemini API key, using fallback plan');
-      return FALLBACK_PLAN;
-    }
-
-    const prompt = `You are an expert wellness and health education AI coach. Generate a personalized 12-week wellness optimization plan based on the following user data:
+  const prompt = `You are an expert wellness and health education AI coach. Generate a personalized 12-week wellness optimization plan based on the following user data:
 Goals: ${answers.goal || 'General wellness'}
 Sleep Quality: ${answers.sleep || 'Average'}
 Energy Levels: ${answers.energy || 'Average'}
 
 IMPORTANT: Do NOT mention any specific medications, drugs, or pharmaceutical compounds. Do NOT provide any dosage recommendations. Focus ONLY on lifestyle, nutrition, exercise, sleep hygiene, and general wellness habits.
 
-Return a strict JSON object with this exact structure:
+Return ONLY a valid JSON object (no markdown, no extra text) with this exact structure:
 {
   "summary": "A 2-sentence encouraging summary of their wellness path forward.",
   "focusAreas": ["area 1", "area 2", "area 3"],
@@ -40,6 +36,30 @@ Return a strict JSON object with this exact structure:
   "inventoryAdvice": "A brief wellness tip related to their goals.",
   "safetyNote": "A brief reminder to consult healthcare professionals before making significant changes to health routines."
 }`;
+
+  // Try Apple Intelligence first (free, on-device/private cloud)
+  try {
+    const { available } = await AppleIntelligence.checkAvailability();
+    if (available) {
+      const response = await AppleIntelligence.generateText({ prompt });
+      const jsonMatch = response.text.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        const parsed = JSON.parse(jsonMatch[0]);
+        if (parsed.summary && parsed.focusAreas && parsed.schedule) {
+          return parsed;
+        }
+      }
+    }
+  } catch (appleErr) {
+    console.log('Apple Intelligence unavailable, trying Gemini:', appleErr.message);
+  }
+
+  // Fallback to Gemini
+  try {
+    if (!GEMINI_API_KEY) {
+      console.warn('No Gemini API key, using fallback plan');
+      return FALLBACK_PLAN;
+    }
 
     const response = await fetch(API_URL, {
       method: 'POST',
