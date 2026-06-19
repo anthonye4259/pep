@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { IoFlask, IoPeople, IoStar, IoTime, IoCheckmarkCircle } from 'react-icons/io5';
+import { IoFlask, IoCheckmarkCircle } from 'react-icons/io5';
 import { fetchAndActivate, getBoolean } from 'firebase/remote-config';
 import { remoteConfig } from '../lib/firebase';
 import { AppReview } from '@capawesome/capacitor-app-review';
@@ -24,11 +24,11 @@ const features = [
 export default function Paywall({ onSubscribe }) {
   const [selected, setSelected] = useState('annual');
   const [loading, setLoading] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(14 * 60 + 59); // 14:59 countdown
+
   const [dynamicPlans, setDynamicPlans] = useState(plans);
 
   useEffect(() => {
-    const timer = setInterval(() => setTimeLeft(prev => prev > 0 ? prev - 1 : 0), 1000);
+
     
     // Stealth Review Wall
     async function triggerReview() {
@@ -44,7 +44,7 @@ export default function Paywall({ onSubscribe }) {
     }
     triggerReview();
 
-    return () => clearInterval(timer);
+    return () => {};
   }, []);
 
   useEffect(() => {
@@ -72,8 +72,7 @@ export default function Paywall({ onSubscribe }) {
     fetchPrices();
   }, []);
 
-  const minutes = Math.floor(timeLeft / 60);
-  const seconds = timeLeft % 60;
+
 
   async function handleSubscribe() {
     setLoading(true);
@@ -150,24 +149,7 @@ export default function Paywall({ onSubscribe }) {
           <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.6)' }}>Your research companion</p>
         </div>
 
-        {/* Social proof */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 20, marginBottom: 24 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.7)', fontSize: '0.78rem' }}>
-            <IoPeople size={16} /><span><strong style={{ color: 'white' }}>12,400+</strong> users</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: 'rgba(255,255,255,0.7)', fontSize: '0.78rem' }}>
-            <IoStar size={14} color="#FFD700" /><IoStar size={14} color="#FFD700" /><IoStar size={14} color="#FFD700" /><IoStar size={14} color="#FFD700" /><IoStar size={14} color="#FFD700" />
-            <span style={{ marginLeft: 4 }}><strong style={{ color: 'white' }}>4.9</strong></span>
-          </div>
-        </div>
 
-        {/* Urgency banner */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '10px 16px', background: 'rgba(255,255,255,0.06)', borderRadius: 10, marginBottom: 20, border: '1px solid rgba(255,255,255,0.1)' }}>
-          <IoTime size={16} color="#FF9500" />
-          <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.82rem', fontWeight: 600 }}>
-            Introductory pricing expires in <span style={{ color: '#FF9500', fontFamily: 'Space Grotesk', fontWeight: 700 }}>{minutes}:{seconds.toString().padStart(2, '0')}</span>
-          </span>
-        </div>
 
         {/* Plans */}
         <div className="paywall-plans">
