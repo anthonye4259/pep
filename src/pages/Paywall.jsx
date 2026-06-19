@@ -6,10 +6,10 @@ import { AppReview } from '@capawesome/capacitor-app-review';
 import { Purchases } from '@revenuecat/purchases-capacitor';
 
 const plans = [
-  { id: 'weekly', name: 'Weekly', price: '$2.99', period: '/week', desc: 'Flexible, cancel anytime', badge: null },
-  { id: 'monthly', name: 'Monthly', price: '$7.99', period: '/mo', desc: 'Standard subscription', badge: null },
-  { id: 'annual', name: 'Annual', price: '$39.99', period: '/year', desc: 'Save 74% vs weekly', badge: 'BEST VALUE' },
-  { id: 'lifetime', name: 'Lifetime', price: '$99.99', period: ' once', desc: 'Pay once, own forever', badge: 'ULTIMATE' },
+  { id: 'weekly', name: 'Weekly', price: '$3.99', period: '/week', desc: 'Flexible, cancel anytime', badge: null },
+  { id: 'monthly', name: 'Monthly', price: '$9.99', period: '/mo', desc: 'Standard subscription', badge: null },
+  { id: 'annual', name: 'Annual', price: '$99.99', period: '/year', desc: 'Save 52% vs weekly', badge: 'BEST VALUE' },
+  { id: 'lifetime', name: 'Lifetime', price: '$249.99', period: ' once', desc: 'Pay once, own forever', badge: 'ULTIMATE' },
 ];
 
 const features = [
