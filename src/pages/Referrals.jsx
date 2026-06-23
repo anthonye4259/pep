@@ -32,7 +32,7 @@ export default function Referrals() {
     <div className="page">
       <div className="page-header">
         <h1>Refer a Friend</h1>
-        <p>Give 1 Month, Get 1 Month</p>
+        <p>Share the knowledge</p>
       </div>
 
       <div className="card" style={{ textAlign: 'center', padding: '40px 20px', marginBottom: 20 }}>
@@ -50,7 +50,7 @@ export default function Referrals() {
         <h3 style={{ fontSize: '1rem', marginBottom: 12 }}>How it works</h3>
         <ul style={{ paddingLeft: 20, color: '#666', lineHeight: 1.6, margin: 0 }}>
           <li>Share your unique code or link with a friend.</li>
-          <li>When they sign up and pay for their first month, you both get 1 month of Premium!</li>
+          <li>When they sign up, they'll get access to PeptidAI's wellness tools!</li>
         </ul>
       </div>
     </div>

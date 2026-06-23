@@ -1,7 +1,11 @@
 import { GoogleGenAI, Type } from '@google/genai';
 import AppleIntelligence from '../plugins/AppleIntelligence';
 
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+let _ai;
+function getAI() {
+  if (!_ai) _ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+  return _ai;
+}
 
 // OpenAI-compatible API call (works with Groq, Cerebras, OpenRouter, etc.)
 async function callOpenAICompatible(url, apiKey, model, prompt, json) {
@@ -60,7 +64,7 @@ export async function freeAI(prompt, { json, schema, image } = {}) {
         responseMimeType: "application/json",
         responseSchema: { type: Type.OBJECT, ...schema },
       } : {};
-      const response = await ai.models.generateContent({ model, contents, config });
+      const response = await getAI().models.generateContent({ model, contents, config });
       if (json) {
         return { type: 'json', data: JSON.parse(response.text()) };
       }

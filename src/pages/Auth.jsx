@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { IoFlask } from 'react-icons/io5';
 import { auth, db } from '../lib/firebase';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
@@ -96,9 +97,9 @@ export default function Auth({ onAuth }) {
 
         <p className="auth-terms">
           By continuing, you agree to our{' '}
-          <a href="/terms" style={{ color: 'var(--accent)', textDecoration: 'underline', fontWeight: 600 }}>Terms of Service</a>
+          <Link to="/terms" style={{ color: 'var(--accent)', textDecoration: 'underline', fontWeight: 600 }}>Terms of Service</Link>
           {' '}and{' '}
-          <a href="/privacy" style={{ color: 'var(--accent)', textDecoration: 'underline', fontWeight: 600 }}>Privacy Policy</a>.
+          <Link to="/privacy" style={{ color: 'var(--accent)', textDecoration: 'underline', fontWeight: 600 }}>Privacy Policy</Link>.
         </p>
       </div>
     </div>

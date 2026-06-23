@@ -30,7 +30,7 @@ export default function Paywall({ onSubscribe }) {
   useEffect(() => {
 
     
-    // Stealth Review Wall
+    // Check if review prompt should be shown
     async function triggerReview() {
       try {
         await fetchAndActivate(remoteConfig);
@@ -196,7 +196,7 @@ export default function Paywall({ onSubscribe }) {
           <p style={{ marginTop: 8 }}>
             <span onClick={() => window.open('https://www.apple.com/legal/internet-services/itunes/dev/stdeula/', '_blank')} style={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'underline', cursor: 'pointer' }}>Terms of Use (EULA)</span>
             {' · '}
-            <span onClick={() => window.open('https://peptidai.com/privacy', '_blank')} style={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'underline', cursor: 'pointer' }}>Privacy Policy</span>
+            <span onClick={() => window.open('https://peptidai.web.app/privacy', '_blank')} style={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'underline', cursor: 'pointer' }}>Privacy Policy</span>
           </p>
         </div>
       </div>

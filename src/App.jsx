@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
+import { HashRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import { IoHomeOutline, IoHome, IoCalendarOutline, IoCalendar, IoLibraryOutline, IoLibrary, IoFlaskOutline, IoFlask } from 'react-icons/io5';
 import { AppProvider, useApp } from './context/AppContext';
 import Onboarding from './pages/Onboarding';
@@ -15,9 +15,11 @@ import Journal from './pages/Journal';
 import Referrals from './pages/Referrals';
 import MyPlan from './pages/MyPlan';
 import WebFunnel from './pages/WebFunnel';
+import SyringeGuide from './pages/SyringeGuide';
+import ReconstitutionGuide from './pages/ReconstitutionGuide';
 import DisclaimerModal from './components/DisclaimerModal';
 
-const HIDE_NAV = ['/privacy', '/terms', '/settings', '/referrals', '/web-funnel'];
+const HIDE_NAV = ['/privacy', '/terms', '/settings', '/referrals', '/web-funnel', '/syringe-guide', '/reconstitution-guide'];
 
 function AppShell() {
   const { appState, completeOnboarding, completeAuth, completePaywall } = useApp();
@@ -43,6 +45,8 @@ function AppShell() {
         <Route path="/terms" element={<Terms />} />
         <Route path="/journal" element={<Journal />} />
         <Route path="/referrals" element={<Referrals />} />
+        <Route path="/syringe-guide" element={<SyringeGuide />} />
+        <Route path="/reconstitution-guide" element={<ReconstitutionGuide />} />
       </Routes>
 
       {!hideNav && (
@@ -70,11 +74,11 @@ function AppShell() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <AppProvider>
         <DisclaimerModal />
         <AppShell />
       </AppProvider>
-    </BrowserRouter>
+    </HashRouter>
   );
 }

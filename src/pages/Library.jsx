@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { IoSearch, IoBookOutline, IoChevronForward } from 'react-icons/io5';
+import { Link } from 'react-router-dom';
+import { IoSearch, IoBookOutline, IoChevronForward, IoFlaskOutline, IoMedkitOutline } from 'react-icons/io5';
 
 const educationalTopics = [
   { title: 'What Are Peptides?', category: 'Basics', desc: 'Short chains of amino acids that serve as building blocks for proteins. Learn about the science behind peptide research.' },
@@ -56,6 +57,27 @@ export default function Library() {
           </div>
         </div>
       ))}
+
+      {/* Practical Guides */}
+      <div style={{ marginTop: 24 }}>
+        <h2 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: 12, color: 'var(--text)' }}>Practical Guides</h2>
+        <Link to="/reconstitution-guide" className="peptide-card" style={{ width: '100%', textAlign: 'left', border: 'none', textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center' }}>
+          <div className="peptide-icon"><IoFlaskOutline size={20} /></div>
+          <div className="peptide-info" style={{ flex: 1 }}>
+            <div className="peptide-name">Reconstitution Guide</div>
+            <div className="peptide-desc">Step-by-step reconstitution walkthrough</div>
+          </div>
+          <IoChevronForward size={16} color="#ccc" />
+        </Link>
+        <Link to="/syringe-guide" className="peptide-card" style={{ width: '100%', textAlign: 'left', border: 'none', textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center' }}>
+          <div className="peptide-icon"><IoMedkitOutline size={20} /></div>
+          <div className="peptide-info" style={{ flex: 1 }}>
+            <div className="peptide-name">Syringe Guide</div>
+            <div className="peptide-desc">Reading and measuring with insulin syringes</div>
+          </div>
+          <IoChevronForward size={16} color="#ccc" />
+        </Link>
+      </div>
     </div>
   );
 }

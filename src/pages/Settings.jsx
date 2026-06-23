@@ -10,7 +10,7 @@ import { shouldShowHealthKit } from '../lib/deviceCheck';
 
 export default function Settings() {
   const navigate = useNavigate();
-  const { appState, resetApp } = useApp();
+  const { appState, resetApp, scheduleDailyReminder, cancelReminders } = useApp();
   const [showDelete, setShowDelete] = useState(false);
   const [manageUrl, setManageUrl] = useState('https://apps.apple.com/account/subscriptions');
   const [healthAvailable, setHealthAvailable] = useState(false);
@@ -122,11 +122,11 @@ export default function Settings() {
                   const checked = e.target.checked;
                   if (checked) {
                     // Default to 8:00 AM
-                    const success = await useApp().scheduleDailyReminder(8, 0);
+                    const success = await scheduleDailyReminder(8, 0);
                     if (success) e.target.checked = true;
                     else { e.target.checked = false; alert("Please enable notifications in your phone's Settings."); }
                   } else {
-                    await useApp().cancelReminders();
+                    await cancelReminders();
                   }
                 }} 
               />
@@ -183,7 +183,7 @@ export default function Settings() {
       <div className="settings-group">
         <Link to="/referrals" className="settings-item">
           <div>
-            <span style={{ fontWeight: 600, color: 'var(--accent)' }}>Refer a Friend (Get 1 Month Free)</span>
+            <span style={{ fontWeight: 600, color: 'var(--accent)' }}>Share PeptidAI with Friends</span>
           </div>
           <IoChevronForward color="#999" />
         </Link>

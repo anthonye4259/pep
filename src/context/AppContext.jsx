@@ -9,6 +9,8 @@ import { Health } from '@capgo/capacitor-health';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { shouldShowHealthKit } from '../lib/deviceCheck';
 
+const REVIEW_EMAIL = 'review@peptidai.com';
+
 const AppContext = createContext();
 
 export function AppProvider({ children }) {
@@ -153,6 +155,14 @@ export function AppProvider({ children }) {
   
   async function completeAuth(user) { 
     const userData = { uid: user.uid, email: user.email, displayName: user.displayName };
+    
+    // Apple reviewer bypass: auto-complete onboarding, force paywall
+    if (user.email === REVIEW_EMAIL) {
+      console.log('[Review] Reviewer detected, skipping to paywall');
+      setAppState(prev => ({ ...prev, step: 'paywall', user: userData, subscribed: false }));
+      return;
+    }
+    
     try {
       // Race RevenueCat against a 5-second timeout so the app never hangs
       const rcResult = await Promise.race([
