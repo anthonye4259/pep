@@ -68,11 +68,11 @@ export default function Settings() {
 
       {/* Profile card */}
       <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 24 }}>
-        <IoPersonCircleOutline size={48} color="#ccc" />
+        <IoPersonCircleOutline size={48} color="var(--text-muted)" />
         <div>
           <div style={{ fontWeight: 600, fontSize: '1.05rem' }}>{user?.displayName || 'User'}</div>
-          <div style={{ fontSize: '0.8rem', color: '#999' }}>{user?.email}</div>
-          <div style={{ fontSize: '0.72rem', color: '#34c759', marginTop: 2, fontWeight: 600 }}>PRO</div>
+          <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{user?.email}</div>
+          <div style={{ fontSize: '0.72rem', color: 'var(--success)', marginTop: 2, fontWeight: 600 }}>PRO</div>
         </div>
       </div>
 
@@ -130,7 +130,7 @@ export default function Settings() {
                   }
                 }} 
               />
-              <span style={{ position: 'absolute', cursor: 'pointer', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: '#ccc', transition: '.4s', borderRadius: 24 }}>
+              <span style={{ position: 'absolute', cursor: 'pointer', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'var(--border)', transition: '.4s', borderRadius: 24 }}>
                 <span style={{ position: 'absolute', content: '""', height: 18, width: 18, left: 3, bottom: 3, backgroundColor: 'white', transition: '.4s', borderRadius: '50%' }} className="slider-knob"></span>
               </span>
               <style>{`
@@ -147,13 +147,12 @@ export default function Settings() {
         {menuItems.map((item, i) => (
           <button key={i} onClick={item.action} style={{
             display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px',
-            background: 'none', border: 'none', borderBottom: '1px solid #f0f0f0',
-            cursor: 'pointer', width: '100%', textAlign: 'left', fontFamily: 'Inter',
-            fontSize: '0.9rem', color: '#1a1a1a',
+            background: 'none', border: 'none', borderBottom: '1px solid var(--border)',
+            cursor: 'pointer', width: '100%', textAlign: 'left',             fontSize: '0.9rem', color: 'var(--text)',
           }}>
-            <item.icon size={20} color="#999" />
+            <item.icon size={20} color="var(--text-muted)" />
             <span style={{ flex: 1 }}>{item.label}</span>
-            <IoChevronForward size={16} color="#ccc" />
+            <IoChevronForward size={16} color="var(--text-muted)" />
           </button>
         ))}
       </div>
@@ -162,8 +161,8 @@ export default function Settings() {
       <button onClick={handleSignOut} style={{
         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
         width: '100%', padding: 14, marginTop: 32, background: 'none',
-        border: '1px solid #e5e5e5', borderRadius: 12, cursor: 'pointer',
-        fontFamily: 'Inter', fontSize: '0.9rem', color: '#666', fontWeight: 500,
+        border: '1px solid var(--border)', borderRadius: 12, cursor: 'pointer',
+        fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 500,
       }}>
         <IoLogOutOutline size={18} /> Sign Out
       </button>
@@ -172,20 +171,20 @@ export default function Settings() {
       <button onClick={() => setShowDelete(true)} style={{
         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
         width: '100%', padding: 14, marginTop: 10, background: 'none',
-        border: '1px solid rgba(255,59,48,0.2)', borderRadius: 12, cursor: 'pointer',
-        fontFamily: 'Inter', fontSize: '0.85rem', color: '#ff3b30', fontWeight: 500,
+        border: '1px solid rgba(207,102,121,0.2)', borderRadius: 12, cursor: 'pointer',
+        fontSize: '0.85rem', color: 'var(--danger)', fontWeight: 500,
       }}>
         <IoTrashOutline size={16} /> Delete Account
       </button>
 
-      <p style={{ textAlign: 'center', fontSize: '0.7rem', color: '#ccc', marginTop: 20 }}>PeptidAI v1.0.0</p>
+      <p style={{ textAlign: 'center', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 20 }}>PeptidAI v1.0.0</p>
 
       <div className="settings-group">
         <Link to="/referrals" className="settings-item">
           <div>
             <span style={{ fontWeight: 600, color: 'var(--accent)' }}>Share PeptidAI with Friends</span>
           </div>
-          <IoChevronForward color="#999" />
+          <IoChevronForward color="var(--text-muted)" />
         </Link>
       </div>
 
@@ -194,8 +193,8 @@ export default function Settings() {
         <div className="modal-overlay" onClick={() => setShowDelete(false)}>
           <div className="modal" onClick={e => e.stopPropagation()}>
             <h2 style={{ marginBottom: 8 }}>Delete Account?</h2>
-            <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: 20 }}>This will permanently delete your account, saved vials, and all data. This cannot be undone.</p>
-            <button className="btn btn-full" style={{ background: '#ff3b30', color: 'white', marginBottom: 8 }} onClick={handleDeleteAccount}>Delete Permanently</button>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: 20 }}>This will permanently delete your account, saved vials, and all data. This cannot be undone.</p>
+            <button className="btn btn-full" style={{ background: 'var(--danger)', color: 'white', marginBottom: 8 }} onClick={handleDeleteAccount}>Delete Permanently</button>
             <button className="btn btn-secondary btn-full" onClick={() => setShowDelete(false)}>Cancel</button>
           </div>
         </div>

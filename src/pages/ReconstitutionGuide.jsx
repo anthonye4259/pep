@@ -60,12 +60,12 @@ export default function ReconstitutionGuide() {
       {steps.map((step, i) => (
         <div key={i} className="card" style={{ marginBottom: 14 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-            <step.icon size={22} color="#1a1a1a" />
+            <step.icon size={22} color="var(--text)" />
             <h3 style={{ fontSize: '0.95rem' }}>{step.title}</h3>
           </div>
           <ul style={{ paddingLeft: 18, display: 'flex', flexDirection: 'column', gap: 6 }}>
             {step.items.map((item, j) => (
-              <li key={j} style={{ fontSize: '0.85rem', color: '#555', lineHeight: 1.5 }}>{item}</li>
+              <li key={j} style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>{item}</li>
             ))}
           </ul>
         </div>
@@ -73,7 +73,7 @@ export default function ReconstitutionGuide() {
 
       {/* Water amount guide */}
       <h2 style={{ fontSize: '1.1rem', marginTop: 28, marginBottom: 14 }}>How Much Water Should I Add?</h2>
-      <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: 16, lineHeight: 1.5 }}>
+      <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: 16, lineHeight: 1.5 }}>
         For a standard <strong>5mg vial</strong>, here's how water amount affects your concentration:
       </p>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -81,10 +81,10 @@ export default function ReconstitutionGuide() {
           <div key={i} className="card" style={{ padding: 16 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
               <span style={{ fontWeight: 700, fontSize: '1rem' }}>{row.water}</span>
-              <span style={{ fontSize: '0.8rem', color: '#999', fontFamily: 'Space Grotesk' }}>{row.concentration}</span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{row.concentration}</span>
             </div>
-            <div style={{ fontSize: '0.8rem', color: '#555' }}>{row.pros}</div>
-            <div style={{ fontSize: '0.75rem', color: '#999', marginTop: 2 }}>{row.cons}</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{row.pros}</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>{row.cons}</div>
           </div>
         ))}
       </div>
@@ -93,18 +93,18 @@ export default function ReconstitutionGuide() {
       <h2 style={{ fontSize: '1.1rem', marginTop: 28, marginBottom: 14 }}>mg vs mcg — What's the Difference?</h2>
       <div className="card">
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, textAlign: 'center' }}>
-          <div style={{ padding: 12, background: '#f5f5f5', borderRadius: 10 }}>
-            <div style={{ fontFamily: 'Space Grotesk', fontSize: '1.2rem', fontWeight: 700 }}>mg</div>
-            <div style={{ fontSize: '0.75rem', color: '#999', marginTop: 2 }}>milligram</div>
-            <div style={{ fontSize: '0.8rem', color: '#555', marginTop: 6 }}>1 mg = 1,000 mcg</div>
+          <div style={{ padding: 12, background: 'var(--bg-card)', borderRadius: 10 }}>
+            <div style={{ fontSize: '1.2rem', fontWeight: 700 }}>mg</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>milligram</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: 6 }}>1 mg = 1,000 mcg</div>
           </div>
-          <div style={{ padding: 12, background: '#f5f5f5', borderRadius: 10 }}>
-            <div style={{ fontFamily: 'Space Grotesk', fontSize: '1.2rem', fontWeight: 700 }}>mcg</div>
-            <div style={{ fontSize: '0.75rem', color: '#999', marginTop: 2 }}>microgram</div>
-            <div style={{ fontSize: '0.8rem', color: '#555', marginTop: 6 }}>1,000 mcg = 1 mg</div>
+          <div style={{ padding: 12, background: 'var(--bg-card)', borderRadius: 10 }}>
+            <div style={{ fontSize: '1.2rem', fontWeight: 700 }}>mcg</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>microgram</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: 6 }}>1,000 mcg = 1 mg</div>
           </div>
         </div>
-        <div style={{ marginTop: 16, fontSize: '0.82rem', color: '#555', lineHeight: 1.6 }}>
+        <div style={{ marginTop: 16, fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
           <strong>Example:</strong> If your vial contains 5mg of peptide, that equals 5,000mcg total. When adding water, you are diluting those 5,000mcg into a liquid volume.
         </div>
       </div>

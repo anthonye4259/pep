@@ -96,17 +96,17 @@ export default function Calendar() {
                 <>
                   <span className="calendar-day-num" style={{ fontWeight: injectionDays.has(day) ? 700 : 400 }}>{day}</span>
                   <div className="calendar-dots">
-                    {injectionDays.has(day) && <div className="calendar-dot" style={{ background: '#34c759' }} />}
-                    {scheduledDays.has(day) && !injectionDays.has(day) && <div className="calendar-dot" style={{ background: '#ccc' }} />}
+                    {injectionDays.has(day) && <div className="calendar-dot" style={{ background: 'var(--success)' }} />}
+                    {scheduledDays.has(day) && !injectionDays.has(day) && <div className="calendar-dot" style={{ background: 'var(--text-muted)' }} />}
                   </div>
                 </>
               )}
             </div>
           ))}
         </div>
-        <div style={{ display: 'flex', gap: 16, marginTop: 12, fontSize: '0.7rem', color: '#999', justifyContent: 'center' }}>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><div style={{ width: 8, height: 8, borderRadius: '50%', background: '#34c759' }} /> Logged</span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><div style={{ width: 8, height: 8, borderRadius: '50%', background: '#ccc' }} /> Scheduled</span>
+        <div style={{ display: 'flex', gap: 16, marginTop: 12, fontSize: '0.7rem', color: 'var(--text-muted)', justifyContent: 'center' }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--success)' }} /> Logged</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--text-muted)' }} /> Scheduled</span>
         </div>
       </div>
 
@@ -117,7 +117,7 @@ export default function Calendar() {
           <button className="btn btn-sm btn-secondary" onClick={() => setShowAddSchedule(true)} style={{ padding: '6px 12px' }}><IoAdd size={16} /> Add</button>
         </div>
         {(!schedules || schedules.length === 0) ? (
-          <div style={{ textAlign: 'center', padding: '20px 16px', color: '#999', fontSize: '0.85rem' }}>
+          <div style={{ textAlign: 'center', padding: '20px 16px', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
             <IoNotifications size={28} style={{ opacity: 0.3, marginBottom: 8 }} />
             <p>No schedules yet. Add one to track your routine.</p>
           </div>
@@ -130,7 +130,7 @@ export default function Calendar() {
               </div>
               <div style={{ display: 'flex', gap: 4 }}>
                 <button className="btn btn-icon btn-sm" style={{ background: 'none', border: 'none', color: 'var(--accent)' }} onClick={() => shareProtocol(s)}><IoShareSocialOutline size={18} /></button>
-                <button className="btn btn-icon btn-sm" style={{ background: 'none', border: 'none', color: '#999' }} onClick={() => deleteSchedule(s.id)}><IoClose size={18} /></button>
+                <button className="btn btn-icon btn-sm" style={{ background: 'none', border: 'none', color: 'var(--text-muted)' }} onClick={() => deleteSchedule(s.id)}><IoClose size={18} /></button>
               </div>
             </div>
           ))
@@ -141,7 +141,7 @@ export default function Calendar() {
       <div className="section">
         <div className="section-header"><span className="section-title">Recent Logs</span></div>
         {(vials || []).filter(v => v.lastInjected).length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '20px 16px', color: '#999', fontSize: '0.85rem' }}>No entries logged yet</div>
+          <div style={{ textAlign: 'center', padding: '20px 16px', color: 'var(--text-muted)', fontSize: '0.85rem' }}>No entries logged yet</div>
         ) : (
           (vials || []).filter(v => v.lastInjected).sort((a, b) => new Date(b.lastInjected) - new Date(a.lastInjected)).slice(0, 5).map((v, i) => (
             <div key={i} className="vial-card" style={{ cursor: 'default' }}>
@@ -170,9 +170,9 @@ export default function Calendar() {
                 {SCHEDULE_DAYS.map(d => (
                   <button key={d} onClick={() => toggleScheduleDay(d)} style={{
                     padding: '8px 12px', borderRadius: 8, fontSize: '0.8rem', fontWeight: 600,
-                    background: scheduleForm.days.includes(d) ? '#1a1a1a' : '#f5f5f5',
-                    color: scheduleForm.days.includes(d) ? 'white' : '#666',
-                    border: 'none', cursor: 'pointer', fontFamily: 'Inter',
+                    background: scheduleForm.days.includes(d) ? 'var(--text)' : 'var(--bg-card)',
+                    color: scheduleForm.days.includes(d) ? 'white' : 'var(--text-secondary)',
+                    border: 'none', cursor: 'pointer',
                   }}>{d}</button>
                 ))}
               </div>

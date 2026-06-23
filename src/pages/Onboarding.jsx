@@ -159,21 +159,21 @@ export default function Onboarding({ onComplete }) {
             {/* Story Progress Bars */}
             <div style={{ position: 'absolute', top: 60, left: 20, right: 20, display: 'flex', gap: 6 }}>
                {TUTORIAL_STEPS.map((_, i) => (
-                 <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= tutStep ? 'var(--accent)' : '#e0e0e0', transition: 'background 0.3s' }} />
+                 <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= tutStep ? 'var(--accent)' : 'var(--border)', transition: 'background 0.3s' }} />
                ))}
             </div>
 
-            <div style={{ background: '#fff5f8', width: 180, height: 180, borderRadius: 90, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 40, boxShadow: '0 20px 40px rgba(236,72,153,0.15)' }}>
+            <div style={{ background: '#fff5f8', width: 180, height: 180, borderRadius: 90, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 40, boxShadow: '0 20px 40px rgba(209,138,157,0.25)' }}>
                {TUTORIAL_STEPS[tutStep].icon}
             </div>
-            <h1 style={{ fontSize: '2rem', lineHeight: 1.2, fontWeight: 800, color: '#1a1a1a', marginBottom: 20, whiteSpace: 'pre-line' }}>
+            <h1 style={{ fontSize: '2rem', lineHeight: 1.2, fontWeight: 800, color: 'var(--text)', marginBottom: 20, whiteSpace: 'pre-line' }}>
               {TUTORIAL_STEPS[tutStep].title}
             </h1>
-            <p style={{ color: '#666', fontSize: '1.1rem', lineHeight: 1.5, maxWidth: 300 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: 1.5, maxWidth: 300 }}>
               {TUTORIAL_STEPS[tutStep].desc}
             </p>
             
-            <div style={{ position: 'absolute', bottom: 60, color: '#999', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: 8 }} className="pulse">
+            <div style={{ position: 'absolute', bottom: 60, color: 'var(--text-muted)', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: 8 }} className="pulse">
               Tap anywhere to continue <IoArrowForward />
             </div>
           </div>
@@ -184,7 +184,7 @@ export default function Onboarding({ onComplete }) {
           <div className="animate-in" key={questionIdx} style={{ width: '100%', maxWidth: 380, display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1 }}>
             <p style={{ color: 'var(--accent)', fontWeight: 700, fontSize: '0.85rem', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>Question {questionIdx + 1} of {QUESTIONS.length}</p>
             <h1 className="ob-title" style={{ fontSize: '1.6rem', textAlign: 'left', lineHeight: 1.3 }}>{currentQuestion.title}</h1>
-            {currentQuestion.subtitle && <p style={{ color: '#999', fontSize: '0.85rem', marginBottom: 16, textAlign: 'left' }}>{currentQuestion.subtitle}</p>}
+            {currentQuestion.subtitle && <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: 16, textAlign: 'left' }}>{currentQuestion.subtitle}</p>}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 24 }}>
               {currentQuestion.options.map(opt => {
                 const isSelected = currentQuestion.multi ? multiSelect.includes(opt) : answers[currentQuestion.id] === opt;
@@ -194,19 +194,19 @@ export default function Onboarding({ onComplete }) {
                     onClick={() => handleQuestionAnswer(opt)}
                     style={{
                       display: 'flex', alignItems: 'center', gap: 12,
-                      padding: '18px 20px', borderRadius: 16, textAlign: 'left',
-                      background: isSelected ? '#1a1a1a' : '#f8f8f8',
-                      color: isSelected ? 'white' : '#1a1a1a',
+                      padding: '18px 20px', borderRadius: 12, textAlign: 'left',
+                      background: isSelected ? 'var(--text)' : 'var(--bg-card)',
+                      color: isSelected ? 'white' : 'var(--text)',
                       border: 'none', fontSize: '1.05rem', fontWeight: 600,
                       cursor: 'pointer', transition: 'all 0.15s ease',
-                      fontFamily: 'system-ui, sans-serif', width: '100%',
+                      width: '100%',
                       boxShadow: isSelected ? '0 8px 16px rgba(0,0,0,0.1)' : 'none'
                     }}
                   >
                     {currentQuestion.multi && (
                       <div style={{
                         width: 24, height: 24, borderRadius: 6, flexShrink: 0,
-                        border: isSelected ? 'none' : '2px solid #ccc',
+                        border: isSelected ? 'none' : '2px solid var(--border)',
                         background: isSelected ? 'var(--accent)' : 'transparent',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         color: 'white', fontSize: '0.8rem', fontWeight: 700,
@@ -231,27 +231,27 @@ export default function Onboarding({ onComplete }) {
         {/* Disclaimer + AI Data Consent Phase */}
         {phase === 'disclaimer' && (
           <div className="animate-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, overflowY: 'auto', padding: '20px 0' }}>
-            <div style={{ marginBottom: 24, background: '#f5f5f5', width: 80, height: 80, borderRadius: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-               <IoShieldCheckmark size={40} color="#1a1a1a" />
+            <div style={{ marginBottom: 24, background: 'var(--bg-card)', width: 80, height: 80, borderRadius: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+               <IoShieldCheckmark size={40} color="var(--text)" />
             </div>
             <h1 className="ob-title" style={{ fontSize: '1.4rem', lineHeight: 1.3, marginBottom: 4 }}>Before We Begin</h1>
-            <p style={{ fontSize: '0.85rem', color: '#999', marginBottom: 20 }}>Please review and agree to continue</p>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: 20 }}>Please review and agree to continue</p>
 
             {/* AI Data Sharing Disclosure */}
-            <div style={{ background: '#fff5f8', border: '1px solid #fecdd3', padding: 20, borderRadius: 16, marginBottom: 16, width: '100%', maxWidth: 360 }}>
-              <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#1a1a1a', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ background: '#fff5f8', border: '1px solid var(--border)', padding: 20, borderRadius: 16, marginBottom: 16, width: '100%', maxWidth: 360 }}>
+              <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
                 <IoScanOutline size={18} color="var(--accent)" /> AI Data Sharing
               </h3>
-              <p style={{ fontSize: '0.82rem', color: '#555', lineHeight: 1.7, margin: 0, fontWeight: 500, whiteSpace: 'pre-line' }}>{AI_DISCLOSURE}</p>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.7, margin: 0, fontWeight: 500, whiteSpace: 'pre-line' }}>{AI_DISCLOSURE}</p>
             </div>
 
             {/* Health Disclaimer */}
-            <div style={{ background: '#f8f8f8', padding: 20, borderRadius: 16, width: '100%', maxWidth: 360 }}>
-              <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#1a1a1a', marginBottom: 10 }}>Health Disclaimer</h3>
-              <p style={{ fontSize: '0.82rem', color: '#555', lineHeight: 1.7, margin: 0, fontWeight: 500 }}>{DISCLAIMER}</p>
+            <div style={{ background: 'var(--bg-card)', padding: 20, borderRadius: 16, width: '100%', maxWidth: 360 }}>
+              <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text)', marginBottom: 10 }}>Health Disclaimer</h3>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.7, margin: 0, fontWeight: 500 }}>{DISCLAIMER}</p>
             </div>
 
-            <p style={{ fontSize: '0.75rem', color: '#999', marginTop: 16, textAlign: 'center' }}>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 16, textAlign: 'center' }}>
               By tapping "I Agree", you consent to the above data sharing. <a href="https://peptidai.web.app/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</a>
             </p>
             
@@ -313,8 +313,8 @@ export default function Onboarding({ onComplete }) {
         {phase === 'building' && (
           <div className="animate-in" style={{ width: '100%', maxWidth: 320, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
             <div style={{ width: 120, height: 120, border: '4px solid #fff5f8', borderTopColor: 'var(--accent)', borderRadius: '50%', animation: 'spin 1s linear infinite', marginBottom: 40 }} />
-            <h1 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: 32, color: '#1a1a1a' }}>Building Your Plan...</h1>
-            <div style={{ width: '100%', height: 8, background: '#f0f0f0', borderRadius: 4, overflow: 'hidden', marginBottom: 24 }}>
+            <h1 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: 32, color: 'var(--text)' }}>Building Your Plan...</h1>
+            <div style={{ width: '100%', height: 8, background: 'var(--bg-card-hover)', borderRadius: 4, overflow: 'hidden', marginBottom: 24 }}>
               <div style={{ width: `${buildProgress}%`, height: '100%', background: 'linear-gradient(90deg, var(--accent), var(--text-muted))', borderRadius: 4, transition: 'width 0.15s ease' }} />
             </div>
             <p style={{ color: 'var(--accent)', fontSize: '1rem', fontWeight: 600, minHeight: 24, transition: 'opacity 0.3s' }}>{BUILD_STEPS[buildStep]}</p>

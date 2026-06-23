@@ -40,39 +40,39 @@ export default function DisclaimerModal() {
           <IoShieldCheckmarkOutline size={28} color="var(--accent)" />
         </div>
 
-        <h2 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: 16, color: '#1a1a1a', textAlign: 'center' }}>
+        <h2 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: 16, color: 'var(--text)', textAlign: 'center' }}>
           Important Notices
         </h2>
 
         {/* AI Data Sharing */}
         <div style={{ background: '#fff5f8', border: '1px solid #fecdd3', padding: 16, borderRadius: 14, marginBottom: 16 }}>
-          <h3 style={{ fontSize: '0.85rem', fontWeight: 700, color: '#1a1a1a', marginBottom: 8 }}>AI Data Sharing</h3>
-          <p style={{ fontSize: '0.82rem', color: '#555', lineHeight: 1.6, margin: 0 }}>
+          <h3 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>AI Data Sharing</h3>
+          <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>
             PeptidAI uses <strong>Google's Gemini AI</strong>, a third-party AI service operated by <strong>Google LLC</strong>, to generate your personalized wellness plan.
           </p>
-          <p style={{ fontSize: '0.82rem', color: '#555', lineHeight: 1.6, margin: '8px 0 0' }}>
+          <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: '8px 0 0' }}>
             When you use AI features, the following data is sent to Google's Gemini API for processing:
           </p>
-          <ul style={{ fontSize: '0.82rem', color: '#555', lineHeight: 1.6, margin: '8px 0 0', paddingLeft: 18 }}>
+          <ul style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: '8px 0 0', paddingLeft: 18 }}>
             <li>Your wellness goals</li>
             <li>Sleep quality responses</li>
             <li>Energy level responses</li>
             <li>Health preferences from onboarding</li>
           </ul>
-          <p style={{ fontSize: '0.78rem', color: '#888', lineHeight: 1.5, margin: '8px 0 0' }}>
+          <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: '8px 0 0' }}>
             Google processes this data per their Privacy Policy. PeptidAI does not sell your personal data.
           </p>
         </div>
 
         {/* Health Disclaimer */}
-        <div style={{ background: '#f8f8f8', padding: 16, borderRadius: 14, marginBottom: 16 }}>
-          <h3 style={{ fontSize: '0.85rem', fontWeight: 700, color: '#1a1a1a', marginBottom: 8 }}>Health Disclaimer</h3>
-          <p style={{ fontSize: '0.82rem', color: '#555', lineHeight: 1.6, margin: 0 }}>
+        <div style={{ background: 'var(--bg-card)', padding: 16, borderRadius: 14, marginBottom: 16 }}>
+          <h3 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>Health Disclaimer</h3>
+          <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>
             PeptidAI is for tracking and educational purposes only. It does not provide medical advice, diagnosis, or treatment recommendations. Always consult a qualified healthcare professional before making changes to your health routine.
           </p>
         </div>
 
-        <p style={{ fontSize: '0.72rem', color: '#999', textAlign: 'center', marginBottom: 16 }}>
+        <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textAlign: 'center', marginBottom: 16 }}>
           By tapping "I Agree", you consent to the AI data sharing described above. <a href="https://peptidai.web.app/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</a>
         </p>
 
@@ -80,7 +80,7 @@ export default function DisclaimerModal() {
           onClick={handleAccept}
           style={{
             width: '100%', padding: 16, borderRadius: 100,
-            background: 'linear-gradient(135deg, var(--accent), #b39ddb)',
+            background: 'linear-gradient(135deg, var(--accent), #c27c8f)',
             color: 'white', border: 'none', fontSize: '1rem',
             fontWeight: 700, cursor: 'pointer',
           }}

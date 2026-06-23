@@ -55,8 +55,8 @@ export default function MyPlan() {
     return (
       <div className="page" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
         <div className="spinner" style={{ width: 40, height: 40, borderColor: 'var(--bg-card)', borderTopColor: 'var(--accent)', marginBottom: 20 }} />
-        <h2 style={{ fontSize: '1.2rem', color: '#1a1a1a', fontWeight: 700 }}>Creating your Wellness Plan...</h2>
-        <p style={{ color: '#999', fontSize: '0.9rem', marginTop: 8 }}>AI is analyzing your goals & preferences.</p>
+        <h2 style={{ fontSize: '1.2rem', color: 'var(--text)', fontWeight: 700 }}>Creating your Wellness Plan...</h2>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: 8 }}>AI is analyzing your goals & preferences.</p>
       </div>
     );
   }
@@ -77,7 +77,7 @@ export default function MyPlan() {
         <div className="page" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
           <IoSparkles size={48} color="var(--accent)" />
           <h2 style={{ fontSize: '1.2rem', marginTop: 16 }}>Ready to create your plan</h2>
-          <p style={{ color: '#999', fontSize: '0.9rem', marginTop: 8, textAlign: 'center', maxWidth: 280 }}>Tap below to generate your personalized AI wellness plan.</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: 8, textAlign: 'center', maxWidth: 280 }}>Tap below to generate your personalized AI wellness plan.</p>
           <button className="btn btn-primary" style={{ marginTop: 20 }} onClick={() => {
             if (hasConsented) { generateInitialProtocol(); } else { setShowAIConsent(true); }
           }}>Generate My Plan</button>
@@ -95,7 +95,7 @@ export default function MyPlan() {
           </h1>
           <p style={{ color: 'var(--accent)', fontWeight: 600, fontSize: '0.9rem' }}>Personalized 12-Week Wellness Journey</p>
         </div>
-        <button onClick={handleRegenerate} style={{ background: 'transparent', border: 'none', color: '#999', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <button onClick={handleRegenerate} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <IoRefreshCircle size={28} />
           <span style={{ fontSize: '0.6rem', fontWeight: 600 }}>UPDATE</span>
         </button>
@@ -135,8 +135,8 @@ export default function MyPlan() {
         ))}
       </div>
 
-      <div style={{ background: '#fef2f2', border: '1px solid #fecaca', padding: 16, borderRadius: 12 }}>
-        <p style={{ fontSize: '0.8rem', color: '#ef4444', lineHeight: 1.4 }}>
+      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', padding: 16, borderRadius: 12 }}>
+        <p style={{ fontSize: '0.8rem', color: 'var(--danger)', lineHeight: 1.4 }}>
           <strong>Safety Note:</strong> {protocol.safetyNote}
         </p>
       </div>

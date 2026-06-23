@@ -48,7 +48,7 @@ export default function Referrals() {
 
       <div className="card">
         <h3 style={{ fontSize: '1rem', marginBottom: 12 }}>How it works</h3>
-        <ul style={{ paddingLeft: 20, color: '#666', lineHeight: 1.6, margin: 0 }}>
+        <ul style={{ paddingLeft: 20, color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>
           <li>Share your unique code or link with a friend.</li>
           <li>When they sign up, they'll get access to PeptidAI's wellness tools!</li>
         </ul>

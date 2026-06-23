@@ -59,14 +59,14 @@ export default function ShareGraphic({ title, subtitle, items = [], onClose }) {
             boxSizing: 'border-box', position: 'absolute', top: 0, left: 0
           }}
         >
-          <h1 style={{ fontSize: '80px', color: '#1a1a1a', margin: '0 0 20px 0', fontFamily: 'system-ui, sans-serif' }}>{title}</h1>
-          <h2 style={{ fontSize: '40px', color: 'var(--accent)', margin: '0 0 80px 0', fontFamily: 'system-ui, sans-serif', fontWeight: 500 }}>{subtitle}</h2>
+          <h1 style={{ fontSize: '80px', color: 'var(--text)', margin: '0 0 20px 0' }}>{title}</h1>
+          <h2 style={{ fontSize: '40px', color: 'var(--accent)', margin: '0 0 80px 0', fontWeight: 500 }}>{subtitle}</h2>
           
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '40px' }}>
             {items.map((item, i) => (
               <div key={i} style={{ background: '#fff', borderRadius: '30px', padding: '40px', boxShadow: '0 20px 40px rgba(0,0,0,0.05)' }}>
-                <h3 style={{ margin: '0 0 10px 0', fontSize: '50px', color: '#1a1a1a' }}>{item.title}</h3>
-                <p style={{ margin: 0, fontSize: '36px', color: '#666' }}>{item.value}</p>
+                <h3 style={{ margin: '0 0 10px 0', fontSize: '50px', color: 'var(--text)' }}>{item.title}</h3>
+                <p style={{ margin: 0, fontSize: '36px', color: 'var(--text-secondary)' }}>{item.value}</p>
               </div>
             ))}
           </div>
@@ -74,7 +74,7 @@ export default function ShareGraphic({ title, subtitle, items = [], onClose }) {
           {/* Footer Watermark */}
           <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px' }}>
               <div style={{ width: '80px', height: '80px', background: 'var(--accent)', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '50px', fontWeight: 'bold' }}>P</div>
-              <span style={{ fontSize: '40px', color: '#1a1a1a', fontWeight: 'bold' }}>Made with PeptidAI</span>
+              <span style={{ fontSize: '40px', color: 'var(--text)', fontWeight: 'bold' }}>Made with PeptidAI</span>
           </div>
         </div>
       </div>

@@ -65,8 +65,8 @@ export default function WebFunnel() {
   if (funnelStep === 'pricing') {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#fff', padding: '40px 20px' }}>
-        <h2 style={{ textAlign: 'center', marginBottom: 20, color: '#1a1a1a', fontWeight: 800 }}>Choose Your Plan</h2>
-        <p style={{ textAlign: 'center', marginBottom: 40, color: '#666' }}>Your custom protocol is securely saved to your account.</p>
+        <h2 style={{ textAlign: 'center', marginBottom: 20, color: 'var(--text)', fontWeight: 800 }}>Choose Your Plan</h2>
+        <p style={{ textAlign: 'center', marginBottom: 40, color: 'var(--text-secondary)' }}>Your custom protocol is securely saved to your account.</p>
         <stripe-pricing-table 
           pricing-table-id="prctbl_1Tagch06I3eFkRUmLUHyPyhs"
           publishable-key="pk_live_51Rfsym06I3eFkRUmipmmgFo6bqX8Al08OhJZm1N6b6UvO6ZnLUDuhOQpNNaSeJlbFAmETOt64P6oRMboXLsnm3tJ00ClGq74Lv"
@@ -114,7 +114,7 @@ export default function WebFunnel() {
           {error && <div style={{ background: '#7f1d1d', color: '#fca5a5', padding: 12, borderRadius: 8, marginBottom: 20, fontSize: '0.9rem' }}>{error}</div>}
 
           <div style={{ marginBottom: 20 }}>
-            <label style={{ display: 'block', color: '#888', marginBottom: 8, fontSize: '0.9rem' }}>Email Address</label>
+            <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: 8, fontSize: '0.9rem' }}>Email Address</label>
             <input 
               type="email" 
               value={email}
@@ -126,7 +126,7 @@ export default function WebFunnel() {
           </div>
 
           <div style={{ marginBottom: 30 }}>
-            <label style={{ display: 'block', color: '#888', marginBottom: 8, fontSize: '0.9rem' }}>Password</label>
+            <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: 8, fontSize: '0.9rem' }}>Password</label>
             <input 
               type="password" 
               value={password}
@@ -159,7 +159,7 @@ export default function WebFunnel() {
             {loading ? <span className="spinner" /> : <><IoLockClosed /> Continue to Secure Checkout</>}
           </button>
           
-          <p style={{ textAlign: 'center', color: '#666', fontSize: '0.8rem', marginTop: 20, lineHeight: 1.5 }}>
+          <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.8rem', marginTop: 20, lineHeight: 1.5 }}>
             You will be redirected to Stripe to complete your purchase securely. After payment, download the iOS app and log in!
           </p>
         </form>

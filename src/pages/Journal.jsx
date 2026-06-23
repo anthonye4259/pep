@@ -76,7 +76,7 @@ export default function Journal() {
       <div className="card" style={{ marginBottom: 20, background: 'linear-gradient(135deg, #fffafa, #fff0f5)', border: '1px solid #ffe4e1' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
           <IoWatchOutline size={20} color="var(--accent)" />
-          <h2 style={{ fontSize: '1rem', margin: 0, color: '#1a1a1a' }}>Apple Health Integration</h2>
+          <h2 style={{ fontSize: '1rem', margin: 0, color: 'var(--text)' }}>Apple Health Integration</h2>
         </div>
         <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
           PeptidAI integrates with <strong>Apple Health</strong> to automatically import your Sleep Analysis and Active Energy Burned data into your daily journal entries. {!healthAvailable && 'This feature is available on iPhone.'}
@@ -88,7 +88,7 @@ export default function Journal() {
         <div className="card" style={{ marginBottom: 20, background: 'linear-gradient(135deg, #fffafa, #fff0f5)', border: '1px solid #ffe4e1' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
             <IoWatchOutline size={20} color="var(--accent)" />
-            <h2 style={{ fontSize: '1rem', margin: 0, color: '#1a1a1a' }}>Apple Health Insights</h2>
+            <h2 style={{ fontSize: '1rem', margin: 0, color: 'var(--text)' }}>Apple Health Insights</h2>
           </div>
           <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: -12, marginBottom: 16 }}>Latest Sync: {new Date(latestEntry.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</p>
           
@@ -97,7 +97,7 @@ export default function Journal() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--text-muted)', marginBottom: 8 }}>
                 <IoMoonOutline size={16} /> <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Sleep</span>
               </div>
-              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#1a1a1a' }}>
+              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text)' }}>
                 {latestEntry.rawSleep} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 500 }}>hrs</span>
               </div>
             </div>
@@ -106,7 +106,7 @@ export default function Journal() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--success)', marginBottom: 8 }}>
                 <IoFlameOutline size={16} /> <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Activity</span>
               </div>
-              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#1a1a1a' }}>
+              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text)' }}>
                 {latestEntry.rawEnergy} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 500 }}>kcal</span>
               </div>
             </div>
@@ -152,7 +152,7 @@ export default function Journal() {
               <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}>Sleep: {entry.sleep}/10</span>
               <span style={{ color: 'var(--success)', fontWeight: 500 }}>Recovery: {entry.recovery}/10</span>
               {entry.rawSleep && (
-                <span style={{ color: '#1a1a1a', fontWeight: 600, background: '#f5f5f5', padding: '2px 8px', borderRadius: 12 }}>
+                <span style={{ color: 'var(--text)', fontWeight: 600, background: 'var(--bg-card)', padding: '2px 8px', borderRadius: 12 }}>
                   <IoWatchOutline style={{ verticalAlign: 'middle', marginRight: 4 }}/>
                   {entry.rawSleep}h • {entry.rawEnergy}kcal
                 </span>
@@ -186,7 +186,7 @@ export default function Journal() {
                   {syncing ? 'Syncing...' : form.rawSleep ? 'Synced!' : 'Sync Apple Health'}
                 </button>
                 
-                <p style={{ fontSize: '0.75rem', color: '#666', lineHeight: 1.4, margin: '0 0 20px 0', textAlign: 'center' }}>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: 1.4, margin: '0 0 20px 0', textAlign: 'center' }}>
                   We use <strong>Apple Health</strong> to securely import your Sleep Analysis and Active Energy Burned to prepopulate your journal.
                 </p>
               </>

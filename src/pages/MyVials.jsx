@@ -67,7 +67,7 @@ export default function MyVials() {
               </button>
               <button
                 className="btn btn-icon"
-                style={{ background: 'rgba(255,59,48,0.1)', border: '1px solid rgba(255,59,48,0.2)', borderRadius: 12, color: '#ff3b30', flexShrink: 0 }}
+                style={{ background: 'rgba(207,102,121,0.1)', border: '1px solid rgba(207,102,121,0.2)', borderRadius: 12, color: 'var(--danger)', flexShrink: 0 }}
                 onClick={() => deleteVial(vial.id)}
               >
                 <IoTrash size={18} />

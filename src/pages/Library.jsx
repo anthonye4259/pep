@@ -67,7 +67,7 @@ export default function Library() {
             <div className="peptide-name">Reconstitution Guide</div>
             <div className="peptide-desc">Step-by-step reconstitution walkthrough</div>
           </div>
-          <IoChevronForward size={16} color="#ccc" />
+          <IoChevronForward size={16} color="var(--text-muted)" />
         </Link>
         <Link to="/syringe-guide" className="peptide-card" style={{ width: '100%', textAlign: 'left', border: 'none', textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center' }}>
           <div className="peptide-icon"><IoMedkitOutline size={20} /></div>
@@ -75,7 +75,7 @@ export default function Library() {
             <div className="peptide-name">Syringe Guide</div>
             <div className="peptide-desc">Reading and measuring with insulin syringes</div>
           </div>
-          <IoChevronForward size={16} color="#ccc" />
+          <IoChevronForward size={16} color="var(--text-muted)" />
         </Link>
       </div>
     </div>

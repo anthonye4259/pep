@@ -7,7 +7,7 @@
   },
   "plugins": {
     "StatusBar": {
-      "style": "Light",
+      "style": "Dark",
       "backgroundColor": "#ffffff"
     },
     "SplashScreen": {

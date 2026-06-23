@@ -15,14 +15,14 @@ export default function Home() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
         <div>
-          <h1 style={{ fontSize: '1.6rem' }}>Peptid<span style={{ color: 'var(--success)' }}>AI</span></h1>
-          <p style={{ color: '#999', fontSize: '0.85rem' }}>Your wellness research companion</p>
+          <h1 style={{ fontSize: '1.6rem' }}>Peptid<span style={{ color: 'var(--accent)' }}>AI</span></h1>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Your wellness research companion</p>
         </div>
         <button
           onClick={() => navigate('/settings')}
-          style={{ width: 40, height: 40, borderRadius: '50%', background: '#f5f5f5', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--bg-card)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
-          <IoSettingsOutline size={20} color="#999" />
+          <IoSettingsOutline size={20} color="var(--text-muted)" />
         </button>
       </div>
 
@@ -35,7 +35,7 @@ export default function Home() {
         >
           <IoJournalOutline size={28} color="var(--accent)" />
           <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>Daily Journal</span>
-          <span style={{ fontSize: '0.75rem', color: '#999' }}>Log your wellness data</span>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Log your wellness data</span>
         </button>
 
         <button
@@ -45,7 +45,7 @@ export default function Home() {
         >
           <IoCalendarOutline size={28} color="var(--accent)" />
           <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>History</span>
-          <span style={{ fontSize: '0.75rem', color: '#999' }}>Track your progress</span>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Track your progress</span>
         </button>
       </div>
 
