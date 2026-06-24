@@ -2,12 +2,42 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import { auth, db } from '../lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { collection, doc, setDoc, deleteDoc, onSnapshot, query, orderBy } from 'firebase/firestore';
-import { App as CapApp } from '@capacitor/app';
 import { Capacitor } from '@capacitor/core';
-import { Purchases } from '@revenuecat/purchases-capacitor';
-import { Health } from '@capgo/capacitor-health';
-import { LocalNotifications } from '@capacitor/local-notifications';
 import { shouldShowHealthKit } from '../lib/deviceCheck';
+
+// === SAFE LAZY PLUGIN LOADING ===
+// These plugins MUST NOT be imported at the top level because they crash
+// the entire module on devices where the native plugin isn't registered
+// (e.g. iPad where HealthKit isn't available, or web builds).
+// Instead we load them on first use inside a try/catch.
+
+let _CapApp = null;
+async function getCapApp() {
+  if (_CapApp) return _CapApp;
+  try { const m = await import('@capacitor/app'); _CapApp = m.App; return _CapApp; }
+  catch (e) { console.warn('CapApp not available:', e.message); return null; }
+}
+
+let _Purchases = null;
+async function getPurchases() {
+  if (_Purchases) return _Purchases;
+  try { const m = await import('@revenuecat/purchases-capacitor'); _Purchases = m.Purchases; return _Purchases; }
+  catch (e) { console.warn('RevenueCat not available:', e.message); return null; }
+}
+
+let _Health = null;
+async function getHealth() {
+  if (_Health) return _Health;
+  try { const m = await import('@capgo/capacitor-health'); _Health = m.Health; return _Health; }
+  catch (e) { console.warn('Health plugin not available:', e.message); return null; }
+}
+
+let _LocalNotifications = null;
+async function getLocalNotifications() {
+  if (_LocalNotifications) return _LocalNotifications;
+  try { const m = await import('@capacitor/local-notifications'); _LocalNotifications = m.LocalNotifications; return _LocalNotifications; }
+  catch (e) { console.warn('LocalNotifications not available:', e.message); return null; }
+}
 
 const REVIEW_EMAIL = 'review@peptidai.com';
 
@@ -27,43 +57,53 @@ export function AppProvider({ children }) {
   const [journal, setJournal] = useState([]);
   const [userProfile, setUserProfile] = useState(null);
 
-  // Initialize RevenueCat
+  // Initialize RevenueCat (async — won't block or crash render)
   useEffect(() => {
-    const rcKey = import.meta.env.VITE_REVENUECAT_APPLE_KEY || "appl_REPLACE_ME_WHEN_READY";
-    try { Purchases.configure({ apiKey: rcKey }); } 
-    catch (e) { console.warn('RevenueCat config warning', e); }
+    (async () => {
+      try {
+        const Purchases = await getPurchases();
+        if (!Purchases) return;
+        const rcKey = import.meta.env.VITE_REVENUECAT_APPLE_KEY || "appl_REPLACE_ME_WHEN_READY";
+        Purchases.configure({ apiKey: rcKey });
+      } catch (e) { console.warn('RevenueCat config warning', e); }
+    })();
   }, []);
 
   // Listen for Deep Links (Referrals and Templates)
   useEffect(() => {
-    const listener = CapApp.addListener('appUrlOpen', (event) => {
+    let listenerHandle = null;
+    (async () => {
       try {
-        const url = new URL(event.url);
-        if (url.protocol === 'peptidai:') {
-          if (url.host === 'invite') {
-            const code = url.searchParams.get('code');
-            if (code) {
-              localStorage.setItem('peptidai_invite_code', code);
-              alert('Invite code applied!');
-            }
-          } else if (url.host === 'template') {
-            const data = url.searchParams.get('data');
-            if (data) {
-              const decoded = JSON.parse(atob(data));
-              if (window.confirm(`Import Protocol Template: ${decoded.name || 'Custom Protocol'}?`)) {
-                saveSchedule({ ...decoded, id: Date.now().toString() });
-                alert('Protocol imported successfully!');
+        const CapApp = await getCapApp();
+        if (!CapApp) return;
+        listenerHandle = await CapApp.addListener('appUrlOpen', (event) => {
+          try {
+            const url = new URL(event.url);
+            if (url.protocol === 'peptidai:') {
+              if (url.host === 'invite') {
+                const code = url.searchParams.get('code');
+                if (code) {
+                  localStorage.setItem('peptidai_invite_code', code);
+                  alert('Invite code applied!');
+                }
+              } else if (url.host === 'template') {
+                const data = url.searchParams.get('data');
+                if (data) {
+                  const decoded = JSON.parse(atob(data));
+                  if (window.confirm(`Import Protocol Template: ${decoded.name || 'Custom Protocol'}?`)) {
+                    saveSchedule({ ...decoded, id: Date.now().toString() });
+                    alert('Protocol imported successfully!');
+                  }
+                }
               }
             }
+          } catch (e) {
+            console.error('Deep link error', e);
           }
-        }
-      } catch (e) {
-        console.error('Deep link error', e);
-      }
-    });
-    return () => {
-      listener.then(l => l.remove());
-    };
+        });
+      } catch (e) { console.warn('Deep link listener not available:', e.message); }
+    })();
+    return () => { if (listenerHandle) listenerHandle.remove(); };
   }, []);
 
   // Persist app state
@@ -164,19 +204,21 @@ export function AppProvider({ children }) {
     }
     
     try {
-      // Race RevenueCat against a 5-second timeout so the app never hangs
-      const rcResult = await Promise.race([
-        (async () => {
-          await Purchases.logIn({ appUserID: user.uid });
-          return await Purchases.getCustomerInfo();
-        })(),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('RC timeout')), 5000))
-      ]);
-      const active = rcResult.customerInfo.entitlements.active;
-      if (active['premium'] || active['peptid ai Premium']) {
-        // Bypass paywall if active subscription exists
-        setAppState(prev => ({ ...prev, step: 'app', user: userData }));
-        return;
+      const Purchases = await getPurchases();
+      if (Purchases) {
+        // Race RevenueCat against a 5-second timeout so the app never hangs
+        const rcResult = await Promise.race([
+          (async () => {
+            await Purchases.logIn({ appUserID: user.uid });
+            return await Purchases.getCustomerInfo();
+          })(),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('RC timeout')), 5000))
+        ]);
+        const active = rcResult.customerInfo.entitlements.active;
+        if (active['premium'] || active['peptid ai Premium']) {
+          setAppState(prev => ({ ...prev, step: 'app', user: userData }));
+          return;
+        }
       }
     } catch (e) { console.warn('RevenueCat check skipped:', e.message); }
     
@@ -199,6 +241,9 @@ export function AppProvider({ children }) {
       if (!Capacitor.isNativePlatform() || !shouldShowHealthKit()) {
         return { success: false, error: 'Not available on this device' };
       }
+      const Health = await getHealth();
+      if (!Health) return { success: false, error: 'Health plugin not available' };
+
       const available = await Health.isAvailable();
       if (!available || !available.available) {
         return { success: false, error: 'Apple Health is not available on this device.' };
@@ -223,7 +268,6 @@ export function AppProvider({ children }) {
       let totalSleepHours = 0;
       if (sleepData && sleepData.resultData) {
         sleepData.resultData.forEach(entry => {
-          // Apple Health sleepAnalysis values: 0 = inBed, 1 = asleep
           if (entry.value === 1) {
             const start = new Date(entry.startDate);
             const end = new Date(entry.endDate);
@@ -267,12 +311,14 @@ export function AppProvider({ children }) {
 
   const scheduleDailyReminder = async (hour, minute) => {
     try {
-      const permStatus = await LocalNotifications.requestPermissions();
+      const LN = await getLocalNotifications();
+      if (!LN) return false;
+      const permStatus = await LN.requestPermissions();
       if (permStatus.display !== 'granted') return false;
 
-      await LocalNotifications.cancel({ notifications: [{ id: 1 }] });
+      await LN.cancel({ notifications: [{ id: 1 }] });
       
-      await LocalNotifications.schedule({
+      await LN.schedule({
         notifications: [
           {
             title: "PeptidAI Check-In",
@@ -295,7 +341,8 @@ export function AppProvider({ children }) {
 
   const cancelReminders = async () => {
     try {
-      await LocalNotifications.cancel({ notifications: [{ id: 1 }] });
+      const LN = await getLocalNotifications();
+      if (LN) await LN.cancel({ notifications: [{ id: 1 }] });
     } catch (e) {
       console.error("Cancel Error:", e);
     }
