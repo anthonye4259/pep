@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { IoChevronBack, IoChevronForward, IoFlaskOutline, IoAdd, IoClose, IoNotifications, IoShareSocialOutline, IoCameraOutline } from 'react-icons/io5';
 import { useApp } from '../context/AppContext';
 import ShareGraphic from '../components/ShareGraphic';
-import { Share } from '@capacitor/share';
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const SCHEDULE_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -64,6 +63,7 @@ export default function Calendar() {
     const data = btoa(JSON.stringify({ peptideName: s.peptideName, days: s.days, time: s.time }));
     const url = `peptidai://template?data=${data}`;
     try {
+      const { Share } = await import('@capacitor/share');
       await Share.share({ title: 'Protocol Template', text: `Try my ${s.peptideName} routine on PeptidAI!`, url });
     } catch (e) {
       console.error('Share error', e);

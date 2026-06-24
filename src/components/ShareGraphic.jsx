@@ -1,7 +1,5 @@
 import React, { useRef, useState } from 'react';
 import * as htmlToImage from 'html-to-image';
-import { Share } from '@capacitor/share';
-import { Directory, Filesystem } from '@capacitor/filesystem';
 
 export default function ShareGraphic({ title, subtitle, items = [], onClose }) {
   const nodeRef = useRef(null);
@@ -22,12 +20,14 @@ export default function ShareGraphic({ title, subtitle, items = [], onClose }) {
       const fileName = `peptidai-share-${Date.now()}.jpeg`;
       const base64Data = dataUrl.split(',')[1];
       
+      const { Filesystem, Directory } = await import('@capacitor/filesystem');
       const savedFile = await Filesystem.writeFile({
         path: fileName,
         data: base64Data,
         directory: Directory.Cache
       });
 
+      const { Share } = await import('@capacitor/share');
       await Share.share({
         title: 'My Protocol',
         text: 'Check out my wellness protocol on PeptidAI!',

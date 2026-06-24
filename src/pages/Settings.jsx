@@ -4,7 +4,6 @@ import { IoPersonCircleOutline, IoChevronForward, IoLogOutOutline, IoTrashOutlin
 import { auth } from '../lib/firebase';
 import { signOut, deleteUser } from 'firebase/auth';
 import { useApp } from '../context/AppContext';
-import { Purchases } from '@revenuecat/purchases-capacitor';
 import { Capacitor } from '@capacitor/core';
 import { shouldShowHealthKit } from '../lib/deviceCheck';
 
@@ -18,11 +17,13 @@ export default function Settings() {
 
   useEffect(() => {
     if (Capacitor.isNativePlatform()) {
-      Purchases.getCustomerInfo().then(info => {
-        if (info?.customerInfo?.managementURL) {
-          setManageUrl(info.customerInfo.managementURL);
-        }
-      }).catch(e => console.error('RC CustomerInfo error:', e));
+      import('@revenuecat/purchases-capacitor').then(({ Purchases }) => {
+        Purchases.getCustomerInfo().then(info => {
+          if (info?.customerInfo?.managementURL) {
+            setManageUrl(info.customerInfo.managementURL);
+          }
+        }).catch(e => console.error('RC CustomerInfo error:', e));
+      }).catch(e => console.warn('Purchases not available:', e.message));
 
       // Only show HealthKit on iPhone — iPad reports available but doesn't work
       if (shouldShowHealthKit()) {

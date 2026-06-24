@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Share } from '@capacitor/share';
 
 export default function Referrals() {
   const { appState } = useApp();
@@ -11,6 +10,7 @@ export default function Referrals() {
   async function shareLink() {
     const url = `peptidai://invite?code=${inviteCode}`;
     try {
+      const { Share } = await import('@capacitor/share');
       await Share.share({
         title: 'Join PeptidAI',
         text: 'I use PeptidAI to track my wellness protocols. Use my code to join the community!',

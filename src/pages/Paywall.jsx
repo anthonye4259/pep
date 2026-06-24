@@ -2,8 +2,12 @@ import { useState, useEffect } from 'react';
 import { IoFlask, IoCheckmarkCircle } from 'react-icons/io5';
 import { fetchAndActivate, getBoolean } from 'firebase/remote-config';
 import { remoteConfig } from '../lib/firebase';
-import { AppReview } from '@capawesome/capacitor-app-review';
-import { Purchases } from '@revenuecat/purchases-capacitor';
+
+// Native plugins loaded dynamically to prevent crash on iPad
+async function getPurchases() {
+  try { const m = await import('@revenuecat/purchases-capacitor'); return m.Purchases; }
+  catch (e) { console.warn('Purchases not available:', e.message); return null; }
+}
 
 const plans = [
   { id: 'weekly', name: 'Weekly', price: '$3.99', period: '/week', desc: 'Flexible, cancel anytime', badge: null },
@@ -28,14 +32,13 @@ export default function Paywall({ onSubscribe }) {
   const [dynamicPlans, setDynamicPlans] = useState(plans);
 
   useEffect(() => {
-
-    
     // Check if review prompt should be shown
     async function triggerReview() {
       try {
         await fetchAndActivate(remoteConfig);
         const shouldReview = getBoolean(remoteConfig, 'show_onboarding_review');
         if (shouldReview) {
+          const { AppReview } = await import('@capawesome/capacitor-app-review');
           await AppReview.requestReview();
         }
       } catch (e) {
@@ -50,6 +53,8 @@ export default function Paywall({ onSubscribe }) {
   useEffect(() => {
     async function fetchPrices() {
       try {
+        const Purchases = await getPurchases();
+        if (!Purchases) return;
         const offerings = await Purchases.getOfferings();
         const current = offerings.current;
         if (current && current.availablePackages.length > 0) {
@@ -77,6 +82,8 @@ export default function Paywall({ onSubscribe }) {
   async function handleSubscribe() {
     setLoading(true);
     try {
+      const Purchases = await getPurchases();
+      if (!Purchases) { alert('Purchase system not available. Please try again.'); return; }
       // 1. Fetch RevenueCat Offerings
       const offerings = await Purchases.getOfferings();
       const current = offerings.current;
@@ -123,6 +130,8 @@ export default function Paywall({ onSubscribe }) {
 
   async function handleRestore() {
     try {
+      const Purchases = await getPurchases();
+      if (!Purchases) { alert('Purchase system not available.'); return; }
       const info = await Purchases.restorePurchases();
       const activeEntitlements = info.customerInfo.entitlements.active;
       if (activeEntitlements['premium'] || activeEntitlements['peptid ai Premium'] || Object.keys(activeEntitlements).length > 0) {
