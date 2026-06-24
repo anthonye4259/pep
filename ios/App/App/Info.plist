@@ -18,10 +18,27 @@
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>peptidai</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
-	<string>50</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>PeptidAI uses your camera to scan vial labels and extract compound information automatically.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>PeptidAI reads your Sleep Analysis and Active Energy Burned data from Apple Health to automatically populate your daily journal entries.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>PeptidAI may update your Apple Health records with journal data you choose to sync.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>PeptidAI needs access to your photo library to select vial label images for scanning.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -43,22 +60,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>NSCameraUsageDescription</key>
-	<string>PeptidAI uses your camera to scan vial labels and extract compound information automatically.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>PeptidAI needs access to your photo library to select vial label images for scanning.</string>
-	<key>NSHealthShareUsageDescription</key>
-	<string>PeptidAI reads your Sleep Analysis and Active Energy Burned data from Apple Health to automatically populate your daily journal entries.</string>
-	<key>NSHealthUpdateUsageDescription</key>
-	<string>PeptidAI may update your Apple Health records with journal data you choose to sync.</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>peptidai</string>
-			</array>
-		</dict>
-	</array>
 </dict>
 </plist>
