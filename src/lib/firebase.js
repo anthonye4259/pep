@@ -3,7 +3,6 @@
 import { initializeApp } from 'firebase/app';
 import { initializeAuth, browserLocalPersistence } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import { getRemoteConfig } from 'firebase/remote-config';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyCyNKg9JF4GQ-PPLJ0M4o3iUB4n9w_q_CQ",
@@ -25,8 +24,5 @@ export const auth = initializeAuth(app, {
 });
 
 export const db = getFirestore(app);
-export const remoteConfig = getRemoteConfig(app);
-// Set fetch interval to 1 hour (default is 12)
-remoteConfig.settings.minimumFetchIntervalMillis = 3600000;
 
 export default app;

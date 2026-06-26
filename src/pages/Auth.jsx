@@ -44,7 +44,7 @@ export default function Auth({ onAuth }) {
       })();
       
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Connection timed out. Please check your internet connection and try again.')), 10000)
+        setTimeout(() => reject(new Error('Connection timed out. Please check your internet connection and try again.')), 5000)
       );
       
       const userCred = await Promise.race([authPromise, timeoutPromise]);

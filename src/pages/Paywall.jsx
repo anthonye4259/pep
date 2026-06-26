@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 import { IoFlask, IoCheckmarkCircle } from 'react-icons/io5';
-import { fetchAndActivate, getBoolean } from 'firebase/remote-config';
-import { remoteConfig } from '../lib/firebase';
 
 // Native plugins loaded dynamically to prevent crash on iPad
 async function getPurchases() {
@@ -32,21 +30,7 @@ export default function Paywall({ onSubscribe }) {
   const [dynamicPlans, setDynamicPlans] = useState(plans);
 
   useEffect(() => {
-    // Check if review prompt should be shown
-    async function triggerReview() {
-      try {
-        await fetchAndActivate(remoteConfig);
-        const shouldReview = getBoolean(remoteConfig, 'show_onboarding_review');
-        if (shouldReview) {
-          const { AppReview } = await import('@capawesome/capacitor-app-review');
-          await AppReview.requestReview();
-        }
-      } catch (e) {
-        console.error('Failed to trigger review:', e);
-      }
-    }
-    triggerReview();
-
+    // Review prompt disabled to avoid WKWebView IndexedDB deadlocks from Remote Config
     return () => {};
   }, []);
 
@@ -57,7 +41,8 @@ export default function Paywall({ onSubscribe }) {
         if (!Purchases) return;
         const offerings = await Purchases.getOfferings();
         const current = offerings.current;
-        if (current && current.availablePackages.length > 0) {
+        
+        if (current && current.availablePackages && current.availablePackages.length > 0) {
           setDynamicPlans(prev => prev.map(plan => {
             let pkg;
             if (plan.id === 'annual') pkg = current.availablePackages.find(p => p.packageType === 'ANNUAL');
