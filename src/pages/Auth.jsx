@@ -17,6 +17,7 @@ export default function Auth({ onAuth }) {
     e.preventDefault();
     setError('');
     setLoading(true);
+    let timeoutId;
     try {
       // Race auth against a 10-second timeout so the app NEVER hangs
       const authPromise = (async () => {
@@ -34,7 +35,7 @@ export default function Auth({ onAuth }) {
                 createdAt: new Date().toISOString()
               }, { merge: true });
             } catch (e) {
-              console.error('Failed to log referral', e);
+              console.warn('Failed to log referral', e);
             }
           }
         } else {
@@ -43,14 +44,20 @@ export default function Auth({ onAuth }) {
         return userCred;
       })();
       
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Connection timed out. Please check your internet connection and try again.')), 5000)
-      );
+      const timeoutPromise = new Promise((_, reject) => {
+        timeoutId = setTimeout(() => reject(new Error('Connection timed out. Please check your internet connection and try again.')), 8000);
+      });
       
       const userCred = await Promise.race([authPromise, timeoutPromise]);
-      onAuth(userCred.user);
+      clearTimeout(timeoutId);
+      
+      // AWAIT the context update so loading spinner stays active
+      await onAuth(userCred.user);
     } catch (err) {
-      setError(err.message.replace('Firebase: ', '').replace(/\(auth\/.*\)/, '').trim());
+      if (timeoutId) clearTimeout(timeoutId);
+      const msg = err.message.replace('Firebase: ', '').replace(/\(auth\/.*\)/, '').trim();
+      setError(msg);
+      alert('Authentication Failed: ' + msg);
     } finally {
       setLoading(false);
     }

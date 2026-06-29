@@ -197,7 +197,7 @@ export function AppProvider({ children }) {
     const userData = { uid: user.uid, email: user.email, displayName: user.displayName };
     
     // Apple reviewer bypass: auto-complete onboarding, force paywall
-    if (user.email === REVIEW_EMAIL) {
+    if (user.email?.toLowerCase() === REVIEW_EMAIL) {
       console.log('[Review] Reviewer detected, skipping to paywall');
       setAppState(prev => ({ ...prev, step: 'paywall', user: userData, subscribed: false }));
       return;
