@@ -17,10 +17,9 @@ export default function Auth({ onAuth }) {
     e.preventDefault();
     setError('');
     setLoading(true);
-    let timeoutId;
     try {
-      // Race auth against a 10-second timeout so the app NEVER hangs
-      const authPromise = (async () => {
+      // Race the ENTIRE auth flow (Firebase + context update) against a hard timeout
+      const authFlow = (async () => {
         let userCred;
         if (mode === 'signup') {
           userCred = await createUserWithEmailAndPassword(auth, email, password);
@@ -41,20 +40,16 @@ export default function Auth({ onAuth }) {
         } else {
           userCred = await signInWithEmailAndPassword(auth, email, password);
         }
-        return userCred;
+        // Context update (RevenueCat check etc.) — covered by same timeout
+        await onAuth(userCred.user);
       })();
       
-      const timeoutPromise = new Promise((_, reject) => {
-        timeoutId = setTimeout(() => reject(new Error('Connection timed out. Please check your internet connection and try again.')), 8000);
-      });
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Connection timed out. Please check your internet connection and try again.')), 12000)
+      );
       
-      const userCred = await Promise.race([authPromise, timeoutPromise]);
-      clearTimeout(timeoutId);
-      
-      // AWAIT the context update so loading spinner stays active
-      await onAuth(userCred.user);
+      await Promise.race([authFlow, timeoutPromise]);
     } catch (err) {
-      if (timeoutId) clearTimeout(timeoutId);
       const msg = err.message.replace('Firebase: ', '').replace(/\(auth\/.*\)/, '').trim();
       setError(msg);
       alert('Authentication Failed: ' + msg);
