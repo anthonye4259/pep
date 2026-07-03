@@ -66,11 +66,18 @@ export default function Paywall({ onSubscribe }) {
 
   async function handleSubscribe() {
     setLoading(true);
+
+    // Helper: race any async call against a timeout
+    const withTimeout = (promise, ms, label) => Promise.race([
+      promise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error(`${label} timed out. Please try again.`)), ms))
+    ]);
+
     try {
       const Purchases = await getPurchases();
       if (!Purchases) { alert('Purchase system not available. Please try again.'); return; }
       // 1. Fetch RevenueCat Offerings
-      const offerings = await Purchases.getOfferings();
+      const offerings = await withTimeout(Purchases.getOfferings(), 15000, 'Loading offerings');
       const current = offerings.current;
       
       if (current && current.availablePackages.length > 0) {
@@ -87,8 +94,8 @@ export default function Paywall({ onSubscribe }) {
         }
         
         if (pkgToBuy) {
-          // 2. Trigger Native Apple Pay Sheet
-          const result = await Purchases.purchasePackage({ aPackage: pkgToBuy });
+          // 2. Trigger Native Apple Pay Sheet (45s timeout — user has time to confirm)
+          const result = await withTimeout(Purchases.purchasePackage({ aPackage: pkgToBuy }), 45000, 'Purchase');
           
           // 3. Verify Entitlement
           const activeEntitlements = result.customerInfo.entitlements.active;
@@ -105,8 +112,9 @@ export default function Paywall({ onSubscribe }) {
       }
     } catch (err) {
       console.error('RevenueCat Purchase Error:', err);
-      if (!err.userCancelled) {
-         alert(`Purchase failed: ${err.message}. Please ensure In-App Purchases are configured in App Store Connect.`);
+      const isCancelled = err.userCancelled || err.code === 1 || (err.message && err.message.includes('cancelled'));
+      if (!isCancelled) {
+         alert(`Purchase failed: ${err.message || 'Unknown error'}. Please try again.`);
       }
     } finally {
       setLoading(false);
