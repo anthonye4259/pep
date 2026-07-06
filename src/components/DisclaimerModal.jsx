@@ -1,18 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { IoShieldCheckmarkOutline } from 'react-icons/io5';
+import { AI_CONSENT_VERSION, AI_DISCLOSURE_TEXT, acceptAIConsent } from '../lib/aiConsent';
 
 export default function DisclaimerModal() {
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    // Show if user hasn't accepted the AI-aware version (v3)
-    const accepted = localStorage.getItem('peptidai_disclaimer_v3');
-    if (!accepted) setShow(true);
-  }, []);
+  const [show, setShow] = useState(() => {
+    const accepted = localStorage.getItem(`peptidai_disclaimer_${AI_CONSENT_VERSION}`);
+    return !accepted;
+  });
 
   function handleAccept() {
-    localStorage.setItem('peptidai_disclaimer_v3', 'true');
-    localStorage.setItem('peptidai_ai_consent', 'true');
+    localStorage.setItem(`peptidai_disclaimer_${AI_CONSENT_VERSION}`, 'true');
+    acceptAIConsent();
     setShow(false);
   }
 
@@ -47,20 +45,8 @@ export default function DisclaimerModal() {
         {/* AI Data Sharing */}
         <div style={{ background: '#fff5f8', border: '1px solid #fecdd3', padding: 16, borderRadius: 14, marginBottom: 16 }}>
           <h3 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>AI Data Sharing</h3>
-          <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>
-            PeptidAI uses <strong>Google's Gemini AI</strong>, a third-party AI service operated by <strong>Google LLC</strong>, to generate your personalized wellness plan.
-          </p>
-          <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: '8px 0 0' }}>
-            When you use AI features, the following data is sent to Google's Gemini API for processing:
-          </p>
-          <ul style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: '8px 0 0', paddingLeft: 18 }}>
-            <li>Your wellness goals</li>
-            <li>Sleep quality responses</li>
-            <li>Energy level responses</li>
-            <li>Health preferences from onboarding</li>
-          </ul>
-          <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: '8px 0 0' }}>
-            Google processes this data per their Privacy Policy. PeptidAI does not sell your personal data.
+          <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0, whiteSpace: 'pre-line' }}>
+            {AI_DISCLOSURE_TEXT}
           </p>
         </div>
 
@@ -73,7 +59,7 @@ export default function DisclaimerModal() {
         </div>
 
         <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textAlign: 'center', marginBottom: 16 }}>
-          By tapping "I Agree", you consent to the AI data sharing described above. <a href="https://peptidai.web.app/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</a>
+          By tapping "I Understand & Agree", you consent to the AI data sharing described above. <a href="https://peptidai.web.app/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</a>
         </p>
 
         <button

@@ -7,6 +7,24 @@ async function getPurchases() {
   catch (e) { console.warn('Purchases not available:', e.message); return null; }
 }
 
+function withTimeout(promise, ms, label) {
+  let timeoutId;
+  const timeout = new Promise((_, reject) => {
+    timeoutId = setTimeout(() => reject(new Error(`${label} timed out. Please try again.`)), ms);
+  });
+
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timeoutId));
+}
+
+function hasPremiumEntitlement(customerInfo) {
+  const activeEntitlements = customerInfo?.entitlements?.active || {};
+  return Boolean(
+    activeEntitlements.premium ||
+    activeEntitlements['peptid ai Premium'] ||
+    Object.keys(activeEntitlements).length > 0
+  );
+}
+
 const plans = [
   { id: 'weekly', name: 'Weekly', price: '$3.99', period: '/week', desc: 'Flexible, cancel anytime', badge: null },
   { id: 'monthly', name: 'Monthly', price: '$9.99', period: '/mo', desc: 'Standard subscription', badge: null },
@@ -26,6 +44,8 @@ const features = [
 export default function Paywall({ onSubscribe }) {
   const [selected, setSelected] = useState('annual');
   const [loading, setLoading] = useState(false);
+  const [restoreLoading, setRestoreLoading] = useState(false);
+  const [purchaseError, setPurchaseError] = useState('');
 
   const [dynamicPlans, setDynamicPlans] = useState(plans);
 
@@ -37,9 +57,9 @@ export default function Paywall({ onSubscribe }) {
   useEffect(() => {
     async function fetchPrices() {
       try {
-        const Purchases = await getPurchases();
+        const Purchases = await withTimeout(getPurchases(), 8000, 'Loading purchase system');
         if (!Purchases) return;
-        const offerings = await Purchases.getOfferings();
+        const offerings = await withTimeout(Purchases.getOfferings(), 15000, 'Loading prices');
         const current = offerings.current;
         
         if (current && current.availablePackages && current.availablePackages.length > 0) {
@@ -65,17 +85,13 @@ export default function Paywall({ onSubscribe }) {
 
 
   async function handleSubscribe() {
+    if (loading) return;
     setLoading(true);
-
-    // Helper: race any async call against a timeout
-    const withTimeout = (promise, ms, label) => Promise.race([
-      promise,
-      new Promise((_, reject) => setTimeout(() => reject(new Error(`${label} timed out. Please try again.`)), ms))
-    ]);
+    setPurchaseError('');
 
     try {
-      const Purchases = await getPurchases();
-      if (!Purchases) { alert('Purchase system not available. Please try again.'); return; }
+      const Purchases = await withTimeout(getPurchases(), 8000, 'Loading purchase system');
+      if (!Purchases) throw new Error('Purchase system not available. Please try again.');
       // 1. Fetch RevenueCat Offerings
       const offerings = await withTimeout(Purchases.getOfferings(), 15000, 'Loading offerings');
       const current = offerings.current;
@@ -95,14 +111,13 @@ export default function Paywall({ onSubscribe }) {
         
         if (pkgToBuy) {
           // 2. Trigger Native Apple Pay Sheet (45s timeout — user has time to confirm)
-          const result = await withTimeout(Purchases.purchasePackage({ aPackage: pkgToBuy }), 45000, 'Purchase');
+          const result = await withTimeout(Purchases.purchasePackage({ aPackage: pkgToBuy }), 60000, 'Purchase');
           
           // 3. Verify Entitlement
-          const activeEntitlements = result.customerInfo.entitlements.active;
-          if (activeEntitlements['premium'] || activeEntitlements['peptid ai Premium'] || Object.keys(activeEntitlements).length > 0) {
+          if (hasPremiumEntitlement(result.customerInfo)) {
             onSubscribe(selected);
           } else {
-            alert('Purchase completed but premium entitlement not found.');
+            setPurchaseError('Purchase completed, but premium access was not found. Tap Restore Purchases or try again.');
           }
         } else {
           throw new Error('Selected package not configured in RevenueCat.');
@@ -112,9 +127,10 @@ export default function Paywall({ onSubscribe }) {
       }
     } catch (err) {
       console.error('RevenueCat Purchase Error:', err);
-      const isCancelled = err.userCancelled || err.code === 1 || (err.message && err.message.includes('cancelled'));
+      const message = err.message || 'Unknown error';
+      const isCancelled = err.userCancelled || err.code === 1 || message.toLowerCase().includes('cancel');
       if (!isCancelled) {
-         alert(`Purchase failed: ${err.message || 'Unknown error'}. Please try again.`);
+        setPurchaseError(`Purchase failed: ${message}`);
       }
     } finally {
       setLoading(false);
@@ -122,20 +138,24 @@ export default function Paywall({ onSubscribe }) {
   }
 
   async function handleRestore() {
+    if (restoreLoading || loading) return;
+    setRestoreLoading(true);
+    setPurchaseError('');
+
     try {
-      const Purchases = await getPurchases();
-      if (!Purchases) { alert('Purchase system not available.'); return; }
-      const info = await Purchases.restorePurchases();
-      const activeEntitlements = info.customerInfo.entitlements.active;
-      if (activeEntitlements['premium'] || activeEntitlements['peptid ai Premium'] || Object.keys(activeEntitlements).length > 0) {
-        alert('Purchases restored successfully!');
+      const Purchases = await withTimeout(getPurchases(), 8000, 'Loading purchase system');
+      if (!Purchases) throw new Error('Purchase system not available.');
+      const info = await withTimeout(Purchases.restorePurchases(), 30000, 'Restore purchases');
+      if (hasPremiumEntitlement(info.customerInfo)) {
         onSubscribe(selected);
       } else {
-        alert('No active subscriptions found for this Apple ID.');
+        setPurchaseError('No active subscriptions were found for this Apple ID.');
       }
     } catch (e) {
       console.error(e);
-      alert('Failed to restore purchases.');
+      setPurchaseError(`Restore failed: ${e.message || 'Please try again.'}`);
+    } finally {
+      setRestoreLoading(false);
     }
   }
 
@@ -187,10 +207,17 @@ export default function Paywall({ onSubscribe }) {
           <button className={`btn btn-full paywall-cta ${loading ? 'loading' : ''}`} onClick={handleSubscribe} disabled={loading}>
             {loading ? <span className="spinner" /> : 'Subscribe & Unlock Pro'}
           </button>
+          {purchaseError && (
+            <p role="alert" style={{ color: '#fecdd3', textAlign: 'center', fontSize: '0.8rem', lineHeight: 1.4, marginTop: 10 }}>
+              {purchaseError}
+            </p>
+          )}
           <p className="paywall-trial-note">
             {dynamicPlans.find(p => p.id === selected)?.price}{selected !== 'lifetime' ? dynamicPlans.find(p => p.id === selected)?.period : ' once'}. {selected !== 'lifetime' && 'Cancel anytime.'}
           </p>
-          <button className="paywall-restore" onClick={handleRestore}>Restore Purchases</button>
+          <button className="paywall-restore" onClick={handleRestore} disabled={restoreLoading || loading}>
+            {restoreLoading ? 'Restoring...' : 'Restore Purchases'}
+          </button>
         </div>
 
         <div className="paywall-legal">

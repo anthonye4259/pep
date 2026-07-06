@@ -1,35 +1,41 @@
 import { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { generateProtocol } from '../lib/gemini';
-import { IoSparkles, IoCheckmarkCircle, IoRefreshCircle, IoFlameOutline } from 'react-icons/io5';
+import { IoSparkles, IoRefreshCircle, IoFlameOutline } from 'react-icons/io5';
 import AIConsentModal from '../components/AIConsentModal';
+import { acceptAIConsent, hasAIConsent } from '../lib/aiConsent';
 
 export default function MyPlan() {
-  const { appState, userProfile, updateProfileData, vials } = useApp();
+  const { appState, userProfile, updateProfileData } = useApp();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showAIConsent, setShowAIConsent] = useState(false);
 
   const protocol = userProfile?.protocol;
-  const hasConsented = localStorage.getItem('peptidai_ai_consent') === 'true';
+  const hasConsented = hasAIConsent();
 
   useEffect(() => {
     if (userProfile && !protocol && !loading && !error) {
       if (hasConsented) {
         generateInitialProtocol();
       } else {
-        setShowAIConsent(true);
+        setTimeout(() => setShowAIConsent(true), 0);
       }
     }
   }, [userProfile, protocol]);
 
   function handleConsentAccept() {
-    localStorage.setItem('peptidai_ai_consent', 'true');
+    acceptAIConsent();
     setShowAIConsent(false);
     generateInitialProtocol();
   }
 
   async function generateInitialProtocol() {
+    if (!hasAIConsent()) {
+      setShowAIConsent(true);
+      return;
+    }
+
     try {
       setLoading(true);
       const answers = appState.onboardingAnswers || { goal: 'Wellness', sleep: 'Average', energy: 'Average', peptides: [] };

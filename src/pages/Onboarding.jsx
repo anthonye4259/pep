@@ -3,19 +3,10 @@ import { IoArrowForward, IoShieldCheckmark, IoScanOutline, IoColorFillOutline, I
 import { useApp } from '../context/AppContext';
 import { Capacitor } from '@capacitor/core';
 import { shouldShowHealthKit } from '../lib/deviceCheck';
+import { AI_DISCLOSURE_TEXT, acceptAIConsent } from '../lib/aiConsent';
 
 
 const DISCLAIMER = `FOR EDUCATIONAL AND WELLNESS TRACKING PURPOSES ONLY. This app is a wellness journal and AI coaching tool. It does not provide medical advice, diagnosis, or treatment recommendations. Always consult a qualified healthcare professional before making changes to your health routine.`;
-
-const AI_DISCLOSURE = `PeptidAI uses Google's Gemini AI, a third-party AI service by Google LLC, to generate your personalized wellness plan.
-
-When you use AI features, the following data is sent to Google's Gemini API:
-• Your wellness goals
-• Your sleep quality responses
-• Your energy level responses
-• General health preferences from onboarding
-
-Google processes this data per their Privacy Policy. PeptidAI does not sell your personal data.`;
 
 const TUTORIAL_STEPS = [
   {
@@ -242,7 +233,7 @@ export default function Onboarding({ onComplete }) {
               <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
                 <IoScanOutline size={18} color="var(--accent)" /> AI Data Sharing
               </h3>
-              <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.7, margin: 0, fontWeight: 500, whiteSpace: 'pre-line' }}>{AI_DISCLOSURE}</p>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.7, margin: 0, fontWeight: 500, whiteSpace: 'pre-line' }}>{AI_DISCLOSURE_TEXT}</p>
             </div>
 
             {/* Health Disclaimer */}
@@ -252,12 +243,11 @@ export default function Onboarding({ onComplete }) {
             </div>
 
             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 16, textAlign: 'center' }}>
-              By tapping "I Agree", you consent to the above data sharing. <a href="https://peptidai.web.app/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</a>
+              By tapping "I Understand & Agree", you consent to the above data sharing. <a href="https://peptidai.web.app/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</a>
             </p>
             
             <button className="btn btn-primary btn-full" onClick={async () => {
-              // Store AI consent
-              localStorage.setItem('peptidai_ai_consent', 'true');
+              acceptAIConsent();
               // Skip HealthKit on iPad and non-native platforms
               if (!Capacitor.isNativePlatform() || !shouldShowHealthKit()) {
                 setPhase('building');

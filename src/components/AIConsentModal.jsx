@@ -1,4 +1,5 @@
 import { IoShieldCheckmarkOutline } from 'react-icons/io5';
+import { AI_DISCLOSURE_TEXT } from '../lib/aiConsent';
 
 export default function AIConsentModal({ isOpen, onAccept, onDecline }) {
   if (!isOpen) return null;
@@ -21,17 +22,11 @@ export default function AIConsentModal({ isOpen, onAccept, onDecline }) {
         </div>
 
         <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: 12 }}>
-          PeptidAI uses <strong>Google's Gemini AI</strong> to generate your personalized wellness plan. When you use this feature, the following data is sent to Google for processing:
+          PeptidAI uses external AI services to generate your personalized wellness plan. Review the disclosure before continuing:
         </p>
 
-        <ul style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.8, paddingLeft: 20, marginBottom: 12 }}>
-          <li>Your wellness goals</li>
-          <li>Sleep quality and energy level responses</li>
-          <li>General health preferences from onboarding</li>
-        </ul>
-
-        <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: 20 }}>
-          This data is processed by Google's Gemini API to generate AI-powered recommendations. Google's Privacy Policy governs how they handle this data. PeptidAI does not sell your personal data to third parties.
+        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: 20, whiteSpace: 'pre-line' }}>
+          {AI_DISCLOSURE_TEXT}
         </p>
 
         <p style={{ fontSize: '0.8rem', marginBottom: 20 }}>
@@ -43,7 +38,7 @@ export default function AIConsentModal({ isOpen, onAccept, onDecline }) {
           onClick={onAccept}
           style={{ marginBottom: 10 }}
         >
-          I Agree &amp; Continue
+          I Understand &amp; Agree
         </button>
         <button
           className="btn btn-full"
