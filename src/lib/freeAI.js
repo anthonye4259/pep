@@ -1,5 +1,6 @@
 import { GoogleGenAI, Type } from '@google/genai';
 import AppleIntelligence from '../plugins/AppleIntelligence';
+import { requireAIConsent } from './aiConsent';
 
 let _ai;
 function getAI() {
@@ -56,6 +57,7 @@ export async function freeAI(prompt, { json, schema, image } = {}) {
   }
 
   // === 2-3. Gemini chain (each model = separate free quota) ===
+  requireAIConsent();
   const geminiModels = ['gemini-2.0-flash', 'gemini-2.5-flash'];
   for (const model of geminiModels) {
     try {

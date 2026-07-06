@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { IoPersonCircleOutline, IoChevronForward, IoLogOutOutline, IoTrashOutline, IoShieldCheckmarkOutline, IoDocumentTextOutline, IoMailOutline, IoCardOutline, IoHelpCircleOutline } from 'react-icons/io5';
+import { IoPersonCircleOutline, IoChevronForward, IoLogOutOutline, IoTrashOutline, IoShieldCheckmarkOutline, IoDocumentTextOutline, IoMailOutline, IoCardOutline } from 'react-icons/io5';
 import { auth } from '../lib/firebase';
 import { signOut, deleteUser } from 'firebase/auth';
 import { useApp } from '../context/AppContext';
 import { Capacitor } from '@capacitor/core';
 import { shouldShowHealthKit } from '../lib/deviceCheck';
+import { hasAIConsent, revokeAIConsent } from '../lib/aiConsent';
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ export default function Settings() {
   const [showDelete, setShowDelete] = useState(false);
   const [manageUrl, setManageUrl] = useState('https://apps.apple.com/account/subscriptions');
   const [healthAvailable, setHealthAvailable] = useState(false);
+  const [aiConsentActive, setAIConsentActive] = useState(() => hasAIConsent());
   const user = appState.user;
 
   useEffect(() => {
@@ -139,6 +141,26 @@ export default function Settings() {
                 input:checked + span .slider-knob { transform: translateX(20px); }
               `}</style>
             </label>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', paddingRight: 12 }}>
+              <span style={{ fontWeight: 600, color: 'var(--text)' }}>AI Data Sharing</span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                {aiConsentActive ? 'Consent is active for external AI plan generation.' : 'Consent is not active. AI features will ask before sharing data.'}
+              </span>
+            </div>
+            <button
+              className="btn btn-secondary"
+              disabled={!aiConsentActive}
+              style={{ padding: '8px 12px', fontSize: '0.8rem', whiteSpace: 'nowrap', opacity: aiConsentActive ? 1 : 0.5 }}
+              onClick={() => {
+                revokeAIConsent();
+                setAIConsentActive(false);
+              }}
+            >
+              Revoke
+            </button>
           </div>
         </div>
       </div>
