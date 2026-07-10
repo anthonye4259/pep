@@ -3,6 +3,9 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import ErrorBoundary from './components/ErrorBoundary.jsx'
+import { initializeLiveUpdates } from './lib/liveUpdates.js'
+
+initializeLiveUpdates('PeptidAI');
 
 window.addEventListener('unhandledrejection', (event) => {
   console.warn('Unhandled promise rejection:', event.reason);

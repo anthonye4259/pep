@@ -6,6 +6,18 @@
     "androidScheme": "https"
   },
   "plugins": {
+    "CapacitorUpdater": {
+      "appId": "com.peptidai.app",
+      "autoUpdate": "atBackground",
+      "defaultChannel": "production",
+      "appReadyTimeout": 10000,
+      "responseTimeout": 20,
+      "autoDeleteFailed": true,
+      "autoDeletePrevious": true,
+      "resetWhenUpdate": true,
+      "allowModifyUrl": false,
+      "periodCheckDelay": 3600
+    },
     "StatusBar": {
       "style": "Dark",
       "backgroundColor": "#ffffff"
