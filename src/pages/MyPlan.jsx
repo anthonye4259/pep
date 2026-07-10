@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useApp } from '../context/AppContext';
 import { generateProtocol } from '../lib/gemini';
 import { IoSparkles, IoRefreshCircle, IoFlameOutline } from 'react-icons/io5';
@@ -14,23 +14,7 @@ export default function MyPlan() {
   const protocol = userProfile?.protocol;
   const hasConsented = hasAIConsent();
 
-  useEffect(() => {
-    if (userProfile && !protocol && !loading && !error) {
-      if (hasConsented) {
-        generateInitialProtocol();
-      } else {
-        setTimeout(() => setShowAIConsent(true), 0);
-      }
-    }
-  }, [userProfile, protocol]);
-
-  function handleConsentAccept() {
-    acceptAIConsent();
-    setShowAIConsent(false);
-    generateInitialProtocol();
-  }
-
-  async function generateInitialProtocol() {
+  const generateInitialProtocol = useCallback(async () => {
     if (!hasAIConsent()) {
       setShowAIConsent(true);
       return;
@@ -41,7 +25,7 @@ export default function MyPlan() {
       const answers = appState.onboardingAnswers || { goal: 'Wellness', sleep: 'Average', energy: 'Average', peptides: [] };
       const generated = await generateProtocol(answers);
       const now = new Date().toISOString();
-      await updateProfileData({ 
+      await updateProfileData({
         protocol: generated,
         aiUsage: { ...userProfile?.aiUsage, protocolGeneratedDate: now }
       });
@@ -51,6 +35,25 @@ export default function MyPlan() {
     } finally {
       setLoading(false);
     }
+  }, [appState.onboardingAnswers, updateProfileData, userProfile]);
+
+  useEffect(() => {
+    if (userProfile && !protocol && !loading && !error) {
+      const timer = setTimeout(() => {
+        if (hasConsented) {
+          generateInitialProtocol();
+        } else {
+          setShowAIConsent(true);
+        }
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [error, generateInitialProtocol, hasConsented, loading, protocol, userProfile]);
+
+  function handleConsentAccept() {
+    acceptAIConsent();
+    setShowAIConsent(false);
+    generateInitialProtocol();
   }
 
   function handleRegenerate() {

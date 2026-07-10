@@ -30,7 +30,7 @@ export default function AIConsentModal({ isOpen, onAccept, onDecline }) {
         </p>
 
         <p style={{ fontSize: '0.8rem', marginBottom: 20 }}>
-          <a href="/privacy" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>View our Privacy Policy</a>
+          <a href="#/privacy" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>View our Privacy Policy</a>
         </p>
 
         <button

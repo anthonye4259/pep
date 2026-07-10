@@ -4,7 +4,16 @@ import { requireAIConsent } from './aiConsent';
 
 let _ai;
 function getAI() {
-  if (!_ai) _ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  if (!apiKey) return null;
+  if (!_ai) {
+    try {
+      _ai = new GoogleGenAI({ apiKey });
+    } catch (e) {
+      console.warn('GoogleGenAI init failed:', e.message);
+      return null;
+    }
+  }
   return _ai;
 }
 
@@ -52,27 +61,30 @@ export async function freeAI(prompt, { json, schema, image } = {}) {
         return { type: 'text', data: response.text };
       }
     } catch (e) {
-      console.log("Apple AI failed:", e.message);
+      console.warn("Apple AI failed:", e.message);
     }
   }
 
   // === 2-3. Gemini chain (each model = separate free quota) ===
   requireAIConsent();
   const geminiModels = ['gemini-2.0-flash', 'gemini-2.5-flash'];
-  for (const model of geminiModels) {
-    try {
-      const contents = image ? [prompt, { inlineData: image }] : prompt;
-      const config = json && schema ? {
-        responseMimeType: "application/json",
-        responseSchema: { type: Type.OBJECT, ...schema },
-      } : {};
-      const response = await getAI().models.generateContent({ model, contents, config });
-      if (json) {
-        return { type: 'json', data: JSON.parse(response.text()) };
+  const geminiClient = getAI();
+  if (geminiClient) {
+    for (const model of geminiModels) {
+      try {
+        const contents = image ? [prompt, { inlineData: image }] : prompt;
+        const config = json && schema ? {
+          responseMimeType: "application/json",
+          responseSchema: { type: Type.OBJECT, ...schema },
+        } : {};
+        const response = await geminiClient.models.generateContent({ model, contents, config });
+        if (json) {
+          return { type: 'json', data: JSON.parse(response.text()) };
+        }
+        return { type: 'text', data: response.text() };
+      } catch (e) {
+        console.warn(`${model} failed:`, e.message);
       }
-      return { type: 'text', data: response.text() };
-    } catch (e) {
-      console.log(`${model} failed:`, e.message);
     }
   }
 
@@ -97,7 +109,7 @@ export async function freeAI(prompt, { json, schema, image } = {}) {
       }
       return { type: 'text', data: text };
     } catch (e) {
-      console.log("Groq failed:", e.message);
+      console.warn("Groq failed:", e.message);
     }
   }
 
@@ -122,7 +134,7 @@ export async function freeAI(prompt, { json, schema, image } = {}) {
       }
       return { type: 'text', data: text };
     } catch (e) {
-      console.log("Cerebras failed:", e.message);
+      console.warn("Cerebras failed:", e.message);
     }
   }
 

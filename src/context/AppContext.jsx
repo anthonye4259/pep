@@ -25,6 +25,27 @@ async function getPurchases() {
   catch (e) { console.warn('RevenueCat not available:', e.message); return null; }
 }
 
+function getRevenueCatAppleKey() {
+  const key = import.meta.env.VITE_REVENUECAT_APPLE_KEY;
+  return key && key !== 'appl_REPLACE_ME_WHEN_READY' ? key : '';
+}
+
+async function ensurePurchasesConfigured(Purchases) {
+  const apiKey = getRevenueCatAppleKey();
+  if (!apiKey) {
+    console.warn('RevenueCat Apple key is missing; purchase checks skipped.');
+    return false;
+  }
+
+  if (typeof Purchases.isConfigured === 'function') {
+    const configured = await Purchases.isConfigured();
+    if (configured?.isConfigured) return true;
+  }
+
+  await Purchases.configure({ apiKey });
+  return true;
+}
+
 let _Health = null;
 async function getHealth() {
   if (_Health) return _Health;
@@ -64,8 +85,7 @@ export function AppProvider({ children }) {
       try {
         const Purchases = await getPurchases();
         if (!Purchases) return;
-        const rcKey = import.meta.env.VITE_REVENUECAT_APPLE_KEY || "appl_REPLACE_ME_WHEN_READY";
-        Purchases.configure({ apiKey: rcKey });
+        await ensurePurchasesConfigured(Purchases);
       } catch (e) { console.warn('RevenueCat config warning', e); }
     })();
   }, []);
@@ -211,6 +231,8 @@ export function AppProvider({ children }) {
         // Race RevenueCat against a 5-second timeout so the app never hangs
         const rcResult = await Promise.race([
           (async () => {
+            const configured = await ensurePurchasesConfigured(Purchases);
+            if (!configured) throw new Error('RevenueCat key missing');
             await Purchases.logIn({ appUserID: user.uid });
             return await Purchases.getCustomerInfo();
           })(),

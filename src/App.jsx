@@ -1,5 +1,5 @@
 import { HashRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
-import { IoHomeOutline, IoHome, IoCalendarOutline, IoCalendar, IoLibraryOutline, IoLibrary, IoFlaskOutline, IoFlask } from 'react-icons/io5';
+import { IoHomeOutline, IoHome, IoCalendarOutline, IoCalendar, IoFlaskOutline, IoFlask, IoSparklesOutline, IoSparkles, IoJournalOutline, IoJournal } from 'react-icons/io5';
 import { AppProvider, useApp } from './context/AppContext';
 import Onboarding from './pages/Onboarding';
 import Auth from './pages/Auth';
@@ -55,7 +55,7 @@ function AppShell() {
             {({ isActive }) => (<><span className="nav-icon">{isActive ? <IoHome size={24} /> : <IoHomeOutline size={24} />}</span><span>Home</span></>)}
           </NavLink>
           <NavLink to="/plan" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-            {({ isActive }) => (<><span className="nav-icon">{isActive ? <div style={{fontWeight: 'bold', fontSize: 24, color: 'var(--accent)'}}>AI</div> : <div style={{fontSize: 24}}>AI</div>}</span><span>My Plan</span></>)}
+            {({ isActive }) => (<><span className="nav-icon">{isActive ? <IoSparkles size={24} /> : <IoSparklesOutline size={24} />}</span><span>My Plan</span></>)}
           </NavLink>
           <NavLink to="/calendar" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
             {({ isActive }) => (<><span className="nav-icon">{isActive ? <IoCalendar size={24} /> : <IoCalendarOutline size={24} />}</span><span>History</span></>)}
@@ -64,7 +64,7 @@ function AppShell() {
             {({ isActive }) => (<><span className="nav-icon">{isActive ? <IoFlask size={24} /> : <IoFlaskOutline size={24} />}</span><span>Vials</span></>)}
           </NavLink>
           <NavLink to="/journal" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-            {({ isActive }) => (<><span className="nav-icon">{isActive ? <div style={{fontWeight: 'bold', fontSize: 24}}>J</div> : <div style={{fontSize: 24}}>J</div>}</span><span>Journal</span></>)}
+            {({ isActive }) => (<><span className="nav-icon">{isActive ? <IoJournal size={24} /> : <IoJournalOutline size={24} />}</span><span>Journal</span></>)}
           </NavLink>
         </nav>
       )}

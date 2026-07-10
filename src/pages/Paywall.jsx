@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { IoFlask, IoCheckmarkCircle } from 'react-icons/io5';
 
 // Native plugins loaded dynamically to prevent crash on iPad
@@ -25,6 +25,23 @@ function hasPremiumEntitlement(customerInfo) {
   );
 }
 
+function getRevenueCatAppleKey() {
+  const key = import.meta.env.VITE_REVENUECAT_APPLE_KEY;
+  return key && key !== 'appl_REPLACE_ME_WHEN_READY' ? key : '';
+}
+
+async function ensurePurchasesConfigured(Purchases) {
+  const apiKey = getRevenueCatAppleKey();
+  if (!apiKey) throw new Error('Apple subscription setup is missing.');
+
+  if (typeof Purchases.isConfigured === 'function') {
+    const configured = await withTimeout(Purchases.isConfigured(), 3000, 'Purchase setup');
+    if (configured?.isConfigured) return;
+  }
+
+  await withTimeout(Purchases.configure({ apiKey }), 5000, 'Purchase setup');
+}
+
 const plans = [
   { id: 'weekly', name: 'Weekly', price: '$3.99', period: '/week', desc: 'Flexible, cancel anytime', badge: null },
   { id: 'monthly', name: 'Monthly', price: '$9.99', period: '/mo', desc: 'Standard subscription', badge: null },
@@ -41,11 +58,15 @@ const features = [
   'Unlimited plan regenerations',
 ];
 
+const PURCHASE_WATCHDOG_MS = 35000;
+
 export default function Paywall({ onSubscribe }) {
   const [selected, setSelected] = useState('annual');
   const [loading, setLoading] = useState(false);
   const [restoreLoading, setRestoreLoading] = useState(false);
   const [purchaseError, setPurchaseError] = useState('');
+  const [fetchingPrices, setFetchingPrices] = useState(true);
+  const purchaseWatchdogRef = useRef(null);
 
   const [dynamicPlans, setDynamicPlans] = useState(plans);
 
@@ -56,9 +77,11 @@ export default function Paywall({ onSubscribe }) {
 
   useEffect(() => {
     async function fetchPrices() {
+      setFetchingPrices(true);
       try {
         const Purchases = await withTimeout(getPurchases(), 8000, 'Loading purchase system');
         if (!Purchases) return;
+        await ensurePurchasesConfigured(Purchases);
         const offerings = await withTimeout(Purchases.getOfferings(), 15000, 'Loading prices');
         const current = offerings.current;
         
@@ -77,9 +100,17 @@ export default function Paywall({ onSubscribe }) {
         }
       } catch (e) {
         console.warn('Could not fetch RC prices:', e);
+      } finally {
+        setFetchingPrices(false);
       }
     }
     fetchPrices();
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (purchaseWatchdogRef.current) clearTimeout(purchaseWatchdogRef.current);
+    };
   }, []);
 
 
@@ -88,10 +119,18 @@ export default function Paywall({ onSubscribe }) {
     if (loading) return;
     setLoading(true);
     setPurchaseError('');
+    let watchdogFired = false;
+
+    purchaseWatchdogRef.current = setTimeout(() => {
+      watchdogFired = true;
+      setLoading(false);
+      setPurchaseError('Apple checkout is taking longer than expected. Please retry or continue later.');
+    }, PURCHASE_WATCHDOG_MS);
 
     try {
       const Purchases = await withTimeout(getPurchases(), 8000, 'Loading purchase system');
       if (!Purchases) throw new Error('Purchase system not available. Please try again.');
+      await ensurePurchasesConfigured(Purchases);
       // 1. Fetch RevenueCat Offerings
       const offerings = await withTimeout(Purchases.getOfferings(), 15000, 'Loading offerings');
       const current = offerings.current;
@@ -133,7 +172,11 @@ export default function Paywall({ onSubscribe }) {
         setPurchaseError(`Purchase failed: ${message}`);
       }
     } finally {
-      setLoading(false);
+      if (purchaseWatchdogRef.current) {
+        clearTimeout(purchaseWatchdogRef.current);
+        purchaseWatchdogRef.current = null;
+      }
+      if (!watchdogFired) setLoading(false);
     }
   }
 
@@ -145,6 +188,7 @@ export default function Paywall({ onSubscribe }) {
     try {
       const Purchases = await withTimeout(getPurchases(), 8000, 'Loading purchase system');
       if (!Purchases) throw new Error('Purchase system not available.');
+      await ensurePurchasesConfigured(Purchases);
       const info = await withTimeout(Purchases.restorePurchases(), 30000, 'Restore purchases');
       if (hasPremiumEntitlement(info.customerInfo)) {
         onSubscribe(selected);
@@ -159,9 +203,13 @@ export default function Paywall({ onSubscribe }) {
     }
   }
 
+  const selectedPlan = dynamicPlans.find(p => p.id === selected) || dynamicPlans[0];
+  const selectedPriceCopy = selected === 'lifetime'
+    ? `${selectedPlan.price} once.`
+    : `${selectedPlan.price}${selectedPlan.period}. Cancel anytime.`;
+
   return (
     <div className="paywall">
-      <div className="glow-orbs"><div className="glow-orb orb-1" /><div className="glow-orb orb-2" /></div>
       <div className="paywall-inner">
         <div className="paywall-header">
           <div style={{ marginBottom: 12 }}><IoFlask size={40} color="white" /></div>
@@ -205,15 +253,18 @@ export default function Paywall({ onSubscribe }) {
         {/* CTA */}
         <div style={{ marginTop: 'auto' }}>
           <button className={`btn btn-full paywall-cta ${loading ? 'loading' : ''}`} onClick={handleSubscribe} disabled={loading}>
-            {loading ? <span className="spinner" /> : 'Subscribe & Unlock Pro'}
+            {loading ? <><span className="spinner" /> Processing with Apple...</> : `Continue with ${selectedPlan.name}`}
           </button>
+          {fetchingPrices && !loading && (
+            <p className="paywall-status">Checking latest Apple pricing...</p>
+          )}
           {purchaseError && (
-            <p role="alert" style={{ color: '#fecdd3', textAlign: 'center', fontSize: '0.8rem', lineHeight: 1.4, marginTop: 10 }}>
+            <p role="alert" className="paywall-error">
               {purchaseError}
             </p>
           )}
           <p className="paywall-trial-note">
-            {dynamicPlans.find(p => p.id === selected)?.price}{selected !== 'lifetime' ? dynamicPlans.find(p => p.id === selected)?.period : ' once'}. {selected !== 'lifetime' && 'Cancel anytime.'}
+            {selectedPriceCopy}
           </p>
           <button className="paywall-restore" onClick={handleRestore} disabled={restoreLoading || loading}>
             {restoreLoading ? 'Restoring...' : 'Restore Purchases'}

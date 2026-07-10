@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { IoCheckmarkCircle, IoSparkles, IoLockClosed } from 'react-icons/io5';
+import { IoCheckmarkCircle, IoLockClosed } from 'react-icons/io5';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';

@@ -1,80 +1,91 @@
-import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IoCameraOutline, IoFlaskOutline, IoChevronForward, IoSettingsOutline, IoSparkles, IoJournalOutline, IoCalendarOutline } from 'react-icons/io5';
+import { IoFlaskOutline, IoSettingsOutline, IoSparkles, IoJournalOutline, IoCalendarOutline, IoChevronForward } from 'react-icons/io5';
 import { useApp } from '../context/AppContext';
 
 export default function Home() {
   const navigate = useNavigate();
-  const { vials, userProfile } = useApp();
+  const { vials, journal, schedules } = useApp();
 
   const recentVials = (vials || []).slice(0, 4);
   const hasVials = recentVials.length > 0;
+  const journalCount = (journal || []).length;
+  const scheduleCount = (schedules || []).length;
+  const latestJournal = (journal || [])[0];
+  const latestJournalLabel = latestJournal?.date ? new Date(latestJournal.date).toLocaleDateString() : 'Not logged';
 
   return (
     <div className="page">
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+      <div className="home-topbar">
         <div>
           <h1 style={{ fontSize: '1.6rem' }}>Peptid<span style={{ color: 'var(--accent)' }}>AI</span></h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Your wellness research companion</p>
         </div>
         <button
           onClick={() => navigate('/settings')}
-          style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--bg-card)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          className="home-settings-btn"
+          aria-label="Open settings"
         >
-          <IoSettingsOutline size={20} color="var(--text-muted)" />
+          <IoSettingsOutline size={20} />
         </button>
       </div>
 
+      <div className="home-summary-grid" aria-label="Your PeptidAI summary">
+        <div className="home-summary-card">
+          <div className="home-summary-value">{(vials || []).length}</div>
+          <div className="home-summary-label">Saved compounds</div>
+        </div>
+        <div className="home-summary-card">
+          <div className="home-summary-value">{journalCount}</div>
+          <div className="home-summary-label">Journal entries</div>
+        </div>
+        <div className="home-summary-card">
+          <div className="home-summary-value">{scheduleCount}</div>
+          <div className="home-summary-label">Protocols</div>
+        </div>
+      </div>
+
       {/* Quick Actions */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 24 }}>
+      <div className="home-action-grid">
         <button
-          className="card"
+          className="card home-action-card"
           onClick={() => navigate('/journal')}
-          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, padding: 20, cursor: 'pointer', border: '1px solid var(--border)', background: 'var(--bg-card)' }}
         >
-          <IoJournalOutline size={28} color="var(--accent)" />
-          <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>Daily Journal</span>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Log your wellness data</span>
+          <span className="home-action-icon"><IoJournalOutline size={24} /></span>
+          <span className="home-action-title">Daily Journal</span>
+          <span className="home-action-copy">Last entry: {latestJournalLabel}</span>
+          <IoChevronForward size={16} style={{ marginTop: 'auto', color: 'var(--text-muted)' }} />
         </button>
 
         <button
-          className="card"
-          onClick={() => navigate('/calendar')}
-          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, padding: 20, cursor: 'pointer', border: '1px solid var(--border)', background: 'var(--bg-card)' }}
+          className="card home-action-card"
+          onClick={() => navigate(hasVials ? '/calendar' : '/vials')}
         >
-          <IoCalendarOutline size={28} color="var(--accent)" />
-          <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>History</span>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Track your progress</span>
+          <span className="home-action-icon">
+            {hasVials ? <IoCalendarOutline size={24} /> : <IoFlaskOutline size={24} />}
+          </span>
+          <span className="home-action-title">{hasVials ? 'History' : 'Create Vial'}</span>
+          <span className="home-action-copy">{hasVials ? 'Review recent logs and protocol timing' : 'Start with a saved calculator setup'}</span>
+          <IoChevronForward size={16} style={{ marginTop: 'auto', color: 'var(--text-muted)' }} />
         </button>
       </div>
 
       {/* AI Plan CTA */}
-      <div
+      <button
+        type="button"
+        className="home-hero-card"
         onClick={() => navigate('/plan')}
-        style={{ 
-          background: 'linear-gradient(135deg, var(--accent) 0%, var(--text-muted) 100%)', 
-          border: 'none',
-          boxShadow: '0 20px 40px rgba(236,72,153,0.3)',
-          color: 'white',
-          position: 'relative',
-          overflow: 'hidden',
-          borderRadius: 20,
-          padding: '28px 24px',
-          cursor: 'pointer',
-          marginBottom: 24
-        }}
       >
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)', transform: 'skewX(-20deg) translateX(-150%)', animation: 'shimmer 3s infinite' }} />
-        <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.2)', width: 60, height: 60, borderRadius: 30, marginBottom: 12 }}>
-             <IoSparkles size={32} color="white" />
+        <div className="home-hero-content">
+          <div className="home-hero-icon">
+            <IoSparkles size={30} color="white" />
           </div>
-          <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'white', marginBottom: 6 }}>AI Wellness Plan</div>
-          <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)', fontWeight: 500 }}>Personalized 12-week protocol</div>
+          <div>
+            <div className="home-hero-title">AI Wellness Plan</div>
+            <div className="home-hero-copy">Review or regenerate your personalized 12-week research protocol.</div>
+          </div>
         </div>
-      </div>
-      <style>{`@keyframes shimmer { 100% { transform: skewX(-20deg) translateX(150%); } }`}</style>
+      </button>
 
       {/* Saved Configurations */}
       {hasVials && (
@@ -92,6 +103,14 @@ export default function Home() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {!hasVials && (
+        <div className="empty-state">
+          <div className="empty-title">No saved compounds yet</div>
+          <div className="empty-text">Create your first vial calculator setup to make logging and schedule tracking easier.</div>
+          <button className="btn btn-primary" onClick={() => navigate('/vials')}>Create First Vial</button>
         </div>
       )}
     </div>

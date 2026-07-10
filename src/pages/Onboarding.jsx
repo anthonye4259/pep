@@ -89,7 +89,7 @@ export default function Onboarding({ onComplete }) {
       });
     }, 60);
     return () => { clearInterval(stepInterval); clearInterval(progressInterval); };
-  }, [phase, onComplete]);
+  }, [answers, phase, onComplete]);
 
   // Auto-advance tutorial slightly if user doesn't tap (TikTok style auto-play feeling)
   useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import * as htmlToImage from 'html-to-image';
 
 export default function ShareGraphic({ title, subtitle, items = [], onClose }) {

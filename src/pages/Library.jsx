@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { IoSearch, IoBookOutline, IoChevronForward, IoFlaskOutline, IoMedkitOutline, IoArrowBack } from 'react-icons/io5';
 
 const educationalTopics = [
@@ -56,7 +56,7 @@ const educationalTopics = [
   { 
     title: 'Metabolic Health', category: 'Wellness', 
     desc: 'Understanding metabolism and energy balance.',
-    content: `Metabolic health encompasses how efficiently your body converts food into energy and manages blood sugar, lipids, and inflammation.\n\n**Key Metabolic Markers**:\n• **Fasting glucose**: Ideally < 100 mg/dL\n• **HbA1c**: < 5.7% (3-month blood sugar average)\n• **Triglycerides**: < 150 mg/dL\n• **HDL cholesterol**: > 40 mg/dL (men), > 50 mg/dL (women)\n• **Waist circumference**: < 40\" (men), < 35\" (women)\n• **Blood pressure**: < 120/80 mmHg\n\n**Metabolic Rate Factors**:\n• **BMR** (Basal Metabolic Rate): Calories burned at rest (~60-75% of total)\n• **TEF** (Thermic Effect of Food): Energy used to digest (~10%)\n• **NEAT** (Non-Exercise Activity): Fidgeting, walking, standing (~15-30%)\n• **EAT** (Exercise Activity): Intentional exercise (~5-10%)\n\n**Optimization Strategies**:\n1. Build and maintain lean muscle mass\n2. Prioritize protein (increases TEF)\n3. Walk 8,000-10,000 steps daily (boosts NEAT)\n4. Manage stress (cortisol impairs metabolic health)\n5. Get adequate sleep (see Sleep & Recovery)`
+    content: `Metabolic health encompasses how efficiently your body converts food into energy and manages blood sugar, lipids, and inflammation.\n\n**Key Metabolic Markers**:\n• **Fasting glucose**: Ideally < 100 mg/dL\n• **HbA1c**: < 5.7% (3-month blood sugar average)\n• **Triglycerides**: < 150 mg/dL\n• **HDL cholesterol**: > 40 mg/dL (men), > 50 mg/dL (women)\n• **Waist circumference**: < 40" (men), < 35" (women)\n• **Blood pressure**: < 120/80 mmHg\n\n**Metabolic Rate Factors**:\n• **BMR** (Basal Metabolic Rate): Calories burned at rest (~60-75% of total)\n• **TEF** (Thermic Effect of Food): Energy used to digest (~10%)\n• **NEAT** (Non-Exercise Activity): Fidgeting, walking, standing (~15-30%)\n• **EAT** (Exercise Activity): Intentional exercise (~5-10%)\n\n**Optimization Strategies**:\n1. Build and maintain lean muscle mass\n2. Prioritize protein (increases TEF)\n3. Walk 8,000-10,000 steps daily (boosts NEAT)\n4. Manage stress (cortisol impairs metabolic health)\n5. Get adequate sleep (see Sleep & Recovery)`
   },
   { 
     title: 'Immune System Basics', category: 'Wellness', 
@@ -71,7 +71,6 @@ export default function Library() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All');
   const [selectedTopic, setSelectedTopic] = useState(null);
-  const navigate = useNavigate();
 
   const filtered = educationalTopics.filter(p => {
     const matchSearch = !search || p.title.toLowerCase().includes(search.toLowerCase()) || p.desc.toLowerCase().includes(search.toLowerCase());
