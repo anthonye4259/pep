@@ -3,7 +3,7 @@ import { IoFlaskOutline, IoCheckmarkCircle } from 'react-icons/io5';
 
 // Native plugins loaded dynamically to prevent crash on iPad
 async function getPurchases() {
-  try { const m = await import('@revenuecat/purchases-capacitor'); return m.Purchases; }
+  try { const m = await import('@revenuecat/purchases-capacitor'); return { plugin: m.Purchases }; }
   catch (e) { console.warn('Purchases not available:', e.message); return null; }
 }
 
@@ -77,7 +77,7 @@ export default function Paywall({ onSubscribe }) {
     async function fetchPrices() {
       setFetchingPrices(true);
       try {
-        const Purchases = await withTimeout(getPurchases(), 8000, 'Loading purchase system');
+        const Purchases = (await withTimeout(getPurchases(), 8000, 'Loading purchase system'))?.plugin;
         if (!Purchases) return;
         await ensurePurchasesConfigured(Purchases);
         const offerings = await withTimeout(Purchases.getOfferings(), 15000, 'Loading prices');
@@ -126,7 +126,7 @@ export default function Paywall({ onSubscribe }) {
     }, PURCHASE_WATCHDOG_MS);
 
     try {
-      const Purchases = await withTimeout(getPurchases(), 8000, 'Loading purchase system');
+      const Purchases = (await withTimeout(getPurchases(), 8000, 'Loading purchase system'))?.plugin;
       if (!Purchases) throw new Error('Purchase system not available. Please try again.');
       await ensurePurchasesConfigured(Purchases);
       // 1. Fetch RevenueCat Offerings
@@ -184,7 +184,7 @@ export default function Paywall({ onSubscribe }) {
     setPurchaseError('');
 
     try {
-      const Purchases = await withTimeout(getPurchases(), 8000, 'Loading purchase system');
+      const Purchases = (await withTimeout(getPurchases(), 8000, 'Loading purchase system'))?.plugin;
       if (!Purchases) throw new Error('Purchase system not available.');
       await ensurePurchasesConfigured(Purchases);
       const info = await withTimeout(Purchases.restorePurchases(), 30000, 'Restore purchases');

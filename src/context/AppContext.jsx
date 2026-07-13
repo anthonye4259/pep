@@ -13,15 +13,15 @@ import { shouldShowHealthKit } from '../lib/deviceCheck';
 
 let _CapApp = null;
 async function getCapApp() {
-  if (_CapApp) return _CapApp;
-  try { const m = await import('@capacitor/app'); _CapApp = m.App; return _CapApp; }
+  if (_CapApp) return { plugin: _CapApp };
+  try { const m = await import('@capacitor/app'); _CapApp = m.App; return { plugin: _CapApp }; }
   catch (e) { console.warn('CapApp not available:', e.message); return null; }
 }
 
 let _Purchases = null;
 async function getPurchases() {
-  if (_Purchases) return _Purchases;
-  try { const m = await import('@revenuecat/purchases-capacitor'); _Purchases = m.Purchases; return _Purchases; }
+  if (_Purchases) return { plugin: _Purchases };
+  try { const m = await import('@revenuecat/purchases-capacitor'); _Purchases = m.Purchases; return { plugin: _Purchases }; }
   catch (e) { console.warn('RevenueCat not available:', e.message); return null; }
 }
 
@@ -48,15 +48,15 @@ async function ensurePurchasesConfigured(Purchases) {
 
 let _Health = null;
 async function getHealth() {
-  if (_Health) return _Health;
-  try { const m = await import('@capgo/capacitor-health'); _Health = m.Health; return _Health; }
+  if (_Health) return { plugin: _Health };
+  try { const m = await import('@capgo/capacitor-health'); _Health = m.Health; return { plugin: _Health }; }
   catch (e) { console.warn('Health plugin not available:', e.message); return null; }
 }
 
 let _LocalNotifications = null;
 async function getLocalNotifications() {
-  if (_LocalNotifications) return _LocalNotifications;
-  try { const m = await import('@capacitor/local-notifications'); _LocalNotifications = m.LocalNotifications; return _LocalNotifications; }
+  if (_LocalNotifications) return { plugin: _LocalNotifications };
+  try { const m = await import('@capacitor/local-notifications'); _LocalNotifications = m.LocalNotifications; return { plugin: _LocalNotifications }; }
   catch (e) { console.warn('LocalNotifications not available:', e.message); return null; }
 }
 
@@ -80,7 +80,7 @@ export function AppProvider({ children }) {
   useEffect(() => {
     (async () => {
       try {
-        const Purchases = await getPurchases();
+        const Purchases = (await getPurchases())?.plugin;
         if (!Purchases) return;
         await ensurePurchasesConfigured(Purchases);
       } catch (e) { console.warn('RevenueCat config warning', e); }
@@ -92,7 +92,7 @@ export function AppProvider({ children }) {
     let listenerHandle = null;
     (async () => {
       try {
-        const CapApp = await getCapApp();
+        const CapApp = (await getCapApp())?.plugin;
         if (!CapApp) return;
         listenerHandle = await CapApp.addListener('appUrlOpen', (event) => {
           try {
@@ -215,7 +215,7 @@ export function AppProvider({ children }) {
     const userData = { uid: user.uid, email: user.email, displayName: user.displayName };
     
     try {
-      const Purchases = await getPurchases();
+      const Purchases = (await getPurchases())?.plugin;
       if (Purchases) {
         // Race RevenueCat against a 5-second timeout so the app never hangs
         const rcResult = await Promise.race([
@@ -254,7 +254,7 @@ export function AppProvider({ children }) {
       if (!Capacitor.isNativePlatform() || !shouldShowHealthKit()) {
         return { success: false, error: 'Not available on this device' };
       }
-      const Health = await getHealth();
+      const Health = (await getHealth())?.plugin;
       if (!Health) return { success: false, error: 'Health plugin not available' };
 
       const available = await Health.isAvailable();
@@ -324,7 +324,7 @@ export function AppProvider({ children }) {
 
   const scheduleDailyReminder = async (hour, minute) => {
     try {
-      const LN = await getLocalNotifications();
+      const LN = (await getLocalNotifications())?.plugin;
       if (!LN) return false;
       const permStatus = await LN.requestPermissions();
       if (permStatus.display !== 'granted') return false;
@@ -354,7 +354,7 @@ export function AppProvider({ children }) {
 
   const cancelReminders = async () => {
     try {
-      const LN = await getLocalNotifications();
+      const LN = (await getLocalNotifications())?.plugin;
       if (LN) await LN.cancel({ notifications: [{ id: 1 }] });
     } catch (e) {
       console.error("Cancel Error:", e);
