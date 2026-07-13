@@ -60,9 +60,6 @@ async function getLocalNotifications() {
   catch (e) { console.warn('LocalNotifications not available:', e.message); return null; }
 }
 
-const REVIEW_EMAIL = 'review@peptidai.com';
-const REVIEW_EMAIL_ALT = 'appreview@peptidai.com';
-
 const AppContext = createContext();
 
 export function AppProvider({ children }) {
@@ -216,14 +213,6 @@ export function AppProvider({ children }) {
   
   async function completeAuth(user) { 
     const userData = { uid: user.uid, email: user.email, displayName: user.displayName };
-    
-    // Apple reviewer bypass: auto-complete onboarding, force paywall
-    const emailLower = user.email?.toLowerCase();
-    if (emailLower === REVIEW_EMAIL || emailLower === REVIEW_EMAIL_ALT) {
-      console.log('[Review] Reviewer detected, skipping to paywall');
-      setAppState(prev => ({ ...prev, step: 'paywall', user: userData, subscribed: false }));
-      return;
-    }
     
     try {
       const Purchases = await getPurchases();

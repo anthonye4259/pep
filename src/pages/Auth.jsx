@@ -52,7 +52,6 @@ export default function Auth({ onAuth }) {
     } catch (err) {
       const msg = err.message.replace('Firebase: ', '').replace(/\(auth\/.*\)/, '').trim();
       setError(msg);
-      alert('Authentication Failed: ' + msg);
     } finally {
       setLoading(false);
     }
@@ -65,7 +64,7 @@ export default function Auth({ onAuth }) {
         <h1 style={{ fontSize: '1.5rem', marginTop: 12 }}>
           Peptid<span className="text-neon">AI</span>
         </h1>
-        <p className="text-muted text-sm" style={{ marginTop: 4 }}>Never guess your amounts again</p>
+        <p className="text-muted text-sm" style={{ marginTop: 4 }}>Wellness research, organized.</p>
       </div>
 
       <div className="auth-card">
@@ -77,17 +76,17 @@ export default function Auth({ onAuth }) {
         <form onSubmit={handleSubmit}>
           {mode === 'signup' && (
             <div className="input-group">
-              <label>Name</label>
-              <input type="text" className="input" value={name} onChange={e => setName(e.target.value)} placeholder="Your name" />
+              <label htmlFor="auth-name">Name</label>
+              <input id="auth-name" type="text" className="input" value={name} onChange={e => setName(e.target.value)} placeholder="Your name" autoComplete="name" />
             </div>
           )}
           <div className="input-group">
-            <label>Email</label>
-            <input type="email" className="input" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@email.com" required />
+            <label htmlFor="auth-email">Email</label>
+            <input id="auth-email" type="email" className="input" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@email.com" required autoComplete="email" />
           </div>
           <div className="input-group">
-            <label>Password</label>
-            <input type="password" className="input" value={password} onChange={e => setPassword(e.target.value)} placeholder="Min 6 characters" required />
+            <label htmlFor="auth-password">Password</label>
+            <input id="auth-password" type="password" className="input" value={password} onChange={e => setPassword(e.target.value)} placeholder="Min 6 characters" required minLength={6} autoComplete={mode === 'signup' ? 'new-password' : 'current-password'} />
           </div>
 
           {error && <p style={{ color: 'var(--danger)', fontSize: '0.85rem', marginBottom: 12 }}>{error}</p>}

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { IoFlask, IoCheckmarkCircle } from 'react-icons/io5';
+import { IoFlaskOutline, IoCheckmarkCircle } from 'react-icons/io5';
 
 // Native plugins loaded dynamically to prevent crash on iPad
 async function getPurchases() {
@@ -50,12 +50,10 @@ const plans = [
 ];
 
 const features = [
-  'AI-powered wellness coaching',
-  'Personalized 12-week plan',
-  'Daily wellness journal with trends',
-  'Apple Health integration (iPhone)',
-  'Knowledge base & education',
-  'Unlimited plan regenerations',
+  'Personalized 12-week wellness plan',
+  'Daily journal with progress trends',
+  'Research library and education',
+  'Unlimited plan updates',
 ];
 
 const PURCHASE_WATCHDOG_MS = 35000;
@@ -212,11 +210,10 @@ export default function Paywall({ onSubscribe }) {
     <div className="paywall">
       <div className="paywall-inner">
         <div className="paywall-header">
-          <div style={{ marginBottom: 12 }}><IoFlask size={40} color="white" /></div>
-          <h1 style={{ fontSize: '1.8rem', marginBottom: 4, color: 'white' }}>
-            Peptid<span style={{ fontWeight: 800 }}>AI</span> Pro
-          </h1>
-          <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.6)' }}>Your research companion</p>
+          <div className="paywall-mark"><IoFlaskOutline size={24} /></div>
+          <p className="paywall-eyebrow">PeptidAI Pro</p>
+          <h1>Build a clearer wellness routine.</h1>
+          <p>Choose the access level that fits your research.</p>
         </div>
 
 
@@ -224,7 +221,7 @@ export default function Paywall({ onSubscribe }) {
         {/* Plans */}
         <div className="paywall-plans">
           {dynamicPlans.map(plan => (
-            <div key={plan.id} className={`paywall-plan ${selected === plan.id ? 'selected' : ''}`} onClick={() => setSelected(plan.id)}>
+            <button type="button" key={plan.id} className={`paywall-plan ${selected === plan.id ? 'selected' : ''}`} onClick={() => setSelected(plan.id)} aria-pressed={selected === plan.id}>
               {plan.badge && <div className="paywall-badge">{plan.badge}</div>}
               <div className="paywall-plan-radio"><div className={`radio-dot ${selected === plan.id ? 'active' : ''}`} /></div>
               <div className="paywall-plan-header">
@@ -235,13 +232,13 @@ export default function Paywall({ onSubscribe }) {
                 <div className="paywall-price-amount">{plan.price}</div>
                 <div className="paywall-price-period">{plan.period}</div>
               </div>
-            </div>
+            </button>
           ))}
         </div>
 
         {/* Features */}
         <div className="paywall-features">
-          <div style={{ marginBottom: 14, fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600 }}>EVERYTHING INCLUDED</div>
+          <div className="paywall-features-label">Everything included</div>
           {features.map((f, i) => (
             <div key={i} className="paywall-feature">
               <span className="paywall-feature-check"><IoCheckmarkCircle size={20} /></span>
@@ -251,7 +248,7 @@ export default function Paywall({ onSubscribe }) {
         </div>
 
         {/* CTA */}
-        <div style={{ marginTop: 'auto' }}>
+        <div className="paywall-checkout">
           <button className={`btn btn-full paywall-cta ${loading ? 'loading' : ''}`} onClick={handleSubscribe} disabled={loading}>
             {loading ? <><span className="spinner" /> Processing with Apple...</> : `Continue with ${selectedPlan.name}`}
           </button>
@@ -272,11 +269,11 @@ export default function Paywall({ onSubscribe }) {
         </div>
 
         <div className="paywall-legal">
-          <p>Payment will be charged at confirmation. Subscription auto-renews unless canceled 24h before period end.</p>
-          <p style={{ marginTop: 8 }}>
-            <span onClick={() => window.open('https://www.apple.com/legal/internet-services/itunes/dev/stdeula/', '_blank')} style={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'underline', cursor: 'pointer' }}>Terms of Use (EULA)</span>
+          <p>{selected === 'lifetime' ? 'One-time purchase charged at confirmation.' : 'Payment is charged at confirmation. Subscription renews automatically unless canceled at least 24 hours before the current period ends.'}</p>
+          <p className="paywall-legal-links">
+            <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener noreferrer">Terms of Use (EULA)</a>
             {' · '}
-            <span onClick={() => window.open('https://peptidai.web.app/privacy', '_blank')} style={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'underline', cursor: 'pointer' }}>Privacy Policy</span>
+            <a href="https://peptidai.web.app/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
           </p>
         </div>
       </div>

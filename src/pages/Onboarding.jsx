@@ -141,33 +141,31 @@ export default function Onboarding({ onComplete }) {
   const currentQuestion = QUESTIONS[questionIdx];
 
   return (
-    <div className="ob-screen" style={{ overflow: 'hidden' }}>
-      <div className="ob-body" style={{ width: '100%', height: '100%', padding: '40px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+    <div className="ob-screen">
+      <div className="ob-body">
 
         {/* Tutorial Phase */}
         {phase === 'tutorial' && (
-          <div onClick={handleTutNext} className="animate-in" key={tutStep} style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', textAlign: 'center' }}>
-            {/* Story Progress Bars */}
-            <div style={{ position: 'absolute', top: 60, left: 20, right: 20, display: 'flex', gap: 6 }}>
+          <section className="ob-tutorial animate-in" key={tutStep} aria-labelledby="onboarding-title">
+            <div className="ob-progress" aria-label={`Introduction ${tutStep + 1} of ${TUTORIAL_STEPS.length}`}>
                {TUTORIAL_STEPS.map((_, i) => (
-                 <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= tutStep ? 'var(--accent)' : 'var(--border)', transition: 'background 0.3s' }} />
+                 <span key={i} className={i <= tutStep ? 'complete' : ''} />
                ))}
             </div>
 
-            <div style={{ background: '#fff5f8', width: 180, height: 180, borderRadius: 90, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 40, boxShadow: '0 20px 40px rgba(209,138,157,0.25)' }}>
+            <div className="ob-tutorial-main">
+              <div className="ob-tutorial-icon" aria-hidden="true">
                {TUTORIAL_STEPS[tutStep].icon}
+              </div>
+              <p className="ob-tutorial-kicker">Personalized wellness research</p>
+              <h1 id="onboarding-title">{TUTORIAL_STEPS[tutStep].title}</h1>
+              <p className="ob-tutorial-copy">{TUTORIAL_STEPS[tutStep].desc}</p>
             </div>
-            <h1 style={{ fontSize: '2rem', lineHeight: 1.2, fontWeight: 800, color: 'var(--text)', marginBottom: 20, whiteSpace: 'pre-line' }}>
-              {TUTORIAL_STEPS[tutStep].title}
-            </h1>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: 1.5, maxWidth: 300 }}>
-              {TUTORIAL_STEPS[tutStep].desc}
-            </p>
-            
-            <div style={{ position: 'absolute', bottom: 60, color: 'var(--text-muted)', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: 8 }} className="pulse">
-              Tap anywhere to continue <IoArrowForward />
-            </div>
-          </div>
+
+            <button type="button" className="btn btn-primary btn-full ob-tutorial-next" onClick={handleTutNext}>
+              {tutStep === TUTORIAL_STEPS.length - 1 ? 'Personalize My Plan' : 'Continue'} <IoArrowForward />
+            </button>
+          </section>
         )}
 
         {/* Questions Phase */}

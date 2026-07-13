@@ -17,63 +17,43 @@ export default function DisclaimerModal() {
   if (!show) return null;
 
   return (
-    <div style={{
-      position: 'fixed', inset: 0, zIndex: 9999,
-      background: 'rgba(0,0,0,0.5)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      padding: 20,
-    }}>
-      <div style={{
-        background: 'white', borderRadius: 24, padding: 28,
-        maxWidth: 400, width: '100%',
-        boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-        maxHeight: '85vh', overflowY: 'auto',
-      }}>
-        <div style={{
-          width: 56, height: 56, borderRadius: 28,
-          background: '#fff5f8', display: 'flex',
-          alignItems: 'center', justifyContent: 'center',
-          margin: '0 auto 16px',
-        }}>
+    <div className="notice-overlay">
+      <section className="notice-modal" role="dialog" aria-modal="true" aria-labelledby="important-notices-title">
+        <header className="notice-header">
+          <div className="notice-icon" aria-hidden="true">
           <IoShieldCheckmarkOutline size={28} color="var(--accent)" />
-        </div>
-
-        <h2 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: 16, color: 'var(--text)', textAlign: 'center' }}>
+          </div>
+          <div>
+            <p className="notice-eyebrow">Before you continue</p>
+            <h2 id="important-notices-title">
           Important Notices
-        </h2>
+            </h2>
+          </div>
+        </header>
 
-        {/* AI Data Sharing */}
-        <div style={{ background: '#fff5f8', border: '1px solid #fecdd3', padding: 16, borderRadius: 14, marginBottom: 16 }}>
-          <h3 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>AI Data Sharing</h3>
-          <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0, whiteSpace: 'pre-line' }}>
-            {AI_DISCLOSURE_TEXT}
-          </p>
+        <div className="notice-scroll">
+          <div className="notice-section notice-section-ai">
+            <h3>AI Data Sharing</h3>
+            <p>{AI_DISCLOSURE_TEXT}</p>
+          </div>
+
+          <div className="notice-section">
+            <h3>Health Disclaimer</h3>
+            <p>
+              PeptidAI is for tracking and educational purposes only. It does not provide medical advice, diagnosis, or treatment recommendations. Always consult a qualified healthcare professional before making changes to your health routine.
+            </p>
+          </div>
         </div>
 
-        {/* Health Disclaimer */}
-        <div style={{ background: 'var(--bg-card)', padding: 16, borderRadius: 14, marginBottom: 16 }}>
-          <h3 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>Health Disclaimer</h3>
-          <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>
-            PeptidAI is for tracking and educational purposes only. It does not provide medical advice, diagnosis, or treatment recommendations. Always consult a qualified healthcare professional before making changes to your health routine.
+        <footer className="notice-actions">
+          <p>
+            By continuing, you consent to the AI data sharing described above. <a href="https://peptidai.web.app/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
           </p>
-        </div>
-
-        <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textAlign: 'center', marginBottom: 16 }}>
-          By tapping "I Understand & Agree", you consent to the AI data sharing described above. <a href="https://peptidai.web.app/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</a>
-        </p>
-
-        <button
-          onClick={handleAccept}
-          style={{
-            width: '100%', padding: 16, borderRadius: 100,
-            background: 'linear-gradient(135deg, var(--accent), #c27c8f)',
-            color: 'white', border: 'none', fontSize: '1rem',
-            fontWeight: 700, cursor: 'pointer',
-          }}
-        >
-          I Understand & Agree
-        </button>
-      </div>
+          <button onClick={handleAccept} className="btn btn-primary btn-full notice-accept">
+            I Understand &amp; Agree
+          </button>
+        </footer>
+      </section>
     </div>
   );
 }
